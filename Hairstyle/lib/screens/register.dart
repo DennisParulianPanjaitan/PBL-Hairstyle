@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uts_linkaja/screens/register.dart';
-import 'home_page.dart'; // Import halaman tujuan
-import 'forgot_password.dart';
 
-class LoginPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,12 +10,12 @@ class LoginPage extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/login.jpeg'),
+                image: AssetImage('assets/images/register_background.jpeg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          // White container for login form
+          // White container for register form
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -43,7 +40,7 @@ class LoginPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "Login",
+                      "Register",
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -52,11 +49,22 @@ class LoginPage extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 24),
-                    // Username / Email TextField
+                    // Username TextField
                     TextField(
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person),
-                        labelText: "Username / Email",
+                        labelText: "Username",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    // Email TextField
+                    TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.email),
+                        labelText: "Email",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
@@ -74,38 +82,11 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ForgotPasswordPage(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "Forgot Password? click here",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    // Login Button
+                    SizedBox(height: 24),
+                    // Register Button
                     ElevatedButton(
                       onPressed: () {
-                        // Navigasi ke halaman home_page.dart
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ),
-                        );
+                        // Tambahkan aksi untuk proses pendaftaran
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1B1A55), // Button color
@@ -115,7 +96,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        "Login",
+                        "Register",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -172,15 +153,10 @@ class LoginPage extends StatelessWidget {
                     Center(
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegisterPage(),
-                            ),
-                          );
+                          Navigator.pop(context); // Kembali ke halaman login
                         },
                         child: Text(
-                          "Don't have an account? Register",
+                          "Already have an account? Login",
                           style: TextStyle(color: Colors.blue),
                         ),
                       ),
