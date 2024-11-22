@@ -132,7 +132,7 @@ class LoginPage extends StatelessWidget {
                       onPressed: () {
                         // Tambahkan aksi untuk sign in dengan Google
                       },
-                      icon: Image.asset('assets/images/google.jpeg',
+                      icon: Image.asset('assets/icons/google.jpeg',
                           height: 24), // Ganti dengan ikon Google
                       label: Text(
                         "Sign in with Google",
@@ -153,7 +153,7 @@ class LoginPage extends StatelessWidget {
                       onPressed: () {
                         // Tambahkan aksi untuk sign in dengan Apple
                       },
-                      icon: Image.asset('assets/images/apple.jpeg',
+                      icon: Image.asset('assets/icons/apple.jpeg',
                           height: 24), // Ganti dengan ikon Apple
                       label: Text(
                         "Sign in with Apple",

@@ -27,8 +27,8 @@ class SplashScreen extends StatelessWidget {
                 "Discover the hairstyle\nthat matches your face",
                 textAlign: TextAlign.center, // Align text to center
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w900, // Ketebalan maksimal
                   color: Colors.white,
                 ),
               ),

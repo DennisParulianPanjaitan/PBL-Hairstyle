@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'create_new_password_page.dart';  // Import halaman Create New Password
+import 'create_new_password_page.dart'; // Import halaman Create New Password
 
 class VerificationPage extends StatelessWidget {
   @override
@@ -21,7 +21,7 @@ class VerificationPage extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.4,
+              height: MediaQuery.of(context).size.height * 0.36,
               padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
