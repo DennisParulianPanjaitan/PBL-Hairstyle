@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:uts_linkaja/screens/contact_us.dart';
+import 'package:uts_linkaja/screens/help_support_screen.dart';
+import 'package:uts_linkaja/screens/privacy_policy_screen.dart';
+import 'package:uts_linkaja/screens/splash_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -9,14 +13,27 @@ class ProfileScreen extends StatelessWidget {
     const floatingButtonHeight = kFloatingActionButtonMargin + 55.0;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   // leading: IconButton(
+      //   //   icon: Image.asset(
+      //   //     'assets/icons/arrow.png',
+      //   //     width: 40,
+      //   //     height: 40,
+      //   //   ),
+      //   //   onPressed: () => Navigator.pop(context),
+      //   // ),
+      //   title: const Text(
+      //     'Profile',
+      //     style: TextStyle(
+      //       color: Color(0xFF1B1A55),
+      //       fontSize: 20,
+      //       fontWeight: FontWeight.w600,
+      //     ),
+      //   ),
+      //   backgroundColor: Colors.white,
+      //   elevation: 0,
+      // ),
       body: SafeArea(
         child: SingleChildScrollView(
           // Add padding at the bottom to prevent content from being hidden
@@ -28,7 +45,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               // Profile Image
               Center(
                 child: Stack(
@@ -47,14 +64,11 @@ class ProfileScreen extends StatelessWidget {
                       right: 0,
                       child: Container(
                         padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.verified,
-                          size: 20,
-                          color: Colors.white,
+                        decoration: const BoxDecoration(),
+                        child: Image.asset(
+                          'assets/icons/changeprofile.png', // Ganti dengan path aset Anda
+                          width: 20,
+                          height: 20,
                         ),
                       ),
                     ),
@@ -84,75 +98,114 @@ class ProfileScreen extends StatelessWidget {
               _buildTextField(
                 label: 'Email',
                 hint: 'xxx@gmail.com',
-                icon: Icons.email_outlined,
+                icon: Image.asset(
+                  'assets/icons/Message.png', // Gambar email
+                  width: 24,
+                  height: 24,
+                ),
               ),
+
               const SizedBox(height: 16),
               _buildTextField(
                 label: 'Username',
                 hint: 'xxx@gmail.com',
-                icon: Icons.person_outline,
+                icon: Image.asset(
+                  'assets/icons/Profile.png', // Gambar email
+                  width: 24,
+                  height: 24,
+                ),
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 label: 'Password',
                 hint: '••••••••',
-                icon: Icons.lock_outline,
+                icon: Image.asset(
+                  'assets/icons/password.png', // Gambar email
+                  width: 24,
+                  height: 24,
+                ),
                 isPassword: true,
               ),
               const SizedBox(height: 20),
               // Buttons
               Row(
+                mainAxisAlignment: MainAxisAlignment.center, // Pusatkan tombol
                 children: [
-                  Expanded(
+                  SizedBox(
+                    width: 120, // Atur lebar tombol Cancel
                     child: OutlinedButton(
                       onPressed: () {},
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        // side: const BorderSide(color: Colors.red),
                         backgroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                       child: const Text(
                         'Cancel',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255)),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
+                  const SizedBox(width: 16), // Jarak antar tombol
+                  SizedBox(
+                    width: 120, // Atur lebar tombol Save
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         backgroundColor: Colors.green,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              8), // Atur radius sesuai keinginan
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                       child: const Text(
                         'Save',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255)),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
                 ],
               ),
+
               const SizedBox(height: 30),
               // Menu Items
               _buildMenuItem('History Scan', Icons.history),
-              _buildMenuItem('Privacy and Policy', Icons.privacy_tip_outlined),
               _buildMenuItem('Language', Icons.language),
+              _buildMenuItem('Privacy and Policy', Icons.privacy_tip_outlined,
+                  onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PrivacyPolicyScreen(),
+                  ),
+                );
+              }),
+              _buildMenuItem('Help and Support', Icons.help_outline, onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HelpAndSupportScreen(),
+                  ),
+                );
+              }),
+              _buildMenuItem('Contact Us', Icons.support_agent_outlined,
+                  onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ContactUsScreen(),
+                  ),
+                );
+              }),
               const SizedBox(height: 16),
               // Logout Button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () => _showLogoutDialog(context),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     side: const BorderSide(color: Colors.red),
@@ -162,7 +215,11 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: const Text(
                     'Logout',
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -173,10 +230,49 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog (Cancel)
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Implement your logout logic here
+                Navigator.of(context).pop(); // Close the dialog (Logout)
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SplashScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                iconColor: Colors.red,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text('Yes, Logout'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildTextField({
     required String label,
     required String hint,
-    required IconData icon,
+    required Widget icon,
     bool isPassword = false,
   }) {
     return Column(
@@ -194,7 +290,11 @@ class ProfileScreen extends StatelessWidget {
           obscureText: isPassword,
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: Icon(icon),
+            hintStyle: const TextStyle(
+              color: Color.fromRGBO(171, 171, 171, 100),
+              fontSize: 16,
+            ),
+            prefixIcon: icon,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -208,18 +308,24 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(String title, IconData icon) {
+  Widget _buildMenuItem(String title, IconData icon, {VoidCallback? onTap}) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: Color(0xFF1B1A55)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
-        leading: Icon(icon),
-        title: Text(title),
+        leading: Icon(icon, color: Color(0xFF1B1A55)),
+        title: Text(
+          title,
+          style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF1B1A55)),
+        ),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }
