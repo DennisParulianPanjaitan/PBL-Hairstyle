@@ -21,7 +21,7 @@ class ForgotPasswordPage extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.4,
               padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
