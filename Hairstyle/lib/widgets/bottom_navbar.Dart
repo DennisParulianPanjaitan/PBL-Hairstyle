@@ -61,3 +61,16 @@ class BottomNavBar extends StatelessWidget {
     );
   }
 }
+
+// class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+//   final FloatingActionButtonLocation baseLocation;
+//   final double offsetY;
+
+//   CustomFloatingActionButtonLocation(this.baseLocation, {this.offsetY = 0.0});
+
+//   @override
+//   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+//     final Offset baseOffset = baseLocation.getOffset(scaffoldGeometry);
+//     return Offset(baseOffset.dx, baseOffset.dy + offsetY);
+//   }
+// }
