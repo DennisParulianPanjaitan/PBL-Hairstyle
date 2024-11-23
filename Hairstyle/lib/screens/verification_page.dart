@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'create_new_password_page.dart'; // Import halaman Create New Password
 
 class VerificationPage extends StatelessWidget {
+  const VerificationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,7 @@ class VerificationPage extends StatelessWidget {
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 10,

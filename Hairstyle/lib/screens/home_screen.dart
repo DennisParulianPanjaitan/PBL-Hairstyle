@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +14,7 @@ class HomeScreen extends StatelessWidget {
           onPressed: () {},
         ),
         title: Row(
-          children: [
+          children: const [
             Text(
               "Hi, Afrizal",
               style: TextStyle(
@@ -54,7 +56,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Container(
+            SizedBox(
               height: 180,
               child: PageView(
                 controller: PageController(viewportFraction: 0.9),
@@ -74,7 +76,7 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-            color: Color(0xFF1B1A55),
+                color: Color(0xFF1B1A55),
               ),
             ),
             SizedBox(height: 10),

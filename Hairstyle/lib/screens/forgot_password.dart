@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'verification_page.dart'; // Pastikan VerificationPage sudah diimport
 
 class ForgotPasswordPage extends StatelessWidget {
+  const ForgotPasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,7 @@ class ForgotPasswordPage extends StatelessWidget {
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 10,

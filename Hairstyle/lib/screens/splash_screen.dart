@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'login.dart'; // Import LoginPage
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
