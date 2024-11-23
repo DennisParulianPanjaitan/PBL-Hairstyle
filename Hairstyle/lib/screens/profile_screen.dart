@@ -5,7 +5,7 @@ import 'package:uts_linkaja/screens/privacy_policy_screen.dart';
 import 'package:uts_linkaja/screens/splash_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -183,15 +183,15 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 );
               }),
-              _buildMenuItem('Help and Support', Icons.help_outline, onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HelpAndSupportScreen(),
-                  ),
-                );
-              }),
-              _buildMenuItem('Contact Us', Icons.support_agent_outlined,
+              // _buildMenuItem('Help and Contact', Icons.help_outline, onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => const HelpAndSupportScreen(),
+              //     ),
+              //   );
+              // }),
+              _buildMenuItem('Help and Contact', Icons.support_agent_outlined,
                   onTap: () {
                 Navigator.push(
                   context,
