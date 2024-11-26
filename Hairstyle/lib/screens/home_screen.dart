@@ -17,25 +17,13 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         title: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Hi, Afrizal",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  "Welcome to HairMate",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
+            Text(
+              "Hi, Afrizal",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
             Spacer(),
             CircleAvatar(
@@ -62,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            Container(
+            SizedBox(
               height: 180,
               child: PageView(
                 controller: PageController(viewportFraction: 0.9),

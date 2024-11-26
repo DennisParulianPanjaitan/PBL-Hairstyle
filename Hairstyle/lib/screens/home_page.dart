@@ -7,6 +7,8 @@ import 'profile_screen.dart';
 import '../widgets/bottom_navbar.dart'; // Pastikan ini sudah diimpor
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
