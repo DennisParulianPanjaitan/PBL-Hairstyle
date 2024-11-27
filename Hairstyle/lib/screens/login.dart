@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uts_linkaja/screens/register.dart';
 import 'home_page.dart'; // Import halaman tujuan
 import 'forgot_password.dart';
+import 'package:uts_linkaja/services/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
