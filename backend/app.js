@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import authRoutes from './routes/authRoutes.js'; // Importing routes
 
 // const express = require('express');
@@ -17,6 +18,27 @@ import authRoutes from './routes/authRoutes.js'; // Importing routes
 // index.js
 
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors({
+  origin: (origin, callback) => {                           // Allow specific origin
+    if (!origin || origin.startsWith('http://localhost')) { // Izinkan semua origin dari localhost
+      callback(null, true);
+    } else {
+      // Tolak origin lain
+      callback(new Error('Not allowed by CORS'));
+    }
+  },   
+  methods: ['GET', 'POST'],           // Allowed HTTP methods
+  credentials: true                   // Allow cookies and credentials
+}));
+
+// app.use((req, res, next) => {
+//   console.log(`${req.method} ${req.url}`);
+//   next();
+// });
+
+// Middleware to parse JSON requests
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {

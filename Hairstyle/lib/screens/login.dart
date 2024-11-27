@@ -4,8 +4,51 @@ import 'home_page.dart'; // Import halaman tujuan
 import 'forgot_password.dart';
 import 'package:uts_linkaja/services/auth_service.dart';
 
-class LoginPage extends StatelessWidget {
+
+
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final AuthService _authService = AuthService();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String _errorMessage = '';
+
+  void _login() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+
+    try {
+      final response = await _authService.login(
+        _usernameController.text,
+        _passwordController.text,
+      );
+      // Handle success
+      print('Login successful: $response');
+      Navigator.pushReplacement(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      ); // Navigate to the home screen
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +100,7 @@ class LoginPage extends StatelessWidget {
                     SizedBox(height: 24),
                     // Username / Email TextField
                     TextField(
+                      controller: _usernameController,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person),
                         labelText: "Username / Email",
@@ -68,6 +112,7 @@ class LoginPage extends StatelessWidget {
                     SizedBox(height: 16),
                     // Password TextField
                     TextField(
+                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.lock),
@@ -101,15 +146,16 @@ class LoginPage extends StatelessWidget {
                     SizedBox(height: 16),
                     // Login Button
                     ElevatedButton(
-                      onPressed: () {
-                        // Navigasi ke halaman home_page.dart
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ),
-                        );
-                      },
+                      onPressed: _isLoading ? null : _login,
+                      //() {
+                      //   // Navigasi ke halaman home_page.dart
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => HomePage(),
+                      //     ),
+                      //   );
+                      // },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1B1A55), // Button color
                         padding: EdgeInsets.symmetric(vertical: 14),
@@ -117,8 +163,19 @@ class LoginPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
-                      child: Text(
-                        "Login",
+                      child: _isLoading
+                      ? 
+                      SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      :
+                      Text(
+                        "Check",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
