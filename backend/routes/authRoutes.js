@@ -1,14 +1,18 @@
 // Load environment variables from the .env file
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 // routes/authRoutes.js
 // const express = require('express');
 // const jwt = require('jsonwebtoken');
 // const bcrypt = require('bcrypt');
 import { Router } from 'express';
-import { sign, verify } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
+const { sign, verify } = jwt;
 const router = Router();
 
 const users = [

@@ -19,6 +19,10 @@ import authRoutes from './routes/authRoutes.js'; // Importing routes
 const app = express();
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the API!');
+});
+
 // Use authentication routes
 app.use('/auth', authRoutes);
 
