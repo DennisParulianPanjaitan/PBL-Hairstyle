@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:uts_linkaja/screens/register.dart';
+import '../services/auth_service.dart';
 import 'home_page.dart'; // Import halaman tujuan
 import 'forgot_password.dart';
-import 'package:uts_linkaja/services/auth_service.dart';
-
-
+import 'register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   String _errorMessage = '';
+  bool _isPasswordVisible = false;
 
   void _login() async {
     setState(() {
@@ -34,18 +33,17 @@ class _LoginPageState extends State<LoginPage> {
       // Handle success
       print('Login successful: $response');
       Navigator.pushReplacement(
-        context, 
+        context,
         MaterialPageRoute(
-          builder: (context) => HomePage(),   // Navigate to the home screen
+          builder: (context) => HomePage(), // Navigate to the home screen
         ),
-      ); 
+      );
     } catch (e) {
-      
       setState(() {
         _errorMessage = e.toString();
       });
-      _showErrorDialog(_errorMessage); // Tampilkan popup error - can be replaced with String or whatever
-
+      _showErrorDialog(
+          _errorMessage); // Tampilkan popup error - can be replaced with String or whatever
     } finally {
       setState(() {
         _isLoading = false;
@@ -136,12 +134,25 @@ class _LoginPageState extends State<LoginPage> {
                     // Password TextField
                     TextField(
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: !_isPasswordVisible,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.lock),
                         labelText: "Password",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -187,23 +198,21 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       child: _isLoading
-                      ? 
-                      SizedBox(
-                          height: 16,
-                          width: 16,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      :
-                      Text(
-                        "Check",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
+                          ? SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              "Check",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
                     ),
                     SizedBox(height: 16),
                     Center(
