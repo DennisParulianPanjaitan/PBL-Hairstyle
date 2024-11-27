@@ -18,14 +18,14 @@ const router = Router();
 const users = [
   {
     id: 1,
-    username: 'user1',
+    username: 'kelompok1',
     email: 'user1@example.com',
-    password: '$2b$10$C/dmTnH4Uaz.jA6Q1Ww5beZkEdM9t1Y3Sp0jLs8AzPIpLgH8A6/eS' // bcrypt hash for 'password123'
+    password: '$2a$12$3amRdaJi2whUpiL7IBQVFuDcEPIqEA419eqPnNIMxGfGI3pRB2/AS' // bcrypt hash for 'd4ti223a'
   }
 ];
 
-const SECRET_KEY = process.env.JWT_SECRET_KEY;
-
+// const SECRET_KEY = process.env.JWT_SECRET_KEY;
+const SECRET_KEY = "3938e9e111082bcba44f9d19461580d11177e5af410a485ea417103791fa7ce78656d3bd4651835cf2de75bb2a889717fd0eea7319733fc8c5ffff3f3032c655";
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
   
@@ -33,19 +33,19 @@ router.post('/login', async (req, res) => {
     const user = users.find((u) => u.username === username || u.email === username);
   
     if (!user) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+      return res.status(401).json({ message: 'Username salah' });
     }
   
     // Check password
     const isPasswordValid = await compare(password, user.password);
   
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+      return res.status(401).json({ message: "password salah" });
     }
   
     // Create a JWT token
     const token = sign({ id: user.id, username: user.username }, SECRET_KEY, {
-      expiresIn: '1h',
+      expiresIn: '2h',
     });
   
     return res.status(200).json({ message: 'Login successful', token });

@@ -36,18 +36,41 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context, 
         MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => HomePage(),   // Navigate to the home screen
         ),
-      ); // Navigate to the home screen
+      ); 
     } catch (e) {
+      
       setState(() {
         _errorMessage = e.toString();
       });
+      _showErrorDialog(_errorMessage); // Tampilkan popup error - can be replaced with String or whatever
+
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Login Gagal'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Menutup dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -146,15 +169,16 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 16),
                     // Login Button
                     ElevatedButton(
-                      onPressed: () {
-                        // Navigasi ke halaman home_page.dart
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ),
-                        );
-                      }, // _isLoading ? null : _login,
+                      onPressed: _isLoading ? null : _login,
+                      //() {
+                      //   // Navigasi ke halaman home_page.dart
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => HomePage(),
+                      //     ),
+                      //   );
+                      // },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1B1A55), // Button color
                         padding: EdgeInsets.symmetric(vertical: 14),
@@ -174,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                         )
                       :
                       Text(
-                        "Login",
+                        "Check",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
