@@ -30,12 +30,19 @@ class _CreateNewPasswordPageState extends State<CreateNewPasswordPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/createnew.jpeg'),
-                fit: BoxFit.cover,
+          // Background image with grayscale filter
+          ColorFiltered(
+            colorFilter: ColorFilter.mode(
+              Colors.grey, // Apply grayscale effect
+              BlendMode.saturation,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/createnew.jpeg'),
+                  fit: BoxFit.contain,
+                  alignment: Alignment.topCenter,
+                ),
               ),
             ),
           ),
@@ -43,7 +50,7 @@ class _CreateNewPasswordPageState extends State<CreateNewPasswordPage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.6,
               padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -131,7 +138,7 @@ class _CreateNewPasswordPageState extends State<CreateNewPasswordPage> {
                       Text("Both upper and lower case letters"),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 30),
                   // Reset Password Button
                   ElevatedButton(
                     onPressed: () {

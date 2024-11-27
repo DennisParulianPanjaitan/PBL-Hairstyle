@@ -9,16 +9,22 @@ class VerificationPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/verification_background.jpeg'), // Ganti dengan gambar latar belakang yang sesuai
-                fit: BoxFit.cover,
+          ColorFiltered(
+            colorFilter: ColorFilter.mode(
+              Colors.grey, // Apply grayscale effect
+              BlendMode.saturation,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image:
+                      AssetImage('assets/images/verification_background.jpeg'),
+                  fit: BoxFit.contain,
+                  alignment: Alignment.topCenter,
+                ),
               ),
             ),
-          ),
+          ), // Background image
           // White container for verification form
           Align(
             alignment: Alignment.bottomCenter,

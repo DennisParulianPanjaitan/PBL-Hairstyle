@@ -9,17 +9,22 @@ class ForgotPasswordPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/forgot_password_background.jpeg'), // Ganti dengan gambar yang sesuai
-                fit: BoxFit.cover,
+          ColorFiltered(
+            colorFilter: ColorFilter.mode(
+              Colors.grey, // Apply grayscale effect
+              BlendMode.saturation,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                      'assets/images/forgot_password_background.jpeg'),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                ),
               ),
             ),
           ),
-          // White container for forgot password form
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
