@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/menu_button.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -28,8 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Spacer(),
             CircleAvatar(
               radius: 24,
-              backgroundImage:
-                  AssetImage('assets/images/home_profile.jpeg'), // Gambar profil
+              backgroundImage: AssetImage(
+                  'assets/images/home_profile.jpeg'), // Gambar profil
             ),
           ],
         ),
@@ -76,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildHairTypeCard("Straight Hair", "assets/images/straight.jpeg"),
+                _buildHairTypeCard(
+                    "Straight Hair", "assets/images/straight.jpeg"),
                 _buildHairTypeCard("Wavy Hair", "assets/images/wavy.jpeg"),
                 _buildHairTypeCard("Curly Hair", "assets/images/curly.jpeg"),
               ],
@@ -85,9 +88,45 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildMenuButton(Icons.cut, "Hair Style"),
-                _buildMenuButton(Icons.spa, "Hair Treatment"),
-                _buildMenuButton(Icons.shopping_bag, "Hair Product"),
+                MenuButton(
+                  activeImagePath:
+                      "assets/icons/cutp.png", // Ganti dengan path gambar aktif
+                  inactiveImagePath:
+                      "assets/icons/cutb.png", // Ganti dengan path gambar tidak aktif
+                  label: "Hair Cut",
+                  isSelected: selectedMenu == "Hair Cut",
+                  onTap: () {
+                    setState(() {
+                      selectedMenu = "Hair Cut";
+                    });
+                  },
+                ),
+                MenuButton(
+                  activeImagePath:
+                      "assets/icons/foamp.png", // Ganti dengan path gambar aktif
+                  inactiveImagePath:
+                      "assets/icons/foamb.png", // Ganti dengan path gambar tidak aktif
+                  label: "Hair Product",
+                  isSelected: selectedMenu == "Hair Product",
+                  onTap: () {
+                    setState(() {
+                      selectedMenu = "Hair Product";
+                    });
+                  },
+                ),
+                MenuButton(
+                  activeImagePath:
+                      "assets/icons/Locationp.png", // Ganti dengan path gambar aktif
+                  inactiveImagePath:
+                      "assets/icons/Locationb.png", // Ganti dengan path gambar tidak aktif
+                  label: "Barbershop",
+                  isSelected: selectedMenu == "Barbershop",
+                  onTap: () {
+                    setState(() {
+                      selectedMenu = "Barbershop";
+                    });
+                  },
+                ),
               ],
             ),
             SizedBox(height: 20),
@@ -143,76 +182,76 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 20),
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Text(
-      "Hair Product",
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-        color: Color(0xFF1B1A55),
-      ),
-    ),
-    GestureDetector(
-      onTap: () {
-        // Aksi saat "See all" ditekan
-        print("See all Hair Product tapped");
-      },
-      child: Row(
-        children: [
-          Text(
-            "See all",
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF1B1A55),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Hair Product",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1B1A55),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // Aksi saat "See all" ditekan
+                    print("See all Hair Product tapped");
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        "See all",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF1B1A55),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: Color(0xFF1B1A55),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          Icon(
-            Icons.arrow_forward_ios,
-            size: 14,
-            color: Color(0xFF1B1A55),
-          ),
-        ],
-      ),
-    ),
-  ],
-),
-SizedBox(height: 10),
-Container(
-  height: 180, // Atur tinggi sesuai kebutuhan
-  child: ListView.builder(
-    scrollDirection: Axis.horizontal,
-    itemCount: 3, // Jumlah produk Hair Product
-    itemBuilder: (context, index) {
-      // Data produk contoh
-      List<Map<String, dynamic>> products = [
-        {
-          "name": "Pomade",
-          "description": "Shine • Hold • Texture",
-          "image": "assets/images/pomade.jpeg",
-        },
-        {
-          "name": "Hair Clay",
-          "description": "Nourishes and styles the beard",
-          "image": "assets/images/hair_wax.jpeg",
-        },
-        {
-          "name": "Hair Powder",
-          "description": "Volume • Matte finish",
-          "image": "assets/images/hair_powder.jpeg",
-        },
-      ];
+            SizedBox(height: 10),
+            Container(
+              height: 180, // Atur tinggi sesuai kebutuhan
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 3, // Jumlah produk Hair Product
+                itemBuilder: (context, index) {
+                  // Data produk contoh
+                  List<Map<String, dynamic>> products = [
+                    {
+                      "name": "Pomade",
+                      "description": "Shine • Hold • Texture",
+                      "image": "assets/images/pomade.jpeg",
+                    },
+                    {
+                      "name": "Hair Clay",
+                      "description": "Nourishes and styles the beard",
+                      "image": "assets/images/hair_wax.jpeg",
+                    },
+                    {
+                      "name": "Hair Powder",
+                      "description": "Volume • Matte finish",
+                      "image": "assets/images/hair_powder.jpeg",
+                    },
+                  ];
 
-      var product = products[index];
-      return _buildHairProductCard(
-        product['name'],
-        product['description'],
-        product['image'],
-      );
-    },
-  ),
-),
+                  var product = products[index];
+                  return _buildHairProductCard(
+                    product['name'],
+                    product['description'],
+                    product['image'],
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -331,44 +370,6 @@ Container(
     );
   }
 
-  Widget _buildMenuButton(IconData icon, String label) {
-    bool isSelected = selectedMenu == label;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedMenu = label; // Mengubah menu aktif
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6), // Ukuran lebih kecil
-        decoration: BoxDecoration(
-          color: isSelected ? Color(0xFF1B1A55) : Colors.white,
-          borderRadius: BorderRadius.circular(20), // Lebih kecil dari sebelumnya
-          border: Border.all(color: Color(0xFF1B1A55)),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.white : Color(0xFF1B1A55),
-              size: 16, // Ukuran ikon lebih kecil
-            ),
-            SizedBox(width: 6), // Jarak lebih kecil
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10, // Ukuran teks lebih kecil
-                fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : Color(0xFF1B1A55),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildBarberShopCard(
       String name, String price, double rating, String imagePath) {
     return Container(
@@ -444,60 +445,61 @@ Container(
       ),
     );
   }
-  Widget _buildHairProductCard(String name, String description, String imagePath) {
-  return Container(
-    width: 140, // Atur lebar kartu
-    margin: EdgeInsets.only(right: 12),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.3),
-          blurRadius: 6,
-          offset: Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-          child: Image.asset(
-            imagePath,
-            height: 100,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Text(
-                name,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                description,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
 
+  Widget _buildHairProductCard(
+      String name, String description, String imagePath) {
+    return Container(
+      width: 140, // Atur lebar kartu
+      margin: EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            blurRadius: 6,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+            child: Image.asset(
+              imagePath,
+              height: 100,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
