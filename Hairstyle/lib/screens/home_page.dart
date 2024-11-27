@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uts_linkaja/screens/features_screen.dart';
 import 'camera_page.dart'; // Pastikan ini sudah diimpor
 import 'home_screen.dart';
 import 'category_screen.dart';
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = [
     HomeScreen(),
-    CategoryScreen(),
+    FeaturesPage(),
     FavoritesScreen(),
     ProfileScreen(),
   ];
