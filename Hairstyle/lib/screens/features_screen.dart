@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/menu_button.dart'; // Import MenuButton
+
 class FeaturesPage extends StatefulWidget {
   @override
   _FeaturesPageState createState() => _FeaturesPageState();
@@ -11,37 +13,49 @@ class _FeaturesPageState extends State<FeaturesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Features'),
-      ),
       body: Column(
         children: [
+          SizedBox(height: 50.0), // Jarak dari atas layar ke menu
           Container(
             color: Colors.white,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: 16.0), // Tambah jarak atas dan bawah
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceAround, // Jarak antar item horizontal lebih lebar
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildMenuItem(
-                    index: 0,
-                    activeIcon: 'assets/icons/cutp.png',
-                    inactiveIcon: 'assets/icons/cut3.png',
+                  // Ganti _buildMenuItem dengan MenuButton
+                  MenuButton(
+                    activeImagePath: 'assets/icons/cutp.png',
+                    inactiveImagePath: 'assets/icons/cut3.png',
                     label: 'Hair Cut',
+                    isSelected: _currentIndex == 0,
+                    onTap: () {
+                      setState(() {
+                        _currentIndex = 0;
+                      });
+                    },
                   ),
-                  _buildMenuItem(
-                    index: 1,
-                    activeIcon: 'assets/icons/foamp.png',
-                    inactiveIcon: 'assets/icons/foamb.png',
+                  MenuButton(
+                    activeImagePath: 'assets/icons/foamp.png',
+                    inactiveImagePath: 'assets/icons/foamb.png',
                     label: 'Hair Product',
+                    isSelected: _currentIndex == 1,
+                    onTap: () {
+                      setState(() {
+                        _currentIndex = 1;
+                      });
+                    },
                   ),
-                  _buildMenuItem(
-                    index: 2,
-                    activeIcon: 'assets/icons/Locationp.png',
-                    inactiveIcon: 'assets/icons/Locationb.png',
+                  MenuButton(
+                    activeImagePath: 'assets/icons/Locationp.png',
+                    inactiveImagePath: 'assets/icons/Locationb.png',
                     label: 'BarberShop',
+                    isSelected: _currentIndex == 2,
+                    onTap: () {
+                      setState(() {
+                        _currentIndex = 2;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -51,64 +65,13 @@ class _FeaturesPageState extends State<FeaturesPage> {
             child: IndexedStack(
               index: _currentIndex,
               children: const [
-                Center(
-                  child: Text('Hair Cut'),
-                ),
-                Center(
-                  child: Text('Hair Product'),
-                ),
-                Center(
-                  child: Text('BarberShop'),
-                ),
+                Center(child: Text('Hair Cut')),
+                Center(child: Text('Hair Product')),
+                Center(child: Text('BarberShop')),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem({
-    required int index,
-    required String activeIcon, // Icon aktif
-    required String inactiveIcon, // Icon tidak aktif
-    required String label,
-  }) {
-    bool isActive = _currentIndex == index;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: isActive ? Color(0xFF1B1A55) : Colors.white,
-          border: Border.all(color: Color(0xFF1B1A55)),
-          borderRadius: BorderRadius.circular(16.0), // Radius lebih kecil
-        ),
-        padding: EdgeInsets.symmetric(
-            horizontal: 12.0, vertical: 6.0), // Kurangi padding
-        child: Row(
-          children: [
-            Image.asset(
-              isActive
-                  ? activeIcon
-                  : inactiveIcon, // Ganti icon berdasarkan status
-              width: 20.0, // Kurangi ukuran ikon
-              height: 20.0,
-            ),
-            SizedBox(width: 6.0), // Kurangi jarak antara ikon dan teks
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14.0, // Kurangi ukuran font teks
-                color: isActive ? Colors.white : Color(0xFF1B1A55),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
