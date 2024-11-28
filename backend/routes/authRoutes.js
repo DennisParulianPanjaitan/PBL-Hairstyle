@@ -4,13 +4,13 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-// routes/authRoutes.js
-// const express = require('express');
-// const jwt = require('jsonwebtoken');
-// const bcrypt = require('bcrypt');
 import { Router } from 'express';
 import { compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { sql } from '@vercel/postgres';
+
+// const supabase = createClient('https://vcixgtpgalxcdxxgdxpe.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjaXhndHBnYWx4Y2R4eGdkeHBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI3NzQ5NTEsImV4cCI6MjA0ODM1MDk1MX0.qZa9Sxw7nBIssb1zVMEkVqcGPJ0hIBQxXlvYyZ618Uw');
+dotenv.config({ path: '.env.local' }); // Load environment variables
 
 const { sign, verify } = jwt;
 const router = Router();
