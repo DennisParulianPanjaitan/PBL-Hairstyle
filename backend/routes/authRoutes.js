@@ -18,14 +18,14 @@ const router = Router();
 const users = [
   {
     id: 1,
-    username: 'kelompok1',
+    username: 'k1',
     email: 'user1@example.com',
-    password: '$2a$12$3amRdaJi2whUpiL7IBQVFuDcEPIqEA419eqPnNIMxGfGI3pRB2/AS' // bcrypt hash for 'd4ti223a'
+    password: '$2a$12$zPlq1NLDZmgofBpy6LwiB.2q5zSU5TGQdk3Fh3Ll.PFYc7mrQXaAa' // bcrypt hash for 'ti3a'
   }
 ];
 
-// const SECRET_KEY = process.env.JWT_SECRET_KEY;
-const SECRET_KEY = "3938e9e111082bcba44f9d19461580d11177e5af410a485ea417103791fa7ce78656d3bd4651835cf2de75bb2a889717fd0eea7319733fc8c5ffff3f3032c655";
+const SECRET_KEY = process.env.JWT_SECRET_KEY;
+// const SECRET_KEY = "3938e9e111082bcba44f9d19461580d11177e5af410a485ea417103791fa7ce78656d3bd4651835cf2de75bb2a889717fd0eea7319733fc8c5ffff3f3032c655";
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
   
