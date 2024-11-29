@@ -31,23 +31,20 @@ router.post('/login', async (req, res) => {
   
     // Find user by username or email
     const user = users.find((u) => u.username === username || u.email === username);
-  
     if (!user) {
       return res.status(401).json({ message: 'Username salah' });
     }
-  
+
     // Check password
     const isPasswordValid = await compare(password, user.password);
-  
     if (!isPasswordValid) {
       return res.status(401).json({ message: "password salah" });
     }
-  
+
     // Create a JWT token
     const token = sign({ id: user.id, username: user.username }, SECRET_KEY, {
       expiresIn: '2h',
     });
-  
     return res.status(200).json({ message: 'Login successful', token });
   });
   
@@ -58,12 +55,9 @@ router.post('/login', async (req, res) => {
     if (!token) {
       return res.status(403).json({ message: 'No token provided' });
     }
-  
+
     verify(token, SECRET_KEY, (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ message: 'Failed to authenticate token' });
-      }
-  
+      if (err) return res.status(401).json({ message: 'Failed to authenticate token' });
       // Proceed with the request
       return res.status(200).json({ message: 'Access granted', userId: decoded.id });
     });

@@ -48,7 +48,14 @@ app.use(cors({
   //     callback(new Error('Not allowed by CORS'));
   //   }
   // },
-  origin: '*',   
+  origin: /* '*', */ (origin, callback) => {  // Allow specific origin
+    if ( !origin || origin.startsWith('http://localhost') ) { // Izinkan semua origin dari localhost
+      callback(null, true);
+    } else {
+      // Tolak origin lain
+      callback( new Error('Not allowed by CORS') );
+    }
+  },  
   methods: ['GET', 'POST'],           // Allowed HTTP methods
   credentials: true                   // Allow cookies and credentials
 }));
