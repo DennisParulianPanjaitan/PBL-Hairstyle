@@ -22,8 +22,8 @@ class DetailProduct extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/hair_pomade.jpeg', // Ganti dengan path gambar produk
                       width: double.infinity,
-                      height: 300,
-                      fit: BoxFit.cover,
+                      height: 350,
+                      fit: BoxFit.fill,
                     ),
                   ),
                   Positioned(
@@ -74,7 +74,7 @@ class DetailProduct extends StatelessWidget {
                           "Pomade",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 24,
+                            fontSize: 30,
                             color: Color(0xFF1B1A55),
                           ),
                         ),
@@ -106,9 +106,9 @@ class DetailProduct extends StatelessWidget {
 
                     // Teks "Recommended For"
                     Text(
-                      "Recommended For",
+                      "Hair Type",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF1B1A55),
                       ),
@@ -130,21 +130,21 @@ class DetailProduct extends StatelessWidget {
                     Text(
                       "Gallery",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF1B1A55),
                       ),
                     ),
-                    const SizedBox(height: 8),
 
                     // Galeri gambar
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 8.0,
+                        crossAxisSpacing: 1.0,
+                        mainAxisSpacing: 1.0,
                       ),
                       itemCount: 4,
                       itemBuilder: (context, index) {
@@ -171,14 +171,14 @@ class DetailProduct extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.blue[50],
+        color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.blue),
+        border: Border.all(color: Color(0xFF1B1A55)),
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: Colors.blue,
+          color: Color(0xFF1B1A55),
           fontWeight: FontWeight.bold,
         ),
       ),
