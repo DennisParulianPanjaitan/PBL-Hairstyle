@@ -86,51 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                MenuButton(
-                  activeImagePath:
-                      "assets/icons/cutp.png", // Ganti dengan path gambar aktif
-                  inactiveImagePath:
-                      "assets/icons/cutb.png", // Ganti dengan path gambar tidak aktif
-                  label: "Hair Cut",
-                  isSelected: selectedMenu == "Hair Cut",
-                  onTap: () {
-                    setState(() {
-                      selectedMenu = "Hair Cut";
-                    });
-                  },
-                ),
-                MenuButton(
-                  activeImagePath:
-                      "assets/icons/foamp.png", // Ganti dengan path gambar aktif
-                  inactiveImagePath:
-                      "assets/icons/foamb.png", // Ganti dengan path gambar tidak aktif
-                  label: "Hair Product",
-                  isSelected: selectedMenu == "Hair Product",
-                  onTap: () {
-                    setState(() {
-                      selectedMenu = "Hair Product";
-                    });
-                  },
-                ),
-                MenuButton(
-                  activeImagePath:
-                      "assets/icons/Locationp.png", // Ganti dengan path gambar aktif
-                  inactiveImagePath:
-                      "assets/icons/Locationb.png", // Ganti dengan path gambar tidak aktif
-                  label: "Barbershop",
-                  isSelected: selectedMenu == "Barbershop",
-                  onTap: () {
-                    setState(() {
-                      selectedMenu = "Barbershop";
-                    });
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(

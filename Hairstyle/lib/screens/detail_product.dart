@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DetailHaircut extends StatelessWidget {
-  const DetailHaircut({super.key});
+class DetailProduct extends StatelessWidget {
+  const DetailProduct({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class DetailHaircut extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Gambar utama potongan rambut
+              // Gambar utama produk dengan indikator carousel
               Stack(
                 children: [
                   ClipRRect(
@@ -20,7 +20,7 @@ class DetailHaircut extends StatelessWidget {
                       bottomRight: Radius.circular(16),
                     ),
                     child: Image.asset(
-                      'assets/images/haircut.jpeg', // Ganti dengan path gambar potongan rambut
+                      'assets/images/hair_pomade.jpeg', // Ganti dengan path gambar produk
                       width: double.infinity,
                       height: 300,
                       fit: BoxFit.cover,
@@ -36,22 +36,42 @@ class DetailHaircut extends StatelessWidget {
                       },
                     ),
                   ),
+                  Positioned(
+                    bottom: 16,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        5, // Jumlah indikator carousel
+                        (index) => Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: index == 1 ? Colors.white : Colors.grey[400],
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
 
-              // Informasi potongan rambut
+              // Informasi produk
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Nama dan rating
+                    // Nama produk dan rating
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Buzz Cut",
+                          "Pomade",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
@@ -78,7 +98,7 @@ class DetailHaircut extends StatelessWidget {
 
                     // Deskripsi
                     Text(
-                      "A buzz cut is a short and neat hairstyle, typically achieved using electric clippers set to a low guard number (usually between 1 and 3). This style results in hair being cropped close to the scalp, leaving only a small amount of length.",
+                      "Pomade is a hairstyling product known for its ability to provide a slick, shiny look with a strong hold. It has been popular for decades and is often used to create classic, smooth hairstyles like the pompadour, slick-back, or side-part.",
                       style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       textAlign: TextAlign.justify,
                     ),
@@ -95,14 +115,13 @@ class DetailHaircut extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
 
-                    // Tag wajah
+                    // Tag rambut
                     Wrap(
                       spacing: 8.0,
                       runSpacing: 8.0,
                       children: [
-                        _buildFaceTag("Diamond"),
-                        _buildFaceTag("Square"),
-                        _buildFaceTag("Oval"),
+                        _buildHairTag("Straight hair"),
+                        _buildHairTag("Wavy hair"),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -132,7 +151,7 @@ class DetailHaircut extends StatelessWidget {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.asset(
-                            'assets/images/haircut_gallery_$index.jpeg', // Ganti dengan gambar galeri potongan rambut
+                            'assets/images/product_gallery_$index.jpeg', // Ganti dengan gambar galeri produk
                             fit: BoxFit.cover,
                           ),
                         );
@@ -148,7 +167,7 @@ class DetailHaircut extends StatelessWidget {
     );
   }
 
-  Widget _buildFaceTag(String label) {
+  Widget _buildHairTag(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
