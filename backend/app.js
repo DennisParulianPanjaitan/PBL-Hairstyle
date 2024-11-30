@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import authRoutes from './routes/auth.routes.js'; // Importing routes
-import { dotenv } from 'dotenv';
+// import { dotenv } from 'dotenv';
 import { populateDB, getUsernameById, getUserByUserName } from './databases/populate.postgre.js';
 
 const app = express();
