@@ -12,7 +12,6 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
-    "@supabase/supabase-js": "^2.46.2",
     "@vercel/postgres": "^0.10.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
