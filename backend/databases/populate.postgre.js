@@ -37,7 +37,8 @@ export async function populateDB() {
 };
 export async function getUsernameById(userId) {
   const result = await sql`
-    SELECT username, email
+
+  SELECT username, email
       FROM users
       WHERE id = ${userId};
   `;
