@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uts_linkaja/screens/contact_us.dart';
 import 'package:uts_linkaja/screens/help_support_screen.dart';
+import 'package:uts_linkaja/screens/history.dart';
 import 'package:uts_linkaja/screens/privacy_policy_screen.dart';
 import 'package:uts_linkaja/screens/splash_screen.dart';
 
@@ -172,7 +173,14 @@ class ProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
               // Menu Items
-              _buildMenuItem('History Scan', Icons.history),
+              _buildMenuItem('History Scan', Icons.history, onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HistoryScreen(),
+                  ),
+                );
+              }),
               _buildMenuItem('Language', Icons.language),
               _buildMenuItem('Privacy and Policy', Icons.privacy_tip_outlined,
                   onTap: () {

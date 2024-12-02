@@ -6,7 +6,7 @@ node_modules/
 .env
 .env.local
 .env.production
-.env.development
+# .env.development
 
 # # npm package lock - Enable others to get the latest compatible versions of this project dependencies
 # package-lock.json
