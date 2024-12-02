@@ -20,7 +20,7 @@ class DetailProduct extends StatelessWidget {
                       bottomRight: Radius.circular(16),
                     ),
                     child: Image.asset(
-                      'assets/images/hair_pomade.jpeg', // Ganti dengan path gambar produk
+                      'assets/images/hair_pomade.png', // Ganti dengan path gambar produk
                       width: double.infinity,
                       height: 300,
                       fit: BoxFit.cover,

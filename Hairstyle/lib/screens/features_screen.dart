@@ -1,387 +1,212 @@
 import 'package:flutter/material.dart';
-import 'package:uts_linkaja/screens/detail_haircut.dart';
-import 'package:uts_linkaja/screens/detail_product.dart';
-import 'package:uts_linkaja/screens/detail_barber.dart'; // Tambahkan jika ada
-import '../widgets/menu_button.dart'; // Tambahkan jika ada
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/features/features_bloc.dart';
+import '../bloc/features/features_event.dart';
+import '../bloc/features/features_state.dart';
+import '../widgets/menu_button.dart';
+import '../widgets/haircut_item.dart';
+import '../widgets/hairproduct_item.dart';
+import '../widgets/barbershop_item.dart';
 
-class FeaturesPage extends StatefulWidget {
-  @override
-  _FeaturesPageState createState() => _FeaturesPageState();
-}
-
-class _FeaturesPageState extends State<FeaturesPage> {
-  int _currentIndex = 0;
-
-  // Variabel untuk menyimpan status bookmark secara terpisah
-  Set<int> bookmarkedHaircuts = {};
-  Set<int> bookmarkedProducts = {};
-  Set<int> bookmarkedBarbershops = {};
-
+class FeaturesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 50.0),
-          Container(
-            height: 60,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  MenuButton(
-                    activeImagePath: 'assets/icons/cutp.png',
-                    inactiveImagePath: 'assets/icons/cut3.png',
-                    label: 'Hair Cut',
-                    isSelected: _currentIndex == 0,
-                    onTap: () {
-                      setState(() {
-                        _currentIndex = 0;
-                      });
-                    },
+    return BlocProvider(
+      create: (context) => FeaturesBloc(),
+      child: Scaffold(
+        body: Column(
+          children: [
+            SizedBox(height: 50.0),
+            BlocBuilder<FeaturesBloc, FeaturesState>(
+              builder: (context, state) {
+                return Container(
+                  height: 60,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      MenuButton(
+                        activeImagePath: 'assets/icons/cutp.png',
+                        inactiveImagePath: 'assets/icons/cut3.png',
+                        label: 'Hair Cut',
+                        isSelected: state.currentTabIndex == 0,
+                        onTap: () =>
+                            context.read<FeaturesBloc>().add(SelectTabEvent(0)),
+                      ),
+                      MenuButton(
+                        activeImagePath: 'assets/icons/foamp.png',
+                        inactiveImagePath: 'assets/icons/foamb.png',
+                        label: 'Hair Product',
+                        isSelected: state.currentTabIndex == 1,
+                        onTap: () =>
+                            context.read<FeaturesBloc>().add(SelectTabEvent(1)),
+                      ),
+                      MenuButton(
+                        activeImagePath: 'assets/icons/Locationp.png',
+                        inactiveImagePath: 'assets/icons/Locationb.png',
+                        label: 'BarberShop',
+                        isSelected: state.currentTabIndex == 2,
+                        onTap: () =>
+                            context.read<FeaturesBloc>().add(SelectTabEvent(2)),
+                      ),
+                    ],
                   ),
-                  MenuButton(
-                    activeImagePath: 'assets/icons/foamp.png',
-                    inactiveImagePath: 'assets/icons/foamb.png',
-                    label: 'Hair Product',
-                    isSelected: _currentIndex == 1,
-                    onTap: () {
-                      setState(() {
-                        _currentIndex = 1;
-                      });
-                    },
-                  ),
-                  MenuButton(
-                    activeImagePath: 'assets/icons/Locationp.png',
-                    inactiveImagePath: 'assets/icons/Locationb.png',
-                    label: 'BarberShop',
-                    isSelected: _currentIndex == 2,
-                    onTap: () {
-                      setState(() {
-                        _currentIndex = 2;
-                      });
-                    },
-                  ),
-                ],
+                );
+              },
+            ),
+            Expanded(
+              child: BlocBuilder<FeaturesBloc, FeaturesState>(
+                builder: (context, state) {
+                  switch (state.currentTabIndex) {
+                    case 0:
+                      return _buildHairCutTab(
+                          context, state.bookmarkedHaircuts);
+                    case 1:
+                      return _buildHairProductTab(
+                          context, state.bookmarkedProducts);
+                    case 2:
+                      return _buildBarberShopTab(
+                          context, state.bookmarkedBarbershops);
+                    default:
+                      return Container();
+                  }
+                },
               ),
             ),
-          ),
-          Expanded(
-            child: IndexedStack(
-              index: _currentIndex,
-              children: [
-                _buildHairCutTab(),
-                _buildHairProductTab(),
-                _buildBarberShopTab(),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildHairCutTab() {
+  Widget _buildHairCutTab(BuildContext context, Set<int> bookmarks) {
+    final List<Map<String, dynamic>> haircuts = [
+      {
+        "title": "Buzz Cut",
+        "description":
+            "Buzzcut adalah gaya rambut sangat pendek yang dicukur merata di seluruh kepala.",
+        "faceShapes": ["Oval", "Round", "Square"],
+        "isBookmarked": false,
+      },
+      {
+        "title": "Crew Cut",
+        "description":
+            "Crew Cut adalah gaya rambut pendek klasik yang cocok untuk berbagai bentuk wajah.",
+        "faceShapes": ["Oval", "Diamond", "Square"],
+        "isBookmarked": false,
+      },
+      {
+        "title": "Pompadour",
+        "description":
+            "Pompadour adalah gaya rambut ikonik dengan bagian depan yang tinggi.",
+        "faceShapes": ["Oval", "Triangle", "Square"],
+        "isBookmarked": false,
+      },
+    ];
+
     return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: 5,
+      itemCount: haircuts.length,
       itemBuilder: (context, index) {
-        return _buildHairCutItem(
-          context,
-          index,
-          'assets/images/photo.png',
-          "Buzzcut",
-          "Buzzcut adalah gaya rambut sangat pendek yang dicukur merata diseluruh kepala",
+        final item = haircuts[index];
+        return HaircutItem(
+          title: item["title"] as String,
+          description: item["description"] as String,
+          faceShapes: item["faceShapes"] as List<String>,
+          isBookmarked: bookmarks.contains(index),
+          onBookmarkTap: () {
+            context
+                .read<FeaturesBloc>()
+                .add(ToggleBookmarkEvent(index, "HairCut"));
+          },
         );
       },
     );
   }
 
-  Widget _buildHairProductTab() {
-    return GridView.builder(
-      padding: EdgeInsets.all(16.0),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10.0,
-        mainAxisSpacing: 10.0,
-        childAspectRatio: 0.7,
-      ),
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        return _buildProductItem(
-          index,
-          'assets/images/hair_product.jpeg',
-          "Hair Powder",
-        );
+  Widget _buildHairProductTab(BuildContext context, Set<int> bookmarks) {
+    final List<Map<String, dynamic>> products = [
+      {
+        "title": "Hair Powder",
+        "image":
+            "assets/images/hair_powder.png", // Ganti path sesuai file gambar kedua
+        "isBookmarked": false,
       },
-    );
-  }
+      {
+        "title": "Hair Clay",
+        "image": "assets/images/hair_clay.png", // Ganti sesuai kebutuhan
+        "isBookmarked": false,
+      },
+      {
+        "title": "Pomade",
+        "image": "assets/images/hair_pomade.png", // Ganti sesuai kebutuhan
+        "isBookmarked": false,
+      },
+      {
+        "title": "Hair Spray",
+        "image": "assets/images/hair_clay.png", // Ganti sesuai kebutuhan
+        "isBookmarked": false,
+      },
+    ];
 
-  Widget _buildBarberShopTab() {
-    return GridView.builder(
-      padding: EdgeInsets.all(16.0),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10.0,
-        mainAxisSpacing: 10.0,
-        childAspectRatio: 0.8,
-      ),
-      itemCount: 8,
-      itemBuilder: (context, index) {
-        return _buildBarberShopItem(
-          index,
-          'assets/images/barbershop.jpeg',
-          "GoodFellas",
-          "Rp 20.000 - 500.000",
-        );
-      },
-    );
-  }
-
-  Widget _buildHairCutItem(BuildContext context, int index, String imagePath,
-      String name, String desc) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailHaircut(),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(left: 22.0, right: 22.0, top: 10.0),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Color(0xFF1B1A55),
-            width: 2,
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+          childAspectRatio: 0.75, // Proporsi lebih tinggi untuk estetika
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        imagePath,
-                        width: 90,
-                        height: 90,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: TextStyle(
-                              color: Color(0xFF1B1A55),
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            desc,
-                            style: TextStyle(
-                              color: Color(0xFF1B1A55),
-                              fontSize: 11,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                            textAlign: TextAlign.justify,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Positioned(
-                  top: -15,
-                  right: -15,
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        if (bookmarkedHaircuts.contains(index)) {
-                          bookmarkedHaircuts.remove(index);
-                        } else {
-                          bookmarkedHaircuts.add(index);
-                        }
-                      });
-                    },
-                    icon: Icon(
-                      bookmarkedHaircuts.contains(index)
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
-                      color: bookmarkedHaircuts.contains(index)
-                          ? Color(0xFF007BFF)
-                          : Color(0xFF1B1A55),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Oval   |   Round   |   Square',
-              style: TextStyle(
-                color: Color(0xFF1B1A55),
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final item = products[index];
+          return HairProductItem(
+            title: item["title"] as String,
+            imagePath: item["image"] as String,
+            isBookmarked: bookmarks.contains(index),
+            onBookmarkTap: () {
+              context
+                  .read<FeaturesBloc>()
+                  .add(ToggleBookmarkEvent(index, "HairProduct"));
+            },
+          );
+        },
       ),
     );
   }
 
-  Widget _buildProductItem(int index, String imagePath, String productName) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailProduct(),
-          ),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              blurRadius: 6,
-              offset: Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                  child: Image.asset(
-                    imagePath,
-                    height: 190,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  top: 5,
-                  right: 10,
-                  child: IconButton(
-                    icon: Icon(
-                      bookmarkedProducts.contains(index)
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
-                      color: bookmarkedProducts.contains(index)
-                          ? Colors.amber
-                          : Color(0xFF1B1A55),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        if (bookmarkedProducts.contains(index)) {
-                          bookmarkedProducts.remove(index);
-                        } else {
-                          bookmarkedProducts.add(index);
-                        }
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                productName,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 19,
-                  color: Color(0xFF1B1A55),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+Widget _buildBarberShopTab(BuildContext context, Set<int> bookmarks) {
+  final List<Map<String, dynamic>> barbershops = [
+    {
+      "title": "GoodFellas",
+      "description": "Rp 20.000 - 500.000",
+      "imagePath": "assets/images/barbershop.jpeg",  // Path to the image
+      "isBookmarked": false,
+    },
+    {
+      "title": "GoodFellas",
+      "description": "Rp 20.000 - 500.000",
+      "imagePath": "assets/images/barbershop.jpeg",  // Path to the image
+      "isBookmarked": false,
+    },
+  ];
 
-  Widget _buildBarberShopItem(
-      int index, String imagePath, String name, String priceRange) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailBarber(),
-          ),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              child: Image.asset(
-                imagePath,
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                name,
-                style: TextStyle(
-                  color: Color(0xFF1B1A55),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Text(
-              priceRange,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  return ListView.builder(
+    itemCount: barbershops.length,
+    itemBuilder: (context, index) {
+      final item = barbershops[index];
+      return BarberShopItem(
+        title: item["title"] as String,
+        description: item["description"] as String,
+        imagePath: item["imagePath"] as String,
+        isBookmarked: bookmarks.contains(index),
+        onBookmarkTap: () {
+          context
+              .read<FeaturesBloc>()
+              .add(ToggleBookmarkEvent(index, "BarberShop"));
+        },
+      );
+    },
+  );
+}
+
 }

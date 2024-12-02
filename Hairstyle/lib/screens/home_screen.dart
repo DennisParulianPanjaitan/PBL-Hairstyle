@@ -184,17 +184,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     {
                       "name": "Pomade",
                       "description": "Shine • Hold • Texture",
-                      "image": "assets/images/pomade.jpeg",
+                      "image": "assets/images/hair_pomade.png",
                     },
                     {
                       "name": "Hair Clay",
                       "description": "Nourishes and styles the beard",
-                      "image": "assets/images/hair_wax.jpeg",
+                      "image": "assets/images/hair_clay.png",
                     },
                     {
                       "name": "Hair Powder",
                       "description": "Volume • Matte finish",
-                      "image": "assets/images/hair_powder.jpeg",
+                      "image": "assets/images/hair_powder.png",
                     },
                   ];
 
