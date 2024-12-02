@@ -37,13 +37,13 @@ export async function populateDB() {
 };
 export async function getUsernameById(userId) {
   const result = await sql`
-    SELECT username
+    SELECT username, email
       FROM users
       WHERE id = ${userId};
   `;
 
   if (result.rows.length > 0) {
-    return result.rows[0].username; // Return the username
+    return result.rows[0].email; // Return the username
   } else {
     return 'No user found with the given ID.';
   }

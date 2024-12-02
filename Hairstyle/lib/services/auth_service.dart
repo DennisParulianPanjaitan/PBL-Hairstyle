@@ -25,7 +25,8 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    detectPlatform();
+    // detectPlatform();
+    baseUrl = 'http://10.0.2.2:3000';
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: {'Content-Type': 'application/json'},
