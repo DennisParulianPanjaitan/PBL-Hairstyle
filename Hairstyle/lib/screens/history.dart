@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uts_linkaja/screens/recomendation_page.dart';
 import 'detail_haircut.dart';
 
 class HistoryScreen extends StatelessWidget {
@@ -99,14 +100,14 @@ class HistoryScreen extends StatelessWidget {
     String date,
   ) {
     return GestureDetector(
-      // onTap: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => DetailHaircut(),
-      //     ),
-      //   );
-      // },
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecommendationScreen(),
+          ),
+        );
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10.0),
         padding: const EdgeInsets.all(12),
