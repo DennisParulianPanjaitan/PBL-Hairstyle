@@ -3,6 +3,7 @@ import '../services/auth_service.dart';
 import 'home_page.dart'; // Import halaman tujuan
 import 'forgot_password.dart';
 import 'register.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,12 +33,19 @@ class _LoginPageState extends State<LoginPage> {
       );
       // Handle success
       print('Login successful: $response');
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('jwt_token', response['token']);
+
+      // Navigate to HomePage
+      if (mounted) { // Periksa apakah widget masih aktif
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(), // Navigate to the home screen
+          builder: (context) => HomePage()
         ),
       );
+    }
     } catch (e) {
       setState(() {
         _errorMessage = e.toString();
@@ -181,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                     // Login Button
                     ElevatedButton(
                       onPressed: // _isLoading ? null : _login,
-                      () {
+                          () {
                         // Navigasi ke halaman home_page.dart
                         Navigator.push(
                           context,

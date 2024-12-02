@@ -12,6 +12,8 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   'http://localhost:', // Untuk web dari localhost
   'http://http://10.0.2.2:', // Ganti dengan IP komputer host Anda
+  'http://http://192',
+  'http://http://196',
 ];
 app.use(cors({
   origin: /* '*', */ (origin, callback) => {  
