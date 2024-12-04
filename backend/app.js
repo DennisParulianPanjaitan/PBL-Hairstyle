@@ -4,6 +4,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.routes.js'; // Importing routes
 // import { dotenv } from 'dotenv';
 import { populateDB, getUsernameById, getUserByUserName } from './databases/populate.postgre.js';
+import { Sequelize } from 'sequelize';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,9 +37,19 @@ app.get('/populate', async (req, res) => {
 });
 app.get('/user/:id', async (req, res, next) => {
   const userId = parseInt(req.params.id, 10);
-  const username = await getUsernameById(userId); // If any error occurs, Express will handle it
-  const userData = await getUserByUserName(username);
-  res.send(`${username} and ${userData}`);
+  // const username = await getUsernameById(userId); // If any error occurs, Express will handle it
+  // const userData = await getUserByUserName(username);
+  // res.send(`${username} and ${userData}`);
+  // res.send(username);
+  // console.log(username);
+  const sequelize = new Sequelize('njczidlb_hairmate', 'njczidlb_nioke', 'nioke8090', {
+    host: '109.110.188.74',
+    dialect: /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */ 'mysql'
+  });
+  const [results] = await sequelize.query(`SELECT username, email
+  FROM users
+  WHERE id = ${userId};`);
+  res.send(results[0].username);
 });
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
