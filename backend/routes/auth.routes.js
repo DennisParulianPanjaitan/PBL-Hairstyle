@@ -4,6 +4,8 @@ import { Router } from 'express';
 import { compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { getUserByUserName } from '../databases/populate.postgre.js';
+// import dbPool from '../databases/config.js';
+import db from '../databases/config.js';
 
 // const supabase = createClient('https://vcixgtpgalxcdxxgdxpe.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjaXhndHBnYWx4Y2R4eGdkeHBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI3NzQ5NTEsImV4cCI6MjA0ODM1MDk1MX0.qZa9Sxw7nBIssb1zVMEkVqcGPJ0hIBQxXlvYyZ618Uw');
 dotenv.config();  // Load environment variables
@@ -26,9 +28,9 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY;
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    const userData = getUserByUserName(username);
+    const [ userData ] = await db.query(`SELECT id, username, email, password FROM users WHERE username = "${username}" OR email = "${username}";`);
     // Find user by username or email
-    const user = (await userData).find((user) => user['username'] === username || user['email'] === username);
+    const user = userData.find((user) => user['username'] === username || user['email'] === username);
     if (!user) {
       return res.status(401).json({ message: 'Username salah' });
     }
@@ -43,7 +45,7 @@ router.post('/login', async (req, res) => {
     const token = sign({ id: user.id, username: user.username }, SECRET_KEY, {
       expiresIn: '2h',
     });
-    return res.status(200).json({ message: 'Login successful', token });
+    return res.status(200).json({ message: 'Login successful', token, id: user.id, username: user.username });
   });
   
   // Protected route
