@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import 'package:multicast_dns/multicast_dns.dart';
+// import 'package:multicast_dns/multicast_dns.dart';
 
 class AuthService {
+  // 2 unused variables, just ignore them 
   String laptopku = '192.168.0.103';
   String portLaptopku = '3000';
 
   // var urlList = ['http://localhost', 'http://10.0.2.2/auth'];
-  String baseUrl = ''; // Change this to your server's URL if needed
+  String baseUrl = 'http://192.168.0.100:3000/auth'; // Change this to your server's URL if needed
 
   void detectPlatform() {
     if (kIsWeb) {
@@ -26,14 +27,13 @@ class AuthService {
 
   Future<Map<String, dynamic>> login(String username, String password) async {
     // detectPlatform();
-    baseUrl = 'http://10.0.2.2:3000';
+    // baseUrl = 'http://10.0.2.2:3000';
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'username': username, 'password': password}),
     );
-    
-
+     
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
