@@ -5,10 +5,17 @@ import authRoutes from './routes/auth.routes.js'; // Importing routes
 // import { dotenv } from 'dotenv';
 import { populateDB, getUsernameById, getUserByUserName } from './databases/populate.postgre.js';
 import { Sequelize } from 'sequelize';
+import http from 'http';
+
+// Create an HTTP server
+// const server = http.createServer((req, res) => {
+//   res.statusCode = 200;
+//   res.setHeader('Content-Type', 'text/plain');
+//   res.end('Hello, World!\n');
+// });
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
+const PORT = 3001;
 // Allow specific origin
 const allowedOrigins = [
   'http://localhost:', // Untuk web dari localhost
@@ -17,11 +24,12 @@ const allowedOrigins = [
   'http://http://196',
 ];
 app.use(cors({
-  origin: /* '*', */ (origin, callback) => {  
-    if ( !origin || allowedOrigins.some(allowed_origin => origin.startsWith(allowed_origin)) ){ 
-      callback(null, true); 
-    } else callback( new Error('Not allowed by CORS') );// Tolak origin lain
-  },  
+  origin: '*',
+//     (origin, callback) => {  
+//     if ( !origin || allowedOrigins.some(allowed_origin => origin.startsWith(allowed_origin)) ){ 
+//       callback(null, true); 
+//     } else callback( new Error('Not allowed by CORS') );// Tolak origin lain
+//   },  
   methods: ['GET', 'POST'],   // Allowed HTTP methods
   credentials: true           // Allow cookies and credentials
 }));

@@ -190,16 +190,16 @@ class _LoginPageState extends State<LoginPage> {
                     // Login Button
                     ElevatedButton(
                       onPressed: 
-                        // _isLoading ? null : _login,
-                          () {
-                        // Navigasi ke halaman home_page.dart
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ),
-                        );
-                      },
+                        _isLoading ? null : _login,
+                      //     () {
+                      //   // Navigasi ke halaman home_page.dart
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => HomePage(),
+                      //     ),
+                      //   );
+                      // },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1B1A55), // Button color
                         padding: EdgeInsets.symmetric(vertical: 14),
