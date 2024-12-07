@@ -8,7 +8,7 @@ import db from "../databases/config.js";
 const router = Router();
 // const otps = generateOTP();
 import { customAlphabet } from 'nanoid/non-secure';
-const nanoid = customAlphabet('1234567890abcdef', 10);
+const nanoid = customAlphabet('1234567890abcdef', 4);
 // Konfigurasi Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
