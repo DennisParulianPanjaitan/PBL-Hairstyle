@@ -1,7 +1,74 @@
 import 'package:flutter/material.dart';
+import 'otp_page.dart'; // Pastikan VerificationPage sudah diimport
+import '../services/regist_service.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+  @override
+  // Widget build(BuildContext context) {
+  //   // TODO: implement build
+  //   throw UnimplementedError();
+  // }
+  // _RegisterPageState createState() => _RegisterPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final OTPService _otpService = OTPService();
+  String _errorMessage = '';
+  // Register logic
+  void _register() async {
+    String username = usernameController.text;
+    String email = emailController.text;
+
+    setState(() {
+      _errorMessage = '';
+    });
+    try {
+      bool otpSent = await _otpService.sendOtp(username, email);
+      if (otpSent) {
+        // Navigate to OTP page if OTP is sent
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OtpPage(username: username, email: email)),
+        );
+      } else {
+        // // Show error if OTP sending fails
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Failed to send OTP')),
+        // );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+      _showDialogPop(_errorMessage); // Tampilkan popup error - can be replaced with String or whatever
+    } finally {}
+  }
+  void _showDialogPop(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Registrasi Gagal'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Menutup dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +120,7 @@ class RegisterPage extends StatelessWidget {
                     SizedBox(height: 24),
                     // Username TextField
                     TextField(
+                      controller: usernameController,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person),
                         labelText: "Username",
@@ -64,6 +132,7 @@ class RegisterPage extends StatelessWidget {
                     SizedBox(height: 16),
                     // Email TextField
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.email),
                         labelText: "Email",
@@ -75,6 +144,7 @@ class RegisterPage extends StatelessWidget {
                     SizedBox(height: 16),
                     // Password TextField
                     TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.lock),
@@ -87,9 +157,16 @@ class RegisterPage extends StatelessWidget {
                     SizedBox(height: 24),
                     // Register Button
                     ElevatedButton(
-                      onPressed: () {
-                        // Tambahkan aksi untuk proses pendaftaran
-                      },
+                      onPressed: 
+                        _register,
+                      // () {
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => OtpPage(),
+                      //     ),
+                      //   );
+                      // },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1B1A55), // Button color
                         padding: EdgeInsets.symmetric(vertical: 14),

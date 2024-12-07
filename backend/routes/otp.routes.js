@@ -1,27 +1,33 @@
 import { Router } from "express";
-import generateOTP from "../utils/generateOTP.js";
+import 'dotenv/config';
+// import generateOTP from "../utils/generateOTP.js";
 import nodemailer from 'nodemailer';
 import db from "../databases/config.js";
 // import router from "./auth.routes.js";
 
 const router = Router();
 // const otps = generateOTP();
-
+import { customAlphabet } from 'nanoid/non-secure';
+const nanoid = customAlphabet('1234567890abcdef', 10);
 // Konfigurasi Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-    user: 'hairstyle.k13a@gmail.com',
-    pass: 'AfrizalDennisDidoPaksi',
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
 async function simpanOtp (otp, username, email) {
   await db.query(`
-    UPDATE users 
-      SET otp = ${otp}
-      WHERE username = ${username} AND email = ${email};
+    INSERT INTO users (username, email, otp, status)
+    VALUES ('${username}', '${email}', '${otp}', 'register');
   `);
+  // await db.query(`
+  //   UPDATE users 
+  //     SET otp = ${otp}
+  //     WHERE username = ${username} AND email = ${email};
+  // `);
 }
 async function getOtp (username, email) {
   const [ result ] = await db.query(`
@@ -44,8 +50,8 @@ router.post('/send-otp', async (req, res) => {
     return res.status(400).json({ error: 'Email and username is required' });
   }
 
-  const otp = generateOTP();
-  await simpanOtp(otp, email, username); // Simpan OTP sementara
+  const otp = nanoid();
+  await simpanOtp(otp, username, email); // Simpan OTP sementara
 
   try {
     await transporter.sendMail({

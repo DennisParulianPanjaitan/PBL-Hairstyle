@@ -41,7 +41,8 @@ app.get('/user/:id', async (req, res, next) => {
     SELECT username, email
       FROM users
       WHERE id = ${userId};`);
-  res.send(results[0].username);
+  // res.send(results[0].username);
+  res.send(results);
 });
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
