@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 abstract class LoginState extends Equatable {
+  const LoginState();
+
   @override
   List<Object> get props => [];
 }
@@ -12,7 +14,7 @@ class LoginLoading extends LoginState {}
 class LoginSuccess extends LoginState {
   final String token;
 
-  LoginSuccess({required this.token});
+  const LoginSuccess({required this.token});
 
   @override
   List<Object> get props => [token];
@@ -21,7 +23,7 @@ class LoginSuccess extends LoginState {
 class LoginFailure extends LoginState {
   final String error;
 
-  LoginFailure({required this.error});
+  const LoginFailure({required this.error});
 
   @override
   List<Object> get props => [error];

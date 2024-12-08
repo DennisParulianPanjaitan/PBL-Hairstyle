@@ -7,7 +7,7 @@ import { populateDB, getUsernameById, getUserByUserName } from './databases/popu
 import { Sequelize } from 'sequelize';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Allow specific origin
 const allowedOrigins = [

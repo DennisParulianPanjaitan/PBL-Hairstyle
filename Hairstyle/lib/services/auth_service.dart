@@ -9,7 +9,7 @@ class AuthService {
   String portLaptopku = '3000';
 
   // var urlList = ['http://localhost', 'http://10.0.2.2/auth'];
-  String baseUrl = 'http://192.168.0.100:3000/auth'; // Change this to your server's URL if needed
+  String baseUrl = 'http://192.168.1.113:3000/auth'; // Change this to your server's URL if needed
 
   void detectPlatform() {
     if (kIsWeb) {
