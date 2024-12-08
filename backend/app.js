@@ -8,6 +8,7 @@ import { Sequelize } from 'sequelize';
 import http from 'http';
 import db from './databases/config.js';
 import otpRoutes from './routes/otp.routes.js'; // Importing routes
+import UserRoutes from './routes/user.routes.js'; // Importing routes
 
 const app = express();
 const PORT = 3001;
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 });
 app.use('/auth', authRoutes); // Use authentication routes
 app.use('/otp', otpRoutes); // Add OTP routes
+app.use('/user', UserRoutes); 
  
 app.get('/populate', async (req, res) => {
   await populateDB(); // Call the function to populate the database

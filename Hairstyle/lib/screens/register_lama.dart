@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login.dart'; // Import LoginPage
-import '../services/user_service.dart';
+import 'otp_page.dart'; // Pastikan VerificationPage sudah diimport
+import '../services/regist_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -19,25 +19,23 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  final UserService _userService = UserService();
+  final OTPService _otpService = OTPService();
   String _errorMessage = '';
   // Register logic
   void _register() async {
     String username = usernameController.text;
     String email = emailController.text;
-    String password = passwordController.text;
 
     setState(() {
       _errorMessage = '';
     });
     try {
-      bool response = await _userService.registrasi(username, email, password);
+      bool response = await _otpService.sendOtp(username, email);
       if (response) {
         // Navigate to OTP page if OTP is sent
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => LoginPage()),
+          MaterialPageRoute(builder: (context) => OtpPage(username: username, email: email)),
         );
       } else {
         // // Show error if OTP sending fails
@@ -50,11 +48,9 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         _errorMessage = e.toString();
       });
-      _showDialogPop(
-          _errorMessage); // Tampilkan popup error - can be replaced with String or whatever
+      _showDialogPop(_errorMessage); // Tampilkan popup error - can be replaced with String or whatever
     } finally {}
   }
-
   void _showDialogPop(String message) {
     showDialog(
       context: context,
@@ -162,7 +158,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     SizedBox(height: 24),
                     // Register Button
                     ElevatedButton(
-                      onPressed: _register,
+                      onPressed: 
+                        _register,
+                      // () {
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => OtpPage(),
+                      //     ),
+                      //   );
+                      // },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1B1A55), // Button color
                         padding: EdgeInsets.symmetric(vertical: 14),
