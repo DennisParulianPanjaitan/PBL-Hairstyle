@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 
 class OTPService {
   // Endpoint for sending OTP
-  static const String sendOtpUrl = 'http://localhost:3001/otp';
+  static const String sendOtpUrl = 'http://160.19.166.177:3001/otp';
   // Endpoint for verifying OTP
-  static const String verifyOtpUrl = 'http://localhost:3001/otp';
+  static const String verifyOtpUrl = 'http://160.19.166.177:3001/otp';
 
   // Send OTP to the backend
   Future<bool> sendOtp(String username, String email) async {

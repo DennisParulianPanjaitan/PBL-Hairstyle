@@ -11,11 +11,23 @@ import { customAlphabet } from 'nanoid/non-secure';
 import { Error } from "sequelize";
 const nanoid = customAlphabet('1234567890abcdef', 4);
 // Konfigurasi Nodemailer
+// const transporter = nodemailer.createTransport({
+//   service: 'Gmail',
+//   auth: {
+//     user: process.env.EMAIL_USERNAME,
+//     pass: process.env.EMAIL_PASSWORD,
+//   },
+// });
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  host: "smtp.gmail.com",
+  port: 587, // Gunakan 465 jika memakai SSL
+  secure: false, // Ubah menjadi true jika port 465
   auth: {
-    user: process.env.EMAIL_USERNAME,
-    pass: process.env.EMAIL_PASSWORD,
+    user: process.env.EMAIL_USERNAME, // Ganti dengan email Gmail Anda
+    pass: process.env.EMAIL_PASSWORD,   // Gunakan password aplikasi (bukan password Gmail biasa)
+  },
+  tls: {
+    rejectUnauthorized: true,
   },
 });
 
@@ -61,6 +73,7 @@ router.post('/send-otp', async (req, res) => {
   await simpanOtp(otp, username, email); // Simpan OTP sementara
   try {
     await transporter.sendMail({
+      from: process.env.EMAIL_USERNAME,
       to: email,
       subject: 'Kode OTP - Aplikasi Rekomendasi Hairstyle',
       text: `Your OTP is: ${otp}\nJika Anda tidak merasa telah mendaftar dengan email ini, Anda dapat mengabaikan email ini dan pendaftaran tidak akan berhasil`,
