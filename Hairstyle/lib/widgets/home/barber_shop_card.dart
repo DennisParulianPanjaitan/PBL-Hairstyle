@@ -20,31 +20,68 @@ class BarberShopCard extends StatelessWidget {
       width: 250,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 6)],
+        borderRadius: BorderRadius.circular(2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3), // Warna shadow
+            spreadRadius: 2, // Jarak shadow dari elemen
+            blurRadius: 10, // Menentukan seberapa kabur shadow
+            offset: Offset(0, 4), // Posisi shadow (horizontal, vertical)
+          ),
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
+          // Gambar latar belakang
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.asset(imagePath, height: 100, width: double.infinity, fit: BoxFit.cover),
+            child: Image.asset(
+              imagePath,
+              height: 180, // Mengatur tinggi gambar latar belakang
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          // Teks dan informasi di depan gambar
+          Positioned(
+            left: 12,
+            bottom: 12,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
                 SizedBox(height: 4),
-                Text(price, style: TextStyle(color: Colors.grey[600])),
-                SizedBox(height: 6),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.amber, size: 16),
-                    SizedBox(width: 4),
-                    Text(rating.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
-                  ],
+                Text(
+                  price,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Bintang dan rating di pojok kanan bawah
+          Positioned(
+            right: 12, // Menempatkan di pojok kanan
+            bottom: 12, // Menempatkan di bawah
+            child: Row(
+              children: [
+                Icon(Icons.star, color: Colors.amber, size: 16),
+                SizedBox(width: 4),
+                Text(
+                  rating.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
