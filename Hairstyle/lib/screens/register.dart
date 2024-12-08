@@ -30,8 +30,8 @@ class _RegisterPageState extends State<RegisterPage> {
       _errorMessage = '';
     });
     try {
-      bool otpSent = await _otpService.sendOtp(username, email);
-      if (otpSent) {
+      bool response = await _otpService.sendOtp(username, email);
+      if (response) {
         // Navigate to OTP page if OTP is sent
         Navigator.push(
           context,
@@ -42,6 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
         // ScaffoldMessenger.of(context).showSnackBar(
         //   SnackBar(content: Text('Failed to send OTP')),
         // );
+        throw Exception('Kode OTP gagal terkirim');
       }
     } catch (e) {
       setState(() {
@@ -62,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
               onPressed: () {
                 Navigator.of(context).pop(); // Menutup dialog
               },
-              child: Text('OK'),
+              child: Text('Mengerti'),
             ),
           ],
         );

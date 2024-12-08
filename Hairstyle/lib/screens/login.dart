@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () {
                 Navigator.of(context).pop(); // Menutup dialog
               },
-              child: Text('OK'),
+              child: Text('Mengerti'),
             ),
           ],
         );

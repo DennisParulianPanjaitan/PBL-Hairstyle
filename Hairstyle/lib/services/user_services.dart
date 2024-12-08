@@ -1,42 +1,42 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class OTPService {
+class UserServices {
   // Endpoint for sending OTP
-  static const String sendOtpUrl = 'http://localhost:3001/otp';
-  // Endpoint for verifying OTP
-  static const String verifyOtpUrl = 'http://localhost:3001/otp';
+  String baseUrl = 'http://160.19.166.177:3001/user';
 
   // Send OTP to the backend
-  Future<bool> sendOtp(String username, String email) async {
-    // try {
+  Future<Map<String, dynamic>> updateUser(String username, String email, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/update'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'username': username, 'password': password}),
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to login: ${response.body}');
+    }
+  }
+  Future<bool> deactivateUser(String username, String email) async {
       final response = await http.post(
-        Uri.parse('$sendOtpUrl/send-otp'),
+        Uri.parse('$baseUrl/deactivate'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'username': username, 'email': email}),
       );
       
-      // if (response.statusCode == 200) {
-      //   return true;
-      // } else {
-      //   return false;
-      // }
       if (response.statusCode == 200) {
         return true;
       } else {
         throw Exception('Error sending OTP: ${response.body}');
       }
-  //   } catch (e) {
-  //     // print('Error sending OTP: $e');
-  //     return false;
-  //   }
   }
 
   // Verify OTP sent to the email
   Future<bool> verifyOtp(String username, String email, String otp) async {
     try {
       final response = await http.post(
-        Uri.parse('$verifyOtpUrl/verify-otp'),
+        Uri.parse('$baseUrl/verify-otp'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'username': username, 'email': email, 'otp': otp}),
       );

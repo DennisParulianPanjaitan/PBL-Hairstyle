@@ -4,7 +4,8 @@ import 'package:flutter/foundation.dart';
 
 class AuthService {
   // var urlList = ['http://localhost', 'http://10.0.2.2/auth'];
-  String baseUrl = 'http://160.19.166.177:3001/auth'; // Change this to your server's URL if needed
+  // Endpoint untuk mengakses server
+  String baseUrl = 'http://160.19.166.177:3001/auth'; 
 
   Future<Map<String, dynamic>> login(String username, String password) async {
     final response = await http.post(
