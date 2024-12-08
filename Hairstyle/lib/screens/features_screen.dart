@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/features/features_bloc.dart';
-import '../bloc/features/features_event.dart';
-import '../bloc/features/features_state.dart';
+import '../blocs/features/features_bloc.dart';
+import '../blocs/features/features_event.dart';
+import '../blocs/features/features_state.dart';
 import '../widgets/menu_button.dart';
 import '../widgets/haircut_item.dart';
 import '../widgets/hairproduct_item.dart';
@@ -174,39 +174,38 @@ class FeaturesPage extends StatelessWidget {
     );
   }
 
-Widget _buildBarberShopTab(BuildContext context, Set<int> bookmarks) {
-  final List<Map<String, dynamic>> barbershops = [
-    {
-      "title": "GoodFellas",
-      "description": "Rp 20.000 - 500.000",
-      "imagePath": "assets/images/barbershop.jpeg",  // Path to the image
-      "isBookmarked": false,
-    },
-    {
-      "title": "GoodFellas",
-      "description": "Rp 20.000 - 500.000",
-      "imagePath": "assets/images/barbershop.jpeg",  // Path to the image
-      "isBookmarked": false,
-    },
-  ];
+  Widget _buildBarberShopTab(BuildContext context, Set<int> bookmarks) {
+    final List<Map<String, dynamic>> barbershops = [
+      {
+        "title": "GoodFellas",
+        "description": "Rp 20.000 - 500.000",
+        "imagePath": "assets/images/barbershop.jpeg", // Path to the image
+        "isBookmarked": false,
+      },
+      {
+        "title": "GoodFellas",
+        "description": "Rp 20.000 - 500.000",
+        "imagePath": "assets/images/barbershop.jpeg", // Path to the image
+        "isBookmarked": false,
+      },
+    ];
 
-  return ListView.builder(
-    itemCount: barbershops.length,
-    itemBuilder: (context, index) {
-      final item = barbershops[index];
-      return BarberShopItem(
-        title: item["title"] as String,
-        description: item["description"] as String,
-        imagePath: item["imagePath"] as String,
-        isBookmarked: bookmarks.contains(index),
-        onBookmarkTap: () {
-          context
-              .read<FeaturesBloc>()
-              .add(ToggleBookmarkEvent(index, "BarberShop"));
-        },
-      );
-    },
-  );
-}
-
+    return ListView.builder(
+      itemCount: barbershops.length,
+      itemBuilder: (context, index) {
+        final item = barbershops[index];
+        return BarberShopItem(
+          title: item["title"] as String,
+          description: item["description"] as String,
+          imagePath: item["imagePath"] as String,
+          isBookmarked: bookmarks.contains(index),
+          onBookmarkTap: () {
+            context
+                .read<FeaturesBloc>()
+                .add(ToggleBookmarkEvent(index, "BarberShop"));
+          },
+        );
+      },
+    );
+  }
 }
