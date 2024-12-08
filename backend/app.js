@@ -8,6 +8,7 @@ import { Sequelize } from 'sequelize';
 import http from 'http';
 import db from './databases/config.js';
 import otpRoutes from './routes/otp.routes.js'; // Importing routes
+import UserRoutes from './routes/user.routes.js'; // Importing routes
 
 const app = express();
 const PORT = 3001;
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 });
 app.use('/auth', authRoutes); // Use authentication routes
 app.use('/otp', otpRoutes); // Add OTP routes
+app.use('/user', UserRoutes); 
  
 app.get('/populate', async (req, res) => {
   await populateDB(); // Call the function to populate the database
@@ -50,6 +52,17 @@ app.get('/username/:username', async (req, res, next) => {
 
   // res.send(results[0].username);
   res.send(results);
+});
+app.get('/cekOtp', async (req, res, next) => {
+  // const userId = parseInt(req.params.id, 10);
+  const [ result ] = await db.query(`
+    SELECT otp
+      FROM users
+      WHERE username = 'paksi4' AND email = 'paksi.dh@gmail.com';
+  `);
+  const tipe = typeof result[0].otp;
+  // res.send(results[0].username);
+  res.send(tipe);
 });
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

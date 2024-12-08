@@ -46,6 +46,7 @@ async function simpanOtp (otp, username, email) {
 async function getOtp (username, email) {
   const [ result ] = await db.query(`
     SELECT otp
+      FROM users
       WHERE username = '${username}' AND email = '${email}';
   `);
   return result[0].otp;
@@ -54,7 +55,7 @@ async function deleteOtp (username, email) {
   await db.query(`
     UPDATE users
       SET otp = NULL, status = 'activated'
-      WHERE username = ${username} AND email = ${email};
+      WHERE username = '${username}' AND email = '${email}';
   `);
 }
 router.post('/send-otp', async (req, res) => {
@@ -83,6 +84,31 @@ router.post('/send-otp', async (req, res) => {
     res.status(500).json({ error: `Failed to send OTP:\n${err}` });
   }
 });
+
+// Endpoint untuk verifikasi OTP
+router.post('/verify-otp', async (req, res) => {
+  const { username, email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ error: 'Email and OTP are required' });
+  }
+
+  const storedOtp = await getOtp(username, email);
+  if (storedOtp === otp) {
+    // Hapus OTP setelah diverifikasi
+    // otps.delete(email);
+    await db.query(`
+      UPDATE users 
+        SET otp = '', status = 'activated'
+        WHERE username = '${username}';
+    `);
+    await deleteOtp(username, email)
+    return res.status(200).json({ message: 'OTP verified successfully' });
+  }
+
+  res.status(400).json({ error: `Invalid OTP. storedotp: ${storedOtp} with type ${typeof storedOtp}, otpinput: ${otp} with type ${typeof otp}` });
+});
+
 export default router;
 // Jalankan server
 // const PORT = 3000;

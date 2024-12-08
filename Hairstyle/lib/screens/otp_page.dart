@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'login.dart'; // Import halaman Create New Password
-import '../services/regist_service.dart';
+import '../services/user_services.dart';
 
 class OtpPage extends StatefulWidget {
   final String email;
@@ -15,26 +16,58 @@ class _OtpPageState extends State<OtpPage> {
   // final TextEditingController otpController = TextEditingController();
   final List<TextEditingController> otpControllers =
       List.generate(4, (_) => TextEditingController());
-  final OTPService _otpService = OTPService();
+  final UserServices _otpService = UserServices();
+  String _errorMessage = '';
 
   // Verify OTP logic
   void _verifyOtp() async {
     String otp = otpControllers.map((controller) => controller.text).join();
+    setState(() {
+      _errorMessage = '';
+    });
 
-    bool verified = await _otpService.verifyOtp(widget.username, widget.email, otp);
+    try {
+      bool verified =
+          await _otpService.verifyOtp(widget.username, widget.email, otp);
 
-    if (verified) {
-      // Navigate to login page if OTP is verified
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
-    } else {
-      // Show error if OTP verification fails
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid OTP')),
-      );
+      if (verified) {
+        // Navigate to login page if OTP is verified
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      } else {
+        // Show error if OTP verification fails
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Invalid OTP')),
+        // );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+      _showDialogPop(_errorMessage);
     }
+  }
+
+  void _showDialogPop(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Registrasi Gagal'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Menutup dialog
+              },
+              child: Text('Mengerti'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
