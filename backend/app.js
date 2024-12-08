@@ -51,6 +51,17 @@ app.get('/username/:username', async (req, res, next) => {
   // res.send(results[0].username);
   res.send(results);
 });
+app.get('/cekOtp', async (req, res, next) => {
+  // const userId = parseInt(req.params.id, 10);
+  const [ result ] = await db.query(`
+    SELECT otp
+      FROM users
+      WHERE username = 'paksi4' AND email = 'paksi.dh@gmail.com';
+  `);
+  const tipe = typeof result[0].otp;
+  // res.send(results[0].username);
+  res.send(tipe);
+});
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

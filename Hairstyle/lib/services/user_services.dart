@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class UserServices {
   // Endpoint for sending OTP
-  String baseUrl = 'http://160.19.166.177:3001/user';
+  String baseUrl = 'http://localhost:3001/otp';
 
   // Send OTP to the backend
   Future<Map<String, dynamic>> updateUser(String username, String email, String password) async {
@@ -34,21 +34,26 @@ class UserServices {
 
   // Verify OTP sent to the email
   Future<bool> verifyOtp(String username, String email, String otp) async {
-    try {
+    // try {
       final response = await http.post(
         Uri.parse('$baseUrl/verify-otp'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'username': username, 'email': email, 'otp': otp}),
       );
       
+      // if (response.statusCode == 200) {
+      //   return true;
+      // } else {
+      //   return false;
+      // }
       if (response.statusCode == 200) {
         return true;
       } else {
-        return false;
+        throw Exception('Error verifying OTP: ${response.body}');
       }
-    } catch (e) {
-      // print('Error verifying OTP: $e');
-      return false;
-    }
+    // } catch (e) {
+    //   // print('Error verifying OTP: $e');
+    //   return false;
+    // }
   }
 }
