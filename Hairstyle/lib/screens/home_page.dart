@@ -6,6 +6,7 @@ import 'category_screen.dart';
 import 'favorite_screen.dart';
 import 'profile_screen.dart';
 import '../widgets/bottom_navbar.dart'; // Pastikan ini sudah diimpor
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +16,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String? _token;
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _token = prefs.getString('jwt_token'); // Ambil token dari SharedPreferences
+    });
+  }
 
   final List<Widget> _pages = [
     HomeScreen(),

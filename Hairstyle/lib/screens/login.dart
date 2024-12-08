@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () {
                 Navigator.of(context).pop(); // Menutup dialog
               },
-              child: Text('OK'),
+              child: Text('Mengerti'),
             ),
           ],
         );
@@ -131,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                     // Username / Email TextField
                     TextField(
                       controller: _usernameController,
+                      autofillHints: [AutofillHints.username, AutofillHints.email],
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person),
                         labelText: "Username / Email",
@@ -143,6 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                     // Password TextField
                     TextField(
                       controller: _passwordController,
+                      autofillHints: [AutofillHints.password],
                       obscureText: !_isPasswordVisible,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.lock),

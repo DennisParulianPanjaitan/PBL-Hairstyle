@@ -5,10 +5,12 @@ import authRoutes from './routes/auth.routes.js'; // Importing routes
 // import { dotenv } from 'dotenv';
 import { populateDB, getUsernameById, getUserByUserName } from './databases/populate.postgre.js';
 import { Sequelize } from 'sequelize';
+import http from 'http';
+import db from './databases/config.js';
+import otpRoutes from './routes/otp.routes.js'; // Importing routes
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-
+const PORT = 3001;
 // Allow specific origin
 const allowedOrigins = [
   'http://localhost:', // Untuk web dari localhost
@@ -17,11 +19,7 @@ const allowedOrigins = [
   'http://http://196',
 ];
 app.use(cors({
-  origin: /* '*', */ (origin, callback) => {  
-    if ( !origin || allowedOrigins.some(allowed_origin => origin.startsWith(allowed_origin)) ){ 
-      callback(null, true); 
-    } else callback( new Error('Not allowed by CORS') );// Tolak origin lain
-  },  
+  origin: '*',
   methods: ['GET', 'POST'],   // Allowed HTTP methods
   credentials: true           // Allow cookies and credentials
 }));
@@ -31,25 +29,27 @@ app.get('/', (req, res) => {
   res.send('Welcome to the API!');
 });
 app.use('/auth', authRoutes); // Use authentication routes
+app.use('/otp', otpRoutes); // Add OTP routes
+ 
 app.get('/populate', async (req, res) => {
   await populateDB(); // Call the function to populate the database
   res.send('Database populated!');
 });
 app.get('/user/:id', async (req, res, next) => {
   const userId = parseInt(req.params.id, 10);
-  // const username = await getUsernameById(userId); // If any error occurs, Express will handle it
-  // const userData = await getUserByUserName(username);
-  // res.send(`${username} and ${userData}`);
-  // res.send(username);
-  // console.log(username);
-  const sequelize = new Sequelize('njczidlb_hairmate', 'njczidlb_nioke', 'nioke8090', {
-    host: '109.110.188.74',
-    dialect: /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */ 'mysql'
-  });
-  const [results] = await sequelize.query(`SELECT username, email
-  FROM users
-  WHERE id = ${userId};`);
-  res.send(results[0].username);
+  const [results] = await db.query(`
+    SELECT username, email
+      FROM users
+      WHERE id = ${userId};`);
+  // res.send(results[0].username);
+  res.send(results);
+});
+app.get('/username/:username', async (req, res, next) => {
+  // const userId = parseInt(req.params.id, 10);
+  const [ results ] = await db.query(`SELECT id FROM users WHERE username = '${req.params.username}'`);
+
+  // res.send(results[0].username);
+  res.send(results);
 });
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
