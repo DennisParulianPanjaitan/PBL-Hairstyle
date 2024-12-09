@@ -1,40 +1,53 @@
+// hair_product_card.dart
 import 'package:flutter/material.dart';
 
-class HairProductCard extends StatelessWidget {
-  final String name;
-  final String description;
+class HairProduct extends StatelessWidget {
   final String imagePath;
+  final String productName;
 
-  HairProductCard({
-    required this.name,
-    required this.description,
+  HairProduct({
     required this.imagePath,
+    required this.productName,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 140,
-      margin: EdgeInsets.only(right: 12),
+      width: 180,
+      height: 230,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 6)],
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(255, 146, 146, 146).withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.asset(imagePath, height: 100, width: double.infinity, fit: BoxFit.cover),
+          // Gambar Produk
+          Container(
+            width: double.infinity,
+            height: 180,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              image: DecorationImage(
+                image: AssetImage(imagePath),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 4),
-                Text(description, style: TextStyle(color: Colors.grey[600]), textAlign: TextAlign.center),
-              ],
+          SizedBox(height: 10),
+          // Nama Produk
+          Text(
+            productName,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
