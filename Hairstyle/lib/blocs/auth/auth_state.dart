@@ -1,28 +1,19 @@
-part of 'auth_bloc.dart';
+import '../../models/user_model.dart';
 
-@immutable
-sealed class AuthState {
-  const AuthState();
-
-  List<Object> get props => [];
-}
+abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthFailed extends AuthState {
-  final String e;
-  const AuthFailed(this.e);
-
-  @override
-  List<Object> get props => [e];
-}
-
 class AuthSuccess extends AuthState {
   final UserModel user;
-  const AuthSuccess(this.user);
 
-  @override
-  List<Object> get props => [user];
+  AuthSuccess(this.user);
+}
+
+class AuthFailure extends AuthState {
+  final String message;
+
+  AuthFailure(this.message);
 }
