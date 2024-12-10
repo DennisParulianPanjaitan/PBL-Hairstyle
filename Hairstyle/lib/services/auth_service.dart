@@ -39,7 +39,7 @@
 // }
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/register.dart';
+import '../models/auth.dart';
 import '../models/user_model.dart';
 
 class AuthService {
@@ -53,18 +53,57 @@ class AuthService {
       body: jsonEncode(request.toJson()),
     );
 
+    // if (response.statusCode == 200) {
+    //   final data = jsonDecode(response.body);
+
+    //   // Periksa apakah response memiliki struktur yang diharapkan
+    //   if (data['user'] != null) {
+    //     return UserModel.fromJson(data['user']);
+    //   } else {
+    //     throw Exception(data['message'] ?? 'Unexpected API response format');
+    //   }
+    // } else {
+    //   final errorData = jsonDecode(response.body);
+    //   throw Exception(errorData['message'] ?? 'Failed to register');
+    // }
+    if (response.statusCode == 200) {
+      // Jika sukses, log data dan lakukan sesuatu
+      final data = jsonDecode(response.body);
+      print('Register Success: $data');
+      return UserModel.fromJson(data);
+    } else {
+      // Jika gagal, log error dan respons
+      final errorData = jsonDecode(response.body);
+      throw Exception(errorData['message'] ?? 'Register failed');
+    }
+  }
+
+  Future<UserModel> login(LoginRequest request) async {
+    final url = Uri.parse('$_baseUrl/login');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(request.toJson()),
+    );
+
+    // if (response.statusCode == 200) {
+    //   final data = jsonDecode(response.body);
+    //   print('Data from API: $data'); // Pastikan data terprint di sini
+    //   return UserModel.fromJson(data['user']);
+    // } else {
+    //   print('Failed with status code: ${response.statusCode}');
+    //   final errorData = jsonDecode(response.body);
+    //   throw Exception(errorData['message'] ?? 'Failed to login');
+    // }
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-
-      // Periksa apakah response memiliki struktur yang diharapkan
-      if (data['user'] != null) {
-        return UserModel.fromJson(data['user']);
-      } else {
-        throw Exception(data['message'] ?? 'Unexpected API response format');
-      }
+      print('Data from API: $data'); // Periksa apakah datanya benar
+      return UserModel.fromJson(data);
     } else {
+      print('Failed with status code: ${response.statusCode}');
       final errorData = jsonDecode(response.body);
-      throw Exception(errorData['message'] ?? 'Failed to register');
+      throw Exception(errorData['message'] ?? 'Failed to login');
     }
   }
 }
