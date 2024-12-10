@@ -19,10 +19,14 @@ class HairMateApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Inisialisasi AuthService secara manual
+    final authService = AuthService();
+
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => AuthBloc(AuthService()),
+        // Menyediakan AuthBloc dengan AuthService yang sudah diinisialisasi
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(authService: authService),
         ),
       ],
       child: MaterialApp(
