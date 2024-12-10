@@ -21,7 +21,7 @@ router.post('/registrasi', async (req, res) => {
       INSERT INTO users (username, email, password, status)
         VALUES ('${username}', '${email}', '${password}','activated');
     `);
-    res.status(200).json({ message: 'Registrasi berhasil' });
+    res.status(200).json({ message: 'Registrasi berhasil', berhasil: true});
   } catch (err) {
     res.status(500).json({ error: `Kesalahan:\n${err}` });
   }
