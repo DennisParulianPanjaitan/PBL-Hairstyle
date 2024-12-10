@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uts_linkaja/screens/login.dart';
 
 import '../blocs/auth/auth_bloc.dart';
-import '../blocs/auth/auth_event.dart';
+// import '../blocs/auth/auth_event.dart';
 import '../blocs/auth/auth_state.dart';
 
 class RegisterPage extends StatelessWidget {

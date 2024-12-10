@@ -15,6 +15,8 @@ void main() {
 }
 
 class HairMateApp extends StatelessWidget {
+  const HairMateApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

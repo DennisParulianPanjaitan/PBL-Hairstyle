@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uts_linkaja/screens/home_page.dart';
 import '../blocs/auth/auth_bloc.dart';
-import '../blocs/auth/auth_event.dart';
+// import '../blocs/auth/auth_event.dart';
 import '../blocs/auth/auth_state.dart';
 import 'forgot_password.dart';
 import 'register.dart';

@@ -27,20 +27,21 @@
 //   }
 // }
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
+import 'package:uts_linkaja/blocs/auth/auth_state.dart';
 import '../../models/auth.dart';
 import '../../services/auth_service.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
+part 'auth_event.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthService _authService;
+  final AuthService authService;
 
-  AuthBloc(this._authService) : super(AuthInitial()) {
+  AuthBloc(this.authService) : super(AuthInitial()) {
     // Event handler untuk RegisterEvent
     on<RegisterEvent>((event, emit) async {
-      emit(AuthLoading());
       try {
-        final user = await _authService.register(RegisterRequest(
+        emit(AuthLoading());
+        final user = await authService.register(RegisterRequest(
           username: event.username,
           email: event.email,
           password: event.password,
@@ -53,9 +54,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     // Event handler untuk LoginEvent
     on<LoginEvent>((event, emit) async {
-      emit(AuthLoading());
       try {
-        final user = await _authService.login(LoginRequest(
+        emit(AuthLoading());
+        final user = await authService.login(LoginRequest(
           email: event.email,
           password: event.password,
         ));
