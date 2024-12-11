@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart'; // Import LoginPage
 
 class SplashScreen extends StatelessWidget {
@@ -6,6 +7,18 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Future.delayed(Duration(seconds: 3), () async {
+    //   // Cek apakah sudah login dengan token di SharedPreferences
+    //   final prefs = await SharedPreferences.getInstance();
+    //   final token = prefs.getString('jwt_token');
+    //   if (token != null) {
+    //     Navigator.pushReplacementNamed(
+    //         context, '/home'); // Jika sudah login, langsung ke Home
+    //   } else {
+    //     Navigator.pushReplacementNamed(
+    //         context, '/login'); // Jika belum login, ke halaman login
+    //   }
+    // });
     return Scaffold(
       body: Stack(
         children: [

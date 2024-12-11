@@ -1,79 +1,19 @@
 import 'package:flutter/material.dart';
-import 'login.dart'; // Import LoginPage
-import '../services/user_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uts_linkaja/screens/login.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+import '../blocs/auth/auth_bloc.dart';
+// import '../blocs/auth/auth_event.dart';
+import '../blocs/auth/auth_event.dart';
+import '../blocs/auth/auth_state.dart';
+import 'package:flutter/material.dart';
 
-  @override
-  // Widget build(BuildContext context) {
-  //   // TODO: implement build
-  //   throw UnimplementedError();
-  // }
-  // _RegisterPageState createState() => _RegisterPageState();
-  State<RegisterPage> createState() => _RegisterPageState();
-}
+class RegisterPage extends StatelessWidget {
+  RegisterPage({super.key});
 
-class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  final UserService _userService = UserService();
-  String _errorMessage = '';
-  // Register logic
-  void _register() async {
-    String username = usernameController.text;
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    setState(() {
-      _errorMessage = '';
-    });
-    try {
-      bool response = await _userService.registrasi(username, email, password);
-      if (response) {
-        // Navigate to OTP page if OTP is sent
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LoginPage()),
-        );
-      } else {
-        // // Show error if OTP sending fails
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text('Failed to send OTP')),
-        // );
-        throw Exception('Kode OTP gagal terkirim');
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = e.toString();
-      });
-      _showDialogPop(
-          _errorMessage); // Tampilkan popup error - can be replaced with String or whatever
-    } finally {}
-  }
-
-  void _showDialogPop(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Registrasi Gagal'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Menutup dialog
-              },
-              child: Text('Mengerti'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,135 +49,125 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ],
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      "Register",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1B1A55),
+              child: BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthRegistered) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Registration successful")),
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => LoginPage(),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 24),
-                    // Username TextField
-                    TextField(
-                      controller: usernameController,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person),
-                        labelText: "Username",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                    );
+                  } else if (state is AuthFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.message)),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "Register",
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1B1A55),
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    // Email TextField
-                    TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.email),
-                        labelText: "Email",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                        SizedBox(height: 24),
+                        // Username TextField
+                        TextField(
+                          controller: usernameController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.person),
+                            labelText: "Username",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    // Password TextField
-                    TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock),
-                        labelText: "Password",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                        SizedBox(height: 16),
+                        // Email TextField
+                        TextField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email),
+                            labelText: "Email",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 24),
-                    // Register Button
-                    ElevatedButton(
-                      onPressed: _register,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF1B1A55), // Button color
-                        padding: EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                        SizedBox(height: 16),
+                        // Password TextField
+                        TextField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock),
+                            labelText: "Password",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        "Register",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                        SizedBox(height: 24),
+                        // Register Button
+                        ElevatedButton(
+                          onPressed: state is AuthLoading
+                              ? null
+                              : () {
+                                  context.read<AuthBloc>().add(
+                                        RegisterEvent(
+                                          username: usernameController.text,
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                        ),
+                                      );
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF1B1A55), // Button color
+                            padding: EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: state is AuthLoading
+                              ? CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : Text(
+                                  "Register",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Center(
-                      child: Text("or", style: TextStyle(color: Colors.grey)),
-                    ),
-                    SizedBox(height: 16),
-                    // Google Sign-In Button
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        // Tambahkan aksi untuk sign in dengan Google
-                      },
-                      icon: Image.asset('assets/icons/google.jpeg',
-                          height: 24), // Ganti dengan ikon Google
-                      label: Text(
-                        "Sign in with Google",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: BorderSide(color: Colors.grey.shade300),
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                        SizedBox(height: 16),
+                        Center(
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(
+                                  context); // Kembali ke halaman login
+                            },
+                            child: Text(
+                              "Already have an account? Login",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                    SizedBox(height: 8),
-                    // Apple Sign-In Button
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        // Tambahkan aksi untuk sign in dengan Apple
-                      },
-                      icon: Image.asset('assets/icons/apple.jpeg',
-                          height: 24), // Ganti dengan ikon Apple
-                      label: Text(
-                        "Sign in with Apple",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: BorderSide(color: Colors.grey.shade300),
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Center(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context); // Kembali ke halaman login
-                        },
-                        child: Text(
-                          "Already have an account? Login",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ),

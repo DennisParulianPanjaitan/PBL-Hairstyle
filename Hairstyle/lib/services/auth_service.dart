@@ -1,39 +1,40 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
+import '../models/user_model.dart';
 
 class AuthService {
-  // var urlList = ['http://localhost', 'http://10.0.2.2/auth'];
-  // Endpoint untuk mengakses server
-  String baseUrl = 'http://160.19.166.177:3001/auth'; 
+  final String baseUrl = "http://10.0.2.2:8000/api/user";
 
-  Future<Map<String, dynamic>> login(String username, String password) async {
+  Future<UserModel?> login(String email, String password) async {
+    final url = Uri.parse("$baseUrl/login");
+
     final response = await http.post(
-      Uri.parse('$baseUrl/login'),
+      url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'username': username, 'password': password}),
+      body: jsonEncode({'email': email, 'password': password}),
     );
-     
+
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      return UserModel.fromJson(data['user']);
     } else {
-      throw Exception('Failed to login: ${response.body}');
+      throw Exception(jsonDecode(response.body)['message']);
     }
   }
 
-  Future<Map<String, dynamic>> getProtectedData(String token) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/protected'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token,
-      },
+  Future<bool> register(Map<String, dynamic> data) async {
+    final url = Uri.parse("$baseUrl/daftar");
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(data),
     );
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+    if (response.statusCode == 201) {
+      return true;
     } else {
-      throw Exception('Failed to access protected data: ${response.body}');
+      throw Exception(jsonDecode(response.body)['message']);
     }
   }
 }
