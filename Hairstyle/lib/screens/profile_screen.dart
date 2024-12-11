@@ -8,6 +8,7 @@ import 'package:uts_linkaja/screens/splash_screen.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -181,7 +182,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 );
               }),
-              _buildMenuItem('Language', Icons.language),
               _buildMenuItem('Privacy and Policy', Icons.privacy_tip_outlined,
                   onTap: () {
                 Navigator.push(

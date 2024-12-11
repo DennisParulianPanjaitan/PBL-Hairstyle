@@ -18,6 +18,9 @@ class HaircutItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Membuat nama folder dan gambar berdasarkan title
+    String imageName = title.toLowerCase().replaceAll(" ", "_");
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.all(
@@ -35,12 +38,12 @@ class HaircutItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Gambar
+          // Gambar berdasarkan title (contoh: buzzcut akan mengarah ke assets/images/haircut/buzz_cut/...)
           ClipRRect(
             borderRadius: BorderRadius.circular(
                 12), // Radius gambar untuk tampilan lebih lembut
             child: Image.asset(
-              'assets/images/photo.png', // Ganti sesuai path gambar Anda
+              'assets/images/haircut/$imageName/${imageName}_0.jpg', // Menggunakan $imageName untuk menentukan gambar
               width: 100, // Memperbesar gambar
               height: 110, // Memperbesar gambar
               fit: BoxFit.cover,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uts_linkaja/screens/detail_haircut.dart';
+import 'package:uts_linkaja/screens/detail_product.dart'; // Tambahkan import
+import 'package:uts_linkaja/screens/detail_barber.dart'; // Tambahkan import
 import '../blocs/features/features_bloc.dart';
 import '../blocs/features/features_event.dart';
 import '../blocs/features/features_state.dart';
@@ -7,6 +10,7 @@ import '../widgets/menu_button.dart';
 import '../widgets/haircut_item.dart';
 import '../widgets/hairproduct_item.dart';
 import '../widgets/barbershop_item.dart';
+import '../widgets/data/mock_haircuts.dart';
 
 class FeaturesPage extends StatelessWidget {
   @override
@@ -78,50 +82,48 @@ class FeaturesPage extends StatelessWidget {
     );
   }
 
+  // Tab HairCut sudah ada
+// Tab HairCut menggunakan data dari mock_haircuts.dart
   Widget _buildHairCutTab(BuildContext context, Set<int> bookmarks) {
-    final List<Map<String, dynamic>> haircuts = [
-      {
-        "title": "Buzz Cut",
-        "description":
-            "Buzzcut adalah gaya rambut sangat pendek yang dicukur merata di seluruh kepala.",
-        "faceShapes": ["Oval", "Round", "Square"],
-        "isBookmarked": false,
-      },
-      {
-        "title": "Crew Cut",
-        "description":
-            "Crew Cut adalah gaya rambut pendek klasik yang cocok untuk berbagai bentuk wajah.",
-        "faceShapes": ["Oval", "Diamond", "Square"],
-        "isBookmarked": false,
-      },
-      {
-        "title": "Pompadour",
-        "description":
-            "Pompadour adalah gaya rambut ikonik dengan bagian depan yang tinggi.",
-        "faceShapes": ["Oval", "Triangle", "Square"],
-        "isBookmarked": false,
-      },
-    ];
-
     return ListView.builder(
-      itemCount: haircuts.length,
+      itemCount:
+          haircuts.length, // Gantilah dengan data dari mock_haircuts.dart
       itemBuilder: (context, index) {
-        final item = haircuts[index];
-        return HaircutItem(
-          title: item["title"] as String,
-          description: item["description"] as String,
-          faceShapes: item["faceShapes"] as List<String>,
-          isBookmarked: bookmarks.contains(index),
-          onBookmarkTap: () {
-            context
-                .read<FeaturesBloc>()
-                .add(ToggleBookmarkEvent(index, "HairCut"));
+        final item =
+            haircuts[index]; // Data gaya rambut dari mock_haircuts.dart
+        return GestureDetector(
+          onTap: () {
+            // Navigasi ke halaman DetailHaircut dengan data dari mock_haircuts.dart
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailHaircut(
+                  title: item["title"] as String,
+                  description: item["description"] as String,
+                  sliderImages: item["sliderImages"] as List<String>,
+                  galleryImages: item["galleryImages"] as List<String>,
+                  faceShapes: item["faceShapes"] as List<String>,
+                ),
+              ),
+            );
           },
+          child: HaircutItem(
+            title: item["title"] as String,
+            description: item["description"] as String,
+            faceShapes: item["faceShapes"] as List<String>,
+            isBookmarked: bookmarks.contains(index),
+            onBookmarkTap: () {
+              context
+                  .read<FeaturesBloc>()
+                  .add(ToggleBookmarkEvent(index, "HairCut"));
+            },
+          ),
         );
       },
     );
   }
 
+  // Tab HairProduct dengan navigasi ke DetailProduct
   Widget _buildHairProductTab(BuildContext context, Set<int> bookmarks) {
     final List<Map<String, dynamic>> products = [
       {
@@ -159,21 +161,33 @@ class FeaturesPage extends StatelessWidget {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final item = products[index];
-          return HairProductItem(
-            title: item["title"] as String,
-            imagePath: item["image"] as String,
-            isBookmarked: bookmarks.contains(index),
-            onBookmarkTap: () {
-              context
-                  .read<FeaturesBloc>()
-                  .add(ToggleBookmarkEvent(index, "HairProduct"));
+          return GestureDetector(
+            onTap: () {
+              // Navigasi ke halaman DetailProduct
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DetailProduct(),
+                ),
+              );
             },
+            child: HairProductItem(
+              title: item["title"] as String,
+              imagePath: item["image"] as String,
+              isBookmarked: bookmarks.contains(index),
+              onBookmarkTap: () {
+                context
+                    .read<FeaturesBloc>()
+                    .add(ToggleBookmarkEvent(index, "HairProduct"));
+              },
+            ),
           );
         },
       ),
     );
   }
 
+  // Tab BarberShop dengan navigasi ke DetailBarber
   Widget _buildBarberShopTab(BuildContext context, Set<int> bookmarks) {
     final List<Map<String, dynamic>> barbershops = [
       {
@@ -194,16 +208,27 @@ class FeaturesPage extends StatelessWidget {
       itemCount: barbershops.length,
       itemBuilder: (context, index) {
         final item = barbershops[index];
-        return BarberShopItem(
-          title: item["title"] as String,
-          description: item["description"] as String,
-          imagePath: item["imagePath"] as String,
-          isBookmarked: bookmarks.contains(index),
-          onBookmarkTap: () {
-            context
-                .read<FeaturesBloc>()
-                .add(ToggleBookmarkEvent(index, "BarberShop"));
+        return GestureDetector(
+          onTap: () {
+            // Navigasi ke halaman DetailBarber
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DetailBarber(),
+              ),
+            );
           },
+          child: BarberShopItem(
+            title: item["title"] as String,
+            description: item["description"] as String,
+            imagePath: item["imagePath"] as String,
+            isBookmarked: bookmarks.contains(index),
+            onBookmarkTap: () {
+              context
+                  .read<FeaturesBloc>()
+                  .add(ToggleBookmarkEvent(index, "BarberShop"));
+            },
+          ),
         );
       },
     );

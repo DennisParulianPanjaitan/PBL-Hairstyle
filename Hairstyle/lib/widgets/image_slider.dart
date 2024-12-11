@@ -83,7 +83,7 @@ class _ImageSliderState extends State<ImageSlider> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center, // Mengubah ke center
             children: List.generate(widget.images.length, (index) {
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 300),

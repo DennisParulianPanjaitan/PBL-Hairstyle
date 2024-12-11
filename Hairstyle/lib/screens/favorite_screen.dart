@@ -139,112 +139,112 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  Widget _buildHairCutItem(BuildContext context, int index, String imagePath,
-      String name, String desc) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailHaircut(),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(left: 22.0, right: 22.0, top: 10.0),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Color(0xFF1B1A55),
-            width: 2,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        imagePath,
-                        width: 90,
-                        height: 90,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: TextStyle(
-                              color: Color(0xFF1B1A55),
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            desc,
-                            style: TextStyle(
-                              color: Color(0xFF1B1A55),
-                              fontSize: 11,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                            textAlign: TextAlign.justify,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Positioned(
-                  top: -15,
-                  right: -15,
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        if (bookmarkedHaircuts.contains(index)) {
-                          bookmarkedHaircuts.remove(index);
-                        } else {
-                          bookmarkedHaircuts.add(index);
-                        }
-                      });
-                    },
-                    icon: Icon(
-                      bookmarkedHaircuts.contains(index)
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
-                      color: bookmarkedHaircuts.contains(index)
-                          ? Color(0xFF007BFF)
-                          : Color(0xFF1B1A55),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Oval   |   Round   |   Square',
-              style: TextStyle(
-                color: Color(0xFF1B1A55),
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildHairCutItem(BuildContext context, int index, String imagePath,
+  //     String name, String desc) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           // builder: (context) => DetailHaircut(),
+  //         ),
+  //       );
+  //     },
+  //     child: Container(
+  //       margin: const EdgeInsets.only(left: 22.0, right: 22.0, top: 10.0),
+  //       padding: const EdgeInsets.all(12),
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         borderRadius: BorderRadius.circular(16),
+  //         border: Border.all(
+  //           color: Color(0xFF1B1A55),
+  //           width: 2,
+  //         ),
+  //       ),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Stack(
+  //             children: [
+  //               Row(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   ClipRRect(
+  //                     borderRadius: BorderRadius.circular(8),
+  //                     child: Image.asset(
+  //                       imagePath,
+  //                       width: 90,
+  //                       height: 90,
+  //                       fit: BoxFit.cover,
+  //                     ),
+  //                   ),
+  //                   const SizedBox(width: 16),
+  //                   Expanded(
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           name,
+  //                           style: TextStyle(
+  //                             color: Color(0xFF1B1A55),
+  //                             fontSize: 17,
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                         ),
+  //                         const SizedBox(height: 8),
+  //                         Text(
+  //                           desc,
+  //                           style: TextStyle(
+  //                             color: Color(0xFF1B1A55),
+  //                             fontSize: 11,
+  //                           ),
+  //                           overflow: TextOverflow.ellipsis,
+  //                           maxLines: 3,
+  //                           textAlign: TextAlign.justify,
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //               Positioned(
+  //                 top: -15,
+  //                 right: -15,
+  //                 child: IconButton(
+  //                   onPressed: () {
+  //                     setState(() {
+  //                       if (bookmarkedHaircuts.contains(index)) {
+  //                         bookmarkedHaircuts.remove(index);
+  //                       } else {
+  //                         bookmarkedHaircuts.add(index);
+  //                       }
+  //                     });
+  //                   },
+  //                   icon: Icon(
+  //                     bookmarkedHaircuts.contains(index)
+  //                         ? Icons.bookmark
+  //                         : Icons.bookmark_border,
+  //                     color: bookmarkedHaircuts.contains(index)
+  //                         ? Color(0xFF007BFF)
+  //                         : Color(0xFF1B1A55),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           const SizedBox(height: 16),
+  //           const Text(
+  //             'Oval   |   Round   |   Square',
+  //             style: TextStyle(
+  //               color: Color(0xFF1B1A55),
+  //               fontSize: 14,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildProductItem(int index, String imagePath, String productName) {
     return GestureDetector(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../widgets/home/popular_hairstyle_card.dart';
@@ -15,7 +16,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentPage = 0;
   ScrollController _scrollController = ScrollController();
+  PageController _pageController = PageController(initialPage: 1000);
   double _headerOpacity = 1.0; // Opacity initial header
+  Timer? _timer;
 
   @override
   void initState() {
@@ -28,11 +31,25 @@ class _HomeScreenState extends State<HomeScreen> {
         _headerOpacity = (1 - (offset / 100)).clamp(0, 1);
       });
     });
+
+    // Start the auto-scroll timer
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_pageController.hasClients) {
+        int nextPage = _pageController.page!.toInt() + 1;
+        _pageController.animateToPage(
+          nextPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _pageController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -130,13 +147,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(
                             height: 220,
                             child: PageView.builder(
-                              itemCount: 5,
+                              controller: _pageController,
                               onPageChanged: (index) {
                                 setState(() {
-                                  currentPage = index;
+                                  currentPage = index % 5;
                                 });
                               },
+                              itemCount: 5 * 1000, // Large number to simulate infinite loop
                               itemBuilder: (context, index) {
+                                final itemIndex = index % 5;
                                 return PopularHairstyleCard(
                                   title: "Buzz Cut",
                                   description:

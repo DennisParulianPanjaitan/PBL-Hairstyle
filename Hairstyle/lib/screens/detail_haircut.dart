@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/image_slider.dart';
+import '../widgets/data/mock_haircuts.dart';
+
 
 class DetailHaircut extends StatelessWidget {
-  const DetailHaircut({super.key});
+  final String title;
+  final String description;
+  final List<String> sliderImages;
+  final List<String> galleryImages;
+  final List<String> faceShapes;
+
+  const DetailHaircut({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.sliderImages,
+    required this.galleryImages,
+    required this.faceShapes,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<String> images = [
-      'assets/images/haircut.jpeg',
-      'assets/images/buzzcut_2.jpg',
-      'assets/images/buzzcut_3.jpg',
-    ];
-
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -21,10 +30,9 @@ class DetailHaircut extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Menggunakan ImageSlider sebagai pengganti gambar
-                  ImageSlider(images: images),
+                  // Slider menggunakan sliderImages
+                  ImageSlider(images: sliderImages),
                   const SizedBox(height: 16),
-                  // Informasi haircut
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
@@ -33,9 +41,9 @@ class DetailHaircut extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "Buzz Cut",
-                              style: TextStyle(
+                            Text(
+                              title,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
                                 color: Color(0xFF1B1A55),
@@ -43,12 +51,11 @@ class DetailHaircut extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                const Icon(Icons.star,
-                                    color: Colors.amber, size: 20),
+                                const Icon(Icons.star, color: Colors.amber, size: 20),
                                 const SizedBox(width: 4),
-                                Text(
+                                const Text(
                                   "4.5",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -60,9 +67,8 @@ class DetailHaircut extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "A buzz cut is a short and neat hairstyle, typically achieved using electric clippers...",
-                          style:
-                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                          description,
+                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                           textAlign: TextAlign.justify,
                         ),
                         const SizedBox(height: 16),
@@ -78,11 +84,7 @@ class DetailHaircut extends StatelessWidget {
                         Wrap(
                           spacing: 8.0,
                           runSpacing: 8.0,
-                          children: [
-                            _buildFaceTag("Diamond"),
-                            _buildFaceTag("Square"),
-                            _buildFaceTag("Oval"),
-                          ],
+                          children: faceShapes.map(_buildFaceTag).toList(),
                         ),
                         const SizedBox(height: 16),
                         const Text(
@@ -94,21 +96,21 @@ class DetailHaircut extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
+                        // Galeri menggunakan galleryImages
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            crossAxisSpacing: 8.0,
-                            mainAxisSpacing: 8.0,
+                            crossAxisSpacing: 14.0,
+                            mainAxisSpacing: 14.0,
                           ),
-                          itemCount: 4,
+                          itemCount: galleryImages.length,
                           itemBuilder: (context, index) {
                             return ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(4),
                               child: Image.asset(
-                                'assets/images/haircut_gallery_$index.jpeg',
+                                galleryImages[index],
                                 fit: BoxFit.cover,
                               ),
                             );
@@ -120,12 +122,15 @@ class DetailHaircut extends StatelessWidget {
                 ],
               ),
             ),
-            // Tombol Back menggunakan Positioned
             Positioned(
               top: 16,
               left: 16,
               child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                icon: Image.asset(
+                  'assets/icons/detailarrow.png',
+                  width: 30,
+                  height: 30,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -137,10 +142,9 @@ class DetailHaircut extends StatelessWidget {
     );
   }
 
-  // Widget untuk face tag
   Widget _buildFaceTag(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -156,3 +160,5 @@ class DetailHaircut extends StatelessWidget {
     );
   }
 }
+
+

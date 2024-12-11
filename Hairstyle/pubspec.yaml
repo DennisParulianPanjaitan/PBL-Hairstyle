@@ -28,4 +28,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/haircut/buzz_cut/
     - assets/icons/

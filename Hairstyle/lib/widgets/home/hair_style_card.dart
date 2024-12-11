@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class HaircutItem extends StatelessWidget {
+class HaircutItem extends StatefulWidget {
   final String title;
   final String description;
   final List<String> faceShapes;
@@ -15,6 +15,20 @@ class HaircutItem extends StatelessWidget {
     required this.isBookmarked,
     required this.onBookmarkTap,
   }) : super(key: key);
+
+  @override
+  _HaircutItemState createState() => _HaircutItemState();
+}
+
+class _HaircutItemState extends State<HaircutItem> {
+  late bool isBookmarked;
+
+  @override
+  void initState() {
+    super.initState();
+    // Menyimpan status bookmark awal berdasarkan nilai dari widget
+    isBookmarked = widget.isBookmarked;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +65,7 @@ class HaircutItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    widget.title,
                     style: TextStyle(
                       color: isBookmarked ? Colors.white : Color(0xFF1B1A55),
                       fontSize: 20,
@@ -60,7 +74,7 @@ class HaircutItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    description,
+                    widget.description,
                     style: TextStyle(
                       color: isBookmarked ? Colors.white : Color(0xFF1B1A55),
                       fontSize: 12,
@@ -70,7 +84,7 @@ class HaircutItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    faceShapes.join("   |   "),
+                    widget.faceShapes.join("   |   "),
                     style: TextStyle(
                       color: isBookmarked ? Colors.white : Color(0xFF1B1A55),
                       fontSize: 13,
@@ -84,7 +98,12 @@ class HaircutItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 18), // Geser ke bawah
             child: GestureDetector(
-              onTap: onBookmarkTap,
+              onTap: () {
+                setState(() {
+                  isBookmarked = !isBookmarked; // Toggle status bookmark
+                });
+                widget.onBookmarkTap(); // Memanggil callback dari widget parent
+              },
               child: Image.asset(
                 isBookmarked
                     ? 'assets/icons/bookmarkwhite.png'
