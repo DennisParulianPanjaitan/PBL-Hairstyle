@@ -10,10 +10,10 @@ final List<Map<String, dynamic>> haircuts = [
       'assets/images/haircut/buzz_cut/buzz_cut_2.jpg',
     ],
     "galleryImages": [
-      'assets/images/buzz_cut_3.jpg',
-      'assets/images/buzz_cut_4.jpg',
-      'assets/images/buzz_cut_5.jpg',
-      'assets/images/buzz_cut_6.jpg',
+      'assets/images/buzz_cut/buzz_cut_3.jpg',
+      'assets/images/buzz_cut/buzz_cut_4.jpg',
+      'assets/images/buzz_cut/buzz_cut_5.jpg',
+      'assets/images/buzz_cut/buzz_cut_6.jpg',
     ],
   },
   {

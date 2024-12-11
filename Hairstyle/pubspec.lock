@@ -89,6 +89,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  cloudinary_api:
+    dependency: "direct main"
+    description:
+      name: cloudinary_api
+      sha256: a2cd36ddb96f17a310b6e32d2831698669643a79f19068b5f44c464d68b4973b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  cloudinary_dart:
+    dependency: "direct main"
+    description:
+      name: cloudinary_dart
+      sha256: "7dbcd67f6a463dbb7d638de983211d44323665368d054003b8c1d9eedfd1f8b6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.11"
+  cloudinary_url_gen:
+    dependency: transitive
+    description:
+      name: cloudinary_url_gen
+      sha256: d79558bcb845eedc0e7e7b2a2b06049ce625a590a15eb4fb0630759ec102a732
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.0"
   collection:
     dependency: transitive
     description:
@@ -97,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   cross_file:
     dependency: transitive
     description:
@@ -105,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.4+2"
+  crypto:
+    dependency: transitive
+    description:
+      name: crypto
+      sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.6"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -573,6 +613,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "1722b2dcc462b4b2f3ee7d188dad008b6eb4c40bbd03a3de451d82c78bba9aad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
   vector_graphics:
     dependency: transitive
     description:

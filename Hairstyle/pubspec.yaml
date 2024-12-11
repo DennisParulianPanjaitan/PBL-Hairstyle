@@ -9,6 +9,8 @@ environment:
 dependencies:
   bloc: ^8.1.4
   camera: ^0.11.0+2
+  cloudinary_api: ^1.0.2
+  cloudinary_dart: ^0.0.11
   cupertino_icons: ^1.0.8
   equatable: ^2.0.7
   flutter:
@@ -29,4 +31,5 @@ flutter:
   assets:
     - assets/images/
     - assets/images/haircut/buzz_cut/
+    - assets/images/haircut/crew_cut/
     - assets/icons/
