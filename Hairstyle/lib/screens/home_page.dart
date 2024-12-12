@@ -16,6 +16,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  String username = '';
+  String email = '';
 
   final List<Widget> _pages = [
     HomeScreen(),
@@ -23,6 +25,21 @@ class _HomePageState extends State<HomePage> {
     FeaturesPage(),
     ProfileScreen(),
   ];
+  
+   // Fungsi untuk mengambil data pengguna
+  void getUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username') ?? 'Guest';
+      email = prefs.getString('email') ?? 'Unknown';
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData(); // Memanggil fungsi saat halaman dimuat
+  }
 
   void _onItemTapped(int index) {
     setState(() {
