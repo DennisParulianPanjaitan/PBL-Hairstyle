@@ -8,14 +8,14 @@ class ProductListScreen extends StatefulWidget {
 }
 
 class _ProductListScreenState extends State<ProductListScreen> {
-  final ProductService _productService = ProductService();
+  final ProductService _apiService = ProductService();
   late Future<List<Product>> _productsFuture;
 
   @override
   void initState() {
     super.initState();
     _productsFuture =
-        _productService.fetchProducts(); // Memanggil API untuk mendapatkan data
+        _apiService.fetchProducts(); // Memanggil API untuk mendapatkan data
   }
 
   @override
@@ -42,7 +42,26 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: ListTile(
                   title: Text(product.name),
-                  subtitle: Text(product.description ?? 'Tidak ada deskripsi'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(product.description),
+                      SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        children: product.images.map((image) {
+                          // Periksa apakah `imageUrl` adalah path relatif ke assets
+                          String assetPath = 'assets/images/${image.imageUrl}';
+                          return Image.asset(
+                            assetPath, // Menggunakan Image.asset untuk gambar lokal
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
