@@ -48,11 +48,12 @@ class _LoginPageState extends State<LoginPage> {
               MaterialPageRoute(builder: (context) => HomePage()),
             );
           } else if (state is AuthFailure) {
+            Navigator.pop(context);
             // Tampilkan pesan error
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
-            Navigator.pop(context); // Menutup dialog loading
+            // Navigator.pop(context); // Menutup dialog loading
           }
         },
         child: Stack(

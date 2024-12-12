@@ -5,10 +5,16 @@ import 'package:uts_linkaja/screens/history.dart';
 import 'package:uts_linkaja/screens/privacy_policy_screen.dart';
 import 'package:uts_linkaja/screens/splash_screen.dart';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+email() async {
+  final storage = new FlutterSecureStorage();
+  String value = await storage.read(key: 'email') ?? 'default_value';
+  return value;
+}
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
-
-
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -109,7 +115,7 @@ class ProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
               _buildTextField(
-                label: 'Username',
+                label: email(),
                 hint: 'xxx@gmail.com',
                 icon: Image.asset(
                   'assets/icons/Profile.png', // Gambar email
