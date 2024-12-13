@@ -29,9 +29,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
-    emailController.text = prefs.getString('email') ?? '';
-    usernameController.text = prefs.getString('username') ?? 'Bro';
-    passwordController.text = prefs.getString('password') ?? '';
+    // emailController.text = prefs.getString('email') ?? '';
+    // usernameController.text = prefs.getString('username') ?? 'Bro';
+    // passwordController.text = prefs.getString('password') ?? '';
+    setState(() {
+      emailController.text = prefs.getString('email') ?? '';
+      usernameController.text = prefs.getString('username') ?? 'Bro';
+      passwordController.text = prefs.getString('password') ?? '';
+    });
   }
 
   Future<void> _saveProfileData() async {
