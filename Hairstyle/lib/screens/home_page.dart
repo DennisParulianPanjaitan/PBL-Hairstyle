@@ -7,17 +7,19 @@ import 'favorite_screen.dart';
 import 'profile_screen.dart';
 import '../widgets/bottom_navbar.dart'; // Pastikan ini sudah diimpor
 import '../widgets/alert_scan.dart'; // Pastikan ini sudah diimpor
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  String username = '';
-  String email = '';
+  // String username = '';
+  // String email = '';
 
   final List<Widget> _pages = [
     HomeScreen(),
@@ -27,18 +29,18 @@ class _HomePageState extends State<HomePage> {
   ];
   
    // Fungsi untuk mengambil data pengguna
-  void getUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      username = prefs.getString('username') ?? 'Guest';
-      email = prefs.getString('email') ?? 'Unknown';
-    });
-  }
+  // void getUserData() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     username = prefs.getString('username') ?? 'Guest';
+  //     email = prefs.getString('email') ?? 'Unknown';
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
-    getUserData(); // Memanggil fungsi saat halaman dimuat
+    // getUserData(); // Memanggil fungsi saat halaman dimuat
   }
 
   void _onItemTapped(int index) {

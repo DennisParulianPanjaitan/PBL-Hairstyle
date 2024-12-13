@@ -10,14 +10,16 @@ import '../widgets/home/hair_product_card.dart'; // Import HairTypeCar
 import '../widgets/home/hair_style_card.dart'; // Import HairTypeCard
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentPage = 0;
-  ScrollController _scrollController = ScrollController();
-  PageController _pageController = PageController(initialPage: 1000);
+  final ScrollController _scrollController = ScrollController();
+  final PageController _pageController = PageController(initialPage: 1000);
   double _headerOpacity = 1.0; // Opacity initial header
   Timer? _timer;
 
