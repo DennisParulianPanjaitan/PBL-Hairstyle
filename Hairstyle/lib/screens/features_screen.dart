@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uts_linkaja/screens/detail_haircut.dart';
 import 'package:uts_linkaja/screens/detail_product.dart'; // Tambahkan import
 import 'package:uts_linkaja/screens/detail_barber.dart'; // Tambahkan import
+import 'package:uts_linkaja/models/product.dart'; // Sesuaikan dengan path model Product
+import 'package:uts_linkaja/widgets/hairproduct_item.dart';
 import '../blocs/features/features_bloc.dart';
 import '../blocs/features/features_event.dart';
 import '../blocs/features/features_state.dart';
@@ -11,6 +13,9 @@ import '../widgets/haircut_item.dart';
 import '../widgets/hairproduct_item.dart';
 import '../widgets/barbershop_item.dart';
 import '../widgets/data/mock_haircuts.dart';
+import '../services/haircut_service.dart';
+import '../services/product_service.dart';
+import '../models/haircut.dart';
 
 class FeaturesPage extends StatelessWidget {
   @override
@@ -85,105 +90,144 @@ class FeaturesPage extends StatelessWidget {
   // Tab HairCut sudah ada
 // Tab HairCut menggunakan data dari mock_haircuts.dart
   Widget _buildHairCutTab(BuildContext context, Set<int> bookmarks) {
-    return ListView.builder(
-      itemCount:
-          haircuts.length, // Gantilah dengan data dari mock_haircuts.dart
-      itemBuilder: (context, index) {
-        final item =
-            haircuts[index]; // Data gaya rambut dari mock_haircuts.dart
-        return GestureDetector(
-          onTap: () {
-            // Navigasi ke halaman DetailHaircut dengan data dari mock_haircuts.dart
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DetailHaircut(
-                  title: item["title"] as String,
-                  description: item["description"] as String,
-                  sliderImages: item["sliderImages"] as List<String>,
-                  galleryImages: item["galleryImages"] as List<String>,
-                  faceShapes: item["faceShapes"] as List<String>,
+    final HaircutService haircutService = HaircutService();
+
+    return FutureBuilder<List<Haircut>>(
+      future:
+          haircutService.fetchHaircuts(), // Memanggil API untuk data haircut
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator()); // Loading spinner
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Failed to load haircuts: ${snapshot.error}'),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+            child: Text('No haircuts available.'),
+          );
+        } else {
+          final haircuts = snapshot.data!;
+          return ListView.builder(
+            itemCount: haircuts.length,
+            itemBuilder: (context, index) {
+              final haircut = haircuts[index];
+              return GestureDetector(
+                onTap: () {
+                  // Navigasi ke halaman DetailHaircut dengan data dari API
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailHaircut(
+                        title: haircut
+                            .name, // Menggunakan nama yang dari Haircut model
+                        description:
+                            haircut.description, // Deskripsi dari Haircut
+                        sliderImages: haircut.images
+                            .map((img) =>
+                                'assets/images/${img.imageUrl}') // Menambahkan 'assets/images/uploads/' sebelum URL gambar
+                            .toList(), // Ambil URL gambar dari HaircutImage dan tambahkan prefix
+                        galleryImages: haircut.images
+                            .map((img) =>
+                                'assets/images/${img.imageUrl}') // Sama uaaantuk galleryImages
+                            .toList(), // Gambar lain dari HaircutImage
+                        faceShapes: [
+                          "Round",
+                          "Oval",
+                          "Square"
+                        ], // Ganti dengan data face shapes yang relevan
+                      ),
+                    ),
+                  );
+                },
+                child: HaircutItem(
+                  title: haircut.name,
+                  description: haircut.description,
+                  images: haircut.images,
+                  isBookmarked: false, // Sesuai logika Anda
+                  onBookmarkTap: () {
+                    // Logika bookmark
+                  },
                 ),
-              ),
-            );
-          },
-          child: HaircutItem(
-            title: item["title"] as String,
-            description: item["description"] as String,
-            faceShapes: item["faceShapes"] as List<String>,
-            isBookmarked: bookmarks.contains(index),
-            onBookmarkTap: () {
-              context
-                  .read<FeaturesBloc>()
-                  .add(ToggleBookmarkEvent(index, "HairCut"));
+              );
             },
-          ),
-        );
+          );
+        }
       },
     );
   }
 
   // Tab HairProduct dengan navigasi ke DetailProduct
   Widget _buildHairProductTab(BuildContext context, Set<int> bookmarks) {
-    final List<Map<String, dynamic>> products = [
-      {
-        "title": "Hair Powder",
-        "image":
-            "assets/images/hair_powder.png", // Ganti path sesuai file gambar kedua
-        "isBookmarked": false,
-      },
-      {
-        "title": "Hair Clay",
-        "image": "assets/images/hair_clay.png", // Ganti sesuai kebutuhan
-        "isBookmarked": false,
-      },
-      {
-        "title": "Pomade",
-        "image": "assets/images/hair_pomade.png", // Ganti sesuai kebutuhan
-        "isBookmarked": false,
-      },
-      {
-        "title": "Hair Spray",
-        "image": "assets/images/hair_clay.png", // Ganti sesuai kebutuhan
-        "isBookmarked": false,
-      },
-    ];
+    final productService =
+        ProductService(); // Membuat instance dari ProductService
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16.0,
-          mainAxisSpacing: 16.0,
-          childAspectRatio: 0.75, // Proporsi lebih tinggi untuk estetika
-        ),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final item = products[index];
-          return GestureDetector(
-            onTap: () {
-              // Navigasi ke halaman DetailProduct
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DetailProduct(),
-                ),
-              );
-            },
-            child: HairProductItem(
-              title: item["title"] as String,
-              imagePath: item["image"] as String,
-              isBookmarked: bookmarks.contains(index),
-              onBookmarkTap: () {
-                context
-                    .read<FeaturesBloc>()
-                    .add(ToggleBookmarkEvent(index, "HairProduct"));
+    return FutureBuilder<List<Product>>(
+      future: productService.fetchProducts(), // Mengambil data produk
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No Products Available'));
+        } else {
+          List<Product> products = snapshot.data!;
+
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+                childAspectRatio: 0.75, // Proporsi lebih tinggi untuk estetika
+              ),
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                final item = products[index];
+                return GestureDetector(
+                  onTap: () {
+                    // Navigasi ke halaman DetailProduct
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailProduct(
+                          title: item.name,
+                          description: item.description,
+                          sliderImages: item.images
+                              .map((img) => 'assets/images/${img.imageUrl}')
+                              .toList(),
+                          galleryImages: item.images
+                              .map((img) => 'assets/images/${img.imageUrl}')
+                              .toList(),
+                          faceShapes: [
+                            item.tipeRambut1 ?? '',
+                            item.tipeRambut2 ?? '',
+                            item.tipeRambut3 ?? '',
+                          ].where((shape) => shape.isNotEmpty).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: HairProductItem(
+                    title: item.name,
+                    imagePath:
+                        'assets/images/${item.images.first.imageUrl}', // Menampilkan gambar pertama sebagai thumbnail
+                    isBookmarked: bookmarks.contains(index),
+                    onBookmarkTap: () {
+                      context
+                          .read<FeaturesBloc>()
+                          .add(ToggleBookmarkEvent(index, "HairProduct"));
+                    },
+                  ),
+                );
               },
             ),
           );
-        },
-      ),
+        }
+      },
     );
   }
 

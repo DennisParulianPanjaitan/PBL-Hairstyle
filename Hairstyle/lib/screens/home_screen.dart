@@ -7,6 +7,10 @@ import '../widgets/home/barber_shop_card.dart'; // Import BarberShopCard
 import '../widgets/home/hair_type_card.dart'; // Import HairTypeCard
 import '../widgets/home/hair_product_card.dart'; // Import HairTypeCar
 import '../widgets/home/hair_style_card.dart'; // Import HairTypeCard
+import 'detail_haircut.dart';
+
+import 'package:uts_linkaja/services/product_service.dart';
+import 'package:uts_linkaja/models/product.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,20 +18,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<Product>> products;
+
   int currentPage = 0;
   ScrollController _scrollController = ScrollController();
   PageController _pageController = PageController(initialPage: 1000);
+  int _itemsPerLoad = 3; // Menampilkan 3 produk per load
+  int _currentIndex = 0;
   double _headerOpacity = 1.0; // Opacity initial header
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    products = ProductService().fetchProducts(); // Simpan Future di variabel
+
     // Add listener to scrollController
     _scrollController.addListener(() {
       double offset = _scrollController.offset;
       setState(() {
-        // Set opacity based on scroll offset
         _headerOpacity = (1 - (offset / 100)).clamp(0, 1);
       });
     });
@@ -153,7 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   currentPage = index % 5;
                                 });
                               },
-                              itemCount: 5 * 1000, // Large number to simulate infinite loop
+                              itemCount: 5 *
+                                  1000, // Large number to simulate infinite loop
                               itemBuilder: (context, index) {
                                 final itemIndex = index % 5;
                                 return PopularHairstyleCard(
@@ -343,38 +353,92 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .start, // Pastikan kotak tidak tertutup
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      // Produk pertama
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 15.0), // Jarak antar kotak
-                                        child: HairProduct(
-                                          imagePath:
-                                              'assets/images/hair_clay.png',
-                                          productName: 'Hair Clay',
-                                        ),
-                                      ),
-                                      // Produk kedua
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 15.0), // Jarak antar kotak
-                                        child: HairProduct(
-                                          imagePath:
-                                              'assets/images/hair_pomade.png',
-                                          productName: 'Hair Pomade',
-                                        ),
-                                      ),
-                                      // Produk ketiga
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 15.0), // Jarak antar kotak
-                                        child: HairProduct(
-                                          imagePath:
-                                              'assets/images/hair_powder.png',
-                                          productName: 'Hair Powder',
-                                        ),
+                                      // Menambahkan instance ProductService
+                                      FutureBuilder<List<Product>>(
+                                        future:
+                                            products, // Gunakan Future yang di-cache
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          } else if (snapshot.hasError) {
+                                            return Center(
+                                                child: Text(
+                                                    'Error: ${snapshot.error}'));
+                                          } else if (!snapshot.hasData ||
+                                              snapshot.data!.isEmpty) {
+                                            return const Center(
+                                                child: Text(
+                                                    'No Products Available'));
+                                          } else {
+                                            List<Product> products =
+                                                snapshot.data!;
+
+                                            // Menampilkan hanya 3 produk pertama
+                                            List<Product> displayedProducts =
+                                                products.take(3).toList();
+
+                                            return Row(
+                                              children: products
+                                                  .take(3)
+                                                  .map((product) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      15), // Jarak antar kotak
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      // Navigasi ke DetailHaircut dengan mengirim data
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              DetailHaircut(
+                                                            title: product.name,
+                                                            description: product
+                                                                .description,
+                                                            sliderImages: product
+                                                                .images
+                                                                .map((img) =>
+                                                                    'assets/images/${img.imageUrl}')
+                                                                .toList(),
+                                                            galleryImages: product
+                                                                .images
+                                                                .map((img) =>
+                                                                    'assets/images/${img.imageUrl}')
+                                                                .toList(),
+                                                            faceShapes: [
+                                                              product.tipeRambut1 ??
+                                                                  '',
+                                                              product.tipeRambut2 ??
+                                                                  '',
+                                                              product.tipeRambut3 ??
+                                                                  '',
+                                                            ]
+                                                                .where((shape) =>
+                                                                    shape
+                                                                        .isNotEmpty)
+                                                                .toList(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: HairProduct(
+                                                      imagePath: product
+                                                              .images.isNotEmpty
+                                                          ? 'assets/images/${product.images.first.imageUrl}'
+                                                          : 'assets/images/default_image.png',
+                                                      productName: product.name,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            );
+                                          }
+                                        },
                                       ),
                                     ],
                                   ),
