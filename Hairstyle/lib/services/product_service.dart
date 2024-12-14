@@ -4,7 +4,7 @@ import '../models/product.dart';
 
 class ProductService {
   static const String _baseUrl =
-      'http://127.0.0.1:8000/api'; // Ganti dengan IP komputer Anda
+      'http://127.0.0.1:8000/api'; // Ganti dengan IP server Anda
 
   Future<List<Product>> fetchProducts() async {
     final url = Uri.parse('$_baseUrl/getproduct'); // URL API Anda

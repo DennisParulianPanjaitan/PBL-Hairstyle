@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is AuthLoading) {
             // Tampilkan indikator loading
             showDialog(
@@ -42,6 +42,11 @@ class _LoginPageState extends State<LoginPage> {
               },
             );
           } else if (state is AuthSuccess) {
+            // Simpan username dan email ke shared_preferences
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('username', state.user.username);
+            await prefs.setString('email', state.user.email);
+            
             // Navigasi ke halaman home setelah login sukses
             Navigator.pushReplacement(
               context,

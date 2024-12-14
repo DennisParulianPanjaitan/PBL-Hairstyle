@@ -4,10 +4,47 @@ import 'package:uts_linkaja/screens/help_support_screen.dart';
 import 'package:uts_linkaja/screens/history.dart';
 import 'package:uts_linkaja/screens/privacy_policy_screen.dart';
 import 'package:uts_linkaja/screens/splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late TextEditingController emailController;
+  late TextEditingController usernameController;
+  late TextEditingController passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    final prefs = await SharedPreferences.getInstance();
+    // emailController.text = prefs.getString('email') ?? '';
+    // usernameController.text = prefs.getString('username') ?? 'Bro';
+    // passwordController.text = prefs.getString('password') ?? '';
+    setState(() {
+      emailController.text = prefs.getString('email') ?? '';
+      usernameController.text = prefs.getString('username') ?? 'Bro';
+      passwordController.text = prefs.getString('password') ?? '';
+    });
+  }
+
+  Future<void> _saveProfileData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', emailController.text);
+    await prefs.setString('username', usernameController.text);
+    // Simpan password hanya jika diperlukan
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +116,8 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               // Name
-              const Text(
-                'Mas Amba',
+              Text(
+                usernameController.text,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -88,8 +125,9 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               // Email
-              const Text(
-                'amber@gmail.com',
+              Text(
+                // 'amber@gmail.com',
+                emailController.text,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 16,
@@ -99,7 +137,8 @@ class ProfileScreen extends StatelessWidget {
               // Form Fields
               _buildTextField(
                 label: 'Email',
-                hint: 'xxx@gmail.com',
+                controller: emailController,
+                hint: 'xxx@example.com',
                 icon: Image.asset(
                   'assets/icons/Message.png', // Gambar email
                   width: 24,
@@ -110,7 +149,8 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 16),
               _buildTextField(
                 label: 'Username',
-                hint: 'xxx@gmail.com',
+                controller: usernameController,
+                hint: 'Email Anda',
                 icon: Image.asset(
                   'assets/icons/Profile.png', // Gambar email
                   width: 24,
@@ -120,7 +160,8 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 16),
               _buildTextField(
                 label: 'Password',
-                hint: '••••••••',
+                controller: passwordController,
+                hint: 'Password Anda',
                 icon: Image.asset(
                   'assets/icons/password.png', // Gambar email
                   width: 24,
@@ -282,6 +323,7 @@ class ProfileScreen extends StatelessWidget {
     required String hint,
     required Widget icon,
     bool isPassword = false,
+    required TextEditingController controller,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,6 +337,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextField(
+          controller: controller,
           obscureText: isPassword,
           decoration: InputDecoration(
             hintText: hint,
