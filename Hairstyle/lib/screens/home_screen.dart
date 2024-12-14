@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/home/popular_hairstyle_card.dart';
 import '../widgets/home/barbershop_data.dart';
@@ -18,8 +19,10 @@ import 'package:uts_linkaja/models/haircut.dart';
 import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -34,6 +37,17 @@ class _HomeScreenState extends State<HomeScreen> {
   double _headerOpacity = 1.0; // Opacity initial header
   Timer? _timer;
 
+  String username = '';
+  String email = '';
+  
+  // Fungsi untuk mengambil data pengguna
+  void getUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username') ?? 'Bro';
+      email = prefs.getString('email') ?? 'Unknown';
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -96,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Hi, Afrizal",
+                              "Hi, $username",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
