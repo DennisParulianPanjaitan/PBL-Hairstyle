@@ -50,7 +50,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     print(
         'Predicted Class: $predictedClass'); // Debugging nilai predicted_class
 
-    final url = Uri.parse('http://10.0.2.2:8000/api/recommendation');
+    final url = Uri.parse('https://hairmate.smartrw.my.id/api/recommendation');
 
     try {
       final response = await http.post(
@@ -134,6 +134,11 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String capitalize(String text) {
+      if (text.isEmpty) return '';
+      return text[0].toUpperCase() + text.substring(1).toLowerCase();
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -174,8 +179,9 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${widget.result['predicted_class']}',
-                          style: TextStyle(
+                          capitalize(
+                              widget.result['predicted_class'] ?? 'No Data'),
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
                             color: Color(0xFF1B1A55),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'detail_history.dart';
+
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
@@ -103,6 +105,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       final item = historyData[index];
                       return _buildHairCutItem(
                         context,
+                        item['scan_id'],
                         item['image'],
                         item['title'],
                         item['description'],
@@ -117,103 +120,103 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _buildHairCutItem(
     BuildContext context,
+    int scanId,
     String imagePath,
     String name,
     String description,
     String date,
-    List<dynamic> hairstyles, // List tiga haircut dari backend
+    List<dynamic> hairstyles,
   ) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10.0),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Color(0xFF1B1A55),
-          width: 2,
+    return GestureDetector(
+      onTap: () {
+        // Navigasi ke DetailHistoryScreen dengan scanId dari data
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailHistoryScreen(
+              scanId: scanId.toString(), // Kirim scan_id sebagai string
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10.0),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: const Color(0xFF1B1A55),
+            width: 2,
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          // Gambar dan konten
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  imagePath,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    imagePath,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Judul dan tanggal
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          name,
-                          style: const TextStyle(
-                            color: Color(0xFF1B1A55),
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          date,
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 149, 148, 148),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    // Tiga tombol haircut
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection:
-                                Axis.horizontal, // Scroll ke arah horizontal
-                            child: Row(
-                              children: List.generate(
-                                hairstyles.length,
-                                (index) => Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: _buildShapeButton(
-                                      hairstyles[index]['name']),
-                                ),
-                              ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            name,
+                            style: const TextStyle(
+                              color: Color(0xFF1B1A55),
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      description,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13,
+                          Text(
+                            date,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 149, 148, 148),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                      const SizedBox(height: 5),
+                      Row(
+                        children: List.generate(
+                          hairstyles.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: _buildShapeButton(hairstyles[index]['name']),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        description,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
