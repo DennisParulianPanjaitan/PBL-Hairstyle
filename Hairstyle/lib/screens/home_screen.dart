@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,15 +40,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String username = '';
   String email = '';
-  
+  String ppPath = '';
+
   // Fungsi untuk mengambil data pengguna
   void getUserData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       username = prefs.getString('username') ?? 'Bro';
       email = prefs.getString('email') ?? 'Unknown';
+      ppPath = prefs.getString('profile_picture_url') ?? '';
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -138,8 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: CircleAvatar(
                             radius: 25,
-                            backgroundImage:
-                                AssetImage('assets/images/home_profile.jpeg'),
+                            backgroundImage: ppPath.isEmpty
+                              ? AssetImage('assets/images/home_profile.jpeg') as ImageProvider
+                              : FileImage(File(ppPath)),
                           ),
                         ),
                       ],
