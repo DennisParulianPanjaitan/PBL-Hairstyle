@@ -5,7 +5,7 @@ class Product {
   final String? tipeRambut1;
   final String? tipeRambut2;
   final String? tipeRambut3;
-  final List<Image> images;
+  final List<ProductImage> images;
 
   Product({
     required this.id,
@@ -19,7 +19,7 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     var imagesList = (json['images'] as List)
-        .map((imageData) => Image.fromJson(imageData))
+        .map((imageData) => ProductImage.fromJson(imageData))
         .toList();
 
     return Product(
@@ -34,14 +34,14 @@ class Product {
   }
 }
 
-class Image {
+class ProductImage {
   final int id;
   final String imageUrl;
 
-  Image({required this.id, required this.imageUrl});
+  ProductImage({required this.id, required this.imageUrl});
 
-  factory Image.fromJson(Map<String, dynamic> json) {
-    return Image(
+  factory ProductImage.fromJson(Map<String, dynamic> json) {
+    return ProductImage(
       id: json['id'],
       imageUrl: json['image_url'],
     );

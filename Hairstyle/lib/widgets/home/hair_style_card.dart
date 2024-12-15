@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uts_linkaja/models/haircut.dart';
 
 class HaircutItem extends StatefulWidget {
   final String title;
@@ -6,6 +7,8 @@ class HaircutItem extends StatefulWidget {
   final List<String> faceShapes;
   final bool isBookmarked;
   final VoidCallback onBookmarkTap;
+  final List<HaircutImage>
+      images; // Menambahkan properti images untuk menyimpan data gambar
 
   const HaircutItem({
     Key? key,
@@ -14,6 +17,7 @@ class HaircutItem extends StatefulWidget {
     required this.faceShapes,
     required this.isBookmarked,
     required this.onBookmarkTap,
+    required this.images, // Tambahkan images
   }) : super(key: key);
 
   @override
@@ -32,6 +36,12 @@ class _HaircutItemState extends State<HaircutItem> {
 
   @override
   Widget build(BuildContext context) {
+    // Mengambil gambar pertama dari list images, atau default jika tidak ada
+    // Pastikan gambar ada di folder assets/images/
+    final imageUrl = widget.images.isNotEmpty
+        ? 'assets/images/${widget.images[0].imageUrl}' // Menggunakan path lokal
+        : 'assets/images/photo.png'; // Path default
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.all(8), // Mengatur padding dalam item
@@ -46,11 +56,11 @@ class _HaircutItemState extends State<HaircutItem> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Gambar
+          // Gambar - Menggunakan Image.asset untuk memuat gambar dari folder assets
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
-              'assets/images/photo.png', // Path gambar
+              imageUrl, // Menggunakan path lokal
               width: 100,
               height: 110,
               fit: BoxFit.cover,

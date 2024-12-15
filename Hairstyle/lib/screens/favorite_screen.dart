@@ -246,84 +246,84 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   //   );
   // }
 
-  Widget _buildProductItem(int index, String imagePath, String productName) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailProduct(),
-          ),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              blurRadius: 6,
-              offset: Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                  child: Image.asset(
-                    imagePath,
-                    height: 190,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  top: 5,
-                  right: 10,
-                  child: IconButton(
-                    icon: Icon(
-                      bookmarkedProducts.contains(index)
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
-                      color: bookmarkedProducts.contains(index)
-                          ? Colors.amber
-                          : Color(0xFF1B1A55),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        if (bookmarkedProducts.contains(index)) {
-                          bookmarkedProducts.remove(index);
-                        } else {
-                          bookmarkedProducts.add(index);
-                        }
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                productName,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 19,
-                  color: Color(0xFF1B1A55),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildProductItem(int index, String imagePath, String productName) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => DetailProduct(),
+  //         ),
+  //       );
+  //     },
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         borderRadius: BorderRadius.circular(16),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.grey.withOpacity(0.3),
+  //             blurRadius: 6,
+  //             offset: Offset(0, 10),
+  //           ),
+  //         ],
+  //       ),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: [
+  //           Stack(
+  //             children: [
+  //               ClipRRect(
+  //                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  //                 child: Image.asset(
+  //                   imagePath,
+  //                   height: 190,
+  //                   width: double.infinity,
+  //                   fit: BoxFit.cover,
+  //                 ),
+  //               ),
+  //               Positioned(
+  //                 top: 5,
+  //                 right: 10,
+  //                 child: IconButton(
+  //                   icon: Icon(
+  //                     bookmarkedProducts.contains(index)
+  //                         ? Icons.bookmark
+  //                         : Icons.bookmark_border,
+  //                     color: bookmarkedProducts.contains(index)
+  //                         ? Colors.amber
+  //                         : Color(0xFF1B1A55),
+  //                   ),
+  //                   onPressed: () {
+  //                     setState(() {
+  //                       if (bookmarkedProducts.contains(index)) {
+  //                         bookmarkedProducts.remove(index);
+  //                       } else {
+  //                         bookmarkedProducts.add(index);
+  //                       }
+  //                     });
+  //                   },
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.all(8.0),
+  //             child: Text(
+  //               productName,
+  //               textAlign: TextAlign.center,
+  //               style: TextStyle(
+  //                 fontWeight: FontWeight.bold,
+  //                 fontSize: 19,
+  //                 color: Color(0xFF1B1A55),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildBarberShopItem(
       int index, String imagePath, String name, String priceRange) {

@@ -9,6 +9,15 @@ import '../widgets/home/barber_shop_card.dart'; // Import BarberShopCard
 import '../widgets/home/hair_type_card.dart'; // Import HairTypeCard
 import '../widgets/home/hair_product_card.dart'; // Import HairTypeCar
 import '../widgets/home/hair_style_card.dart'; // Import HairTypeCard
+import 'detail_haircut.dart';
+
+import 'package:uts_linkaja/services/product_service.dart';
+import 'package:uts_linkaja/models/product.dart';
+
+import 'package:uts_linkaja/services/haircut_service.dart';
+import 'package:uts_linkaja/models/haircut.dart';
+
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,9 +27,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<Product>> products;
+  late Future<List<Haircut>> haircuts;
+
   int currentPage = 0;
-  final ScrollController _scrollController = ScrollController();
-  final PageController _pageController = PageController(initialPage: 1000);
+  ScrollController _scrollController = ScrollController();
+  PageController _pageController = PageController(initialPage: 1000);
+  int _itemsPerLoad = 3; // Menampilkan 3 produk per load
+  int _currentIndex = 0;
   double _headerOpacity = 1.0; // Opacity initial header
   Timer? _timer;
 
@@ -41,14 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    getUserData(); // Panggil fungsi untuk mengambil data pengguna
+    products = ProductService().fetchProducts(); // Simpan Future di variabel
+    haircuts = HaircutService().fetchHaircuts(); // Mengambil data hairstyle
 
     // Add listener to scrollController
     _scrollController.addListener(() {
       double offset = _scrollController.offset;
       setState(() {
-        // Set opacity based on scroll offset
         _headerOpacity = (1 - (offset / 100)).clamp(0, 1);
       });
     });
@@ -117,11 +130,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        CircleAvatar(
-                          radius: 25,
-                          backgroundImage: ppPath.isEmpty
-                            ? AssetImage('assets/images/home_profile.jpeg') as ImageProvider
-                            : FileImage(File(ppPath)),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProfileScreen(), // Make sure ProfileScreen is imported
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 25,
+                            backgroundImage: ppPath.isEmpty
+                              ? AssetImage('assets/images/home_profile.jpeg') as ImageProvider
+                              : FileImage(File(ppPath)),
+                          ),
                         ),
                       ],
                     ),
@@ -365,38 +389,92 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .start, // Pastikan kotak tidak tertutup
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      // Produk pertama
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 15.0), // Jarak antar kotak
-                                        child: HairProduct(
-                                          imagePath:
-                                              'assets/images/hair_clay.png',
-                                          productName: 'Hair Clay',
-                                        ),
-                                      ),
-                                      // Produk kedua
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 15.0), // Jarak antar kotak
-                                        child: HairProduct(
-                                          imagePath:
-                                              'assets/images/hair_pomade.png',
-                                          productName: 'Hair Pomade',
-                                        ),
-                                      ),
-                                      // Produk ketiga
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 15.0), // Jarak antar kotak
-                                        child: HairProduct(
-                                          imagePath:
-                                              'assets/images/hair_powder.png',
-                                          productName: 'Hair Powder',
-                                        ),
+                                      // Menambahkan instance ProductService
+                                      FutureBuilder<List<Product>>(
+                                        future:
+                                            products, // Gunakan Future yang di-cache
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          } else if (snapshot.hasError) {
+                                            return Center(
+                                                child: Text(
+                                                    'Error: ${snapshot.error}'));
+                                          } else if (!snapshot.hasData ||
+                                              snapshot.data!.isEmpty) {
+                                            return const Center(
+                                                child: Text(
+                                                    'No Products Available'));
+                                          } else {
+                                            List<Product> products =
+                                                snapshot.data!;
+
+                                            // Menampilkan hanya 3 produk pertama
+                                            List<Product> displayedProducts =
+                                                products.take(3).toList();
+
+                                            return Row(
+                                              children: products
+                                                  .take(3)
+                                                  .map((product) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      15), // Jarak antar kotak
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      // Navigasi ke DetailHaircut dengan mengirim data
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              DetailHaircut(
+                                                            title: product.name,
+                                                            description: product
+                                                                .description,
+                                                            sliderImages: product
+                                                                .images
+                                                                .map((img) =>
+                                                                    'assets/images/${img.imageUrl}')
+                                                                .toList(),
+                                                            galleryImages: product
+                                                                .images
+                                                                .map((img) =>
+                                                                    'assets/images/${img.imageUrl}')
+                                                                .toList(),
+                                                            faceShapes: [
+                                                              product.tipeRambut1 ??
+                                                                  '',
+                                                              product.tipeRambut2 ??
+                                                                  '',
+                                                              product.tipeRambut3 ??
+                                                                  '',
+                                                            ]
+                                                                .where((shape) =>
+                                                                    shape
+                                                                        .isNotEmpty)
+                                                                .toList(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: HairProduct(
+                                                      imagePath: product
+                                                              .images.isNotEmpty
+                                                          ? 'assets/images/${product.images.first.imageUrl}'
+                                                          : 'assets/images/default_image.png',
+                                                      productName: product.name,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            );
+                                          }
+                                        },
                                       ),
                                     ],
                                   ),
@@ -445,40 +523,88 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Column(
                             children: [
-                              StatefulBuilder(
-                                builder: (context, setState) {
-                                  bool isBuzzCutBookmarked = false;
-                                  return HaircutItem(
-                                    title: 'Buzz Cut',
-                                    description:
-                                        'Buzz cut adalah gaya rambut sangat pendek yang dicukur merata.',
-                                    faceShapes: ['Oval', 'Round', 'Square'],
-                                    isBookmarked: isBuzzCutBookmarked,
-                                    onBookmarkTap: () {
-                                      setState(() {
-                                        isBuzzCutBookmarked =
-                                            !isBuzzCutBookmarked;
-                                      });
-                                    },
-                                  );
-                                },
-                              ),
-                              StatefulBuilder(
-                                builder: (context, setState) {
-                                  bool isCrewCutBookmarked = false;
-                                  return HaircutItem(
-                                    title: 'Crew Cut',
-                                    description:
-                                        'Crew cut adalah gaya rambut klasik dengan sisi pendek.',
-                                    faceShapes: ['Oval', 'Round'],
-                                    isBookmarked: isCrewCutBookmarked,
-                                    onBookmarkTap: () {
-                                      setState(() {
-                                        isCrewCutBookmarked =
-                                            !isCrewCutBookmarked;
-                                      });
-                                    },
-                                  );
+                              FutureBuilder<List<Haircut>>(
+                                future: haircuts, // Mengambil data hairstyle
+                                builder: (context, snapshot) {
+                                  // Memeriksa status koneksi data
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                      child: Text(
+                                        'Failed to load hairstyles: ${snapshot.error}',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    );
+                                  } else if (!snapshot.hasData ||
+                                      snapshot.data!.isEmpty) {
+                                    return Center(
+                                        child:
+                                            Text('No hairstyles available.'));
+                                  } else {
+                                    final haircutList = snapshot
+                                        .data!; // Data yang diambil dari API
+
+                                    // Batasi hanya 3 item pertama
+                                    final limitedHaircutList =
+                                        haircutList.take(3).toList();
+
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: limitedHaircutList.length,
+                                      itemBuilder: (context, index) {
+                                        final haircut =
+                                            limitedHaircutList[index];
+                                        return GestureDetector(
+                                          onTap: () {
+                                            // Navigasi ke halaman detail
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailHaircut(
+                                                  title: haircut.name,
+                                                  description:
+                                                      haircut.description,
+                                                  sliderImages: haircut.images
+                                                      .map((image) =>
+                                                          'assets/images/${image.imageUrl}') // Menambahkan 'assets/images/' pada setiap gambar
+                                                      .toList(),
+                                                  galleryImages: haircut.images
+                                                      .map((image) =>
+                                                          'assets/images/${image.imageUrl}') // Menambahkan 'assets/images/' pada setiap gambar
+                                                      .toList(),
+                                                  faceShapes: [
+                                                    'Oval',
+                                                    'Round'
+                                                  ], // Sesuaikan jika ada data faceShapes
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: HaircutItem(
+                                            title: haircut.name,
+                                            description: haircut.description,
+                                            faceShapes: [
+                                              'Oval',
+                                              'Round'
+                                            ], // Anda bisa menyesuaikan ini jika ada data faceShapes
+                                            isBookmarked:
+                                                false, // Status bookmark, bisa disesuaikan
+                                            onBookmarkTap: () {
+                                              print(
+                                                  'Bookmark tapped for: ${haircut.name}');
+                                            },
+                                            images: haircut
+                                                .images, // Mengirim images dari database
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
                                 },
                               ),
                             ],

@@ -101,12 +101,12 @@ class HistoryScreen extends StatelessWidget {
   ) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RecommendationScreen(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => RecommendationScreen(),
+        //   ),
+        // );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10.0),

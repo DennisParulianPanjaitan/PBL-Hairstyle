@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 import '../widgets/image_slider.dart';
 
 class DetailProduct extends StatelessWidget {
-  const DetailProduct({super.key});
+  final String title;
+  final String description;
+  final List<String> sliderImages;
+  final List<String> galleryImages;
+  final List<String> faceShapes;
+
+  const DetailProduct({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.sliderImages,
+    required this.galleryImages,
+    required this.faceShapes,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<String> images = [
-      'assets/images/pomade.jpeg',
-      'assets/images/pomade1.jpg',
-      'assets/images/pomade2.jpg',
-    ];
-
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -21,10 +28,9 @@ class DetailProduct extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Menggunakan ImageSlider sebagai pengganti gambar
-                  ImageSlider(images: images),
+                  // Slider menggunakan sliderImages
+                  ImageSlider(images: sliderImages),
                   const SizedBox(height: 16),
-                  // Informasi haircut
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
@@ -33,9 +39,9 @@ class DetailProduct extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "Buzz Cut",
-                              style: TextStyle(
+                            Text(
+                              title,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
                                 color: Color(0xFF1B1A55),
@@ -43,12 +49,11 @@ class DetailProduct extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                const Icon(Icons.star,
-                                    color: Colors.amber, size: 20),
+                                const Icon(Icons.star, color: Colors.amber, size: 20),
                                 const SizedBox(width: 4),
-                                Text(
+                                const Text(
                                   "4.5",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -60,9 +65,8 @@ class DetailProduct extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "A buzz cut is a short and neat hairstyle, typically achieved using electric clippers set to a low guard number, usually between 1 and 3. This style results in hair being cropped close to the scalp, leaving only a small amount of length.",
-                          style:
-                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                          description,
+                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                           textAlign: TextAlign.justify,
                         ),
                         const SizedBox(height: 16),
@@ -78,17 +82,7 @@ class DetailProduct extends StatelessWidget {
                         Wrap(
                           spacing: 8.0,
                           runSpacing: 8.0,
-                          children: [
-                            // Menambahkan gambar di awal (sebelah kiri)
-                            Image.asset(
-                              'assets/icons/beared.png', // Ganti dengan path gambar Anda
-                              width: 40, // Sesuaikan ukuran gambar
-                              height: 40, // Sesuaikan ukuran gambar
-                            ),
-                            _buildFaceTag("Diamond"),
-                            _buildFaceTag("Square"),
-                            _buildFaceTag("Oval"),
-                          ],
+                          children: faceShapes.map(_buildFaceTag).toList(),
                         ),
                         const SizedBox(height: 16),
                         const Text(
@@ -100,21 +94,21 @@ class DetailProduct extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
+                        // Galeri menggunakan galleryImages
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 14.0,
                             mainAxisSpacing: 14.0,
                           ),
-                          itemCount: 4,
+                          itemCount: galleryImages.length,
                           itemBuilder: (context, index) {
                             return ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: Image.asset(
-                                'assets/images/haircut_gallery_$index.jpeg',
+                                galleryImages[index],
                                 fit: BoxFit.cover,
                               ),
                             );
@@ -126,19 +120,17 @@ class DetailProduct extends StatelessWidget {
                 ],
               ),
             ),
-            // Tombol Back menggunakan Positioned
             Positioned(
               top: 16,
               left: 16,
               child: IconButton(
                 icon: Image.asset(
-                  'assets/icons/detailarrow.png', // Ganti dengan path gambar Anda
-                  width: 30, // Sesuaikan ukuran gambar sesuai kebutuhan
-                  height: 30, // Sesuaikan ukuran gambar sesuai kebutuhan
+                  'assets/icons/detailarrow.png',
+                  width: 30,
+                  height: 30,
                 ),
                 onPressed: () {
-                  Navigator.pop(
-                      context); // Fungsi untuk kembali ke layar sebelumnya
+                  Navigator.pop(context);
                 },
               ),
             ),
@@ -148,11 +140,9 @@ class DetailProduct extends StatelessWidget {
     );
   }
 
-  // Widget untuk face tag
   Widget _buildFaceTag(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 12, vertical: 2), // Ubah vertical menjadi 4
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -168,3 +158,5 @@ class DetailProduct extends StatelessWidget {
     );
   }
 }
+
+

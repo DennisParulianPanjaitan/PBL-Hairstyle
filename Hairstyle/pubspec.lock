@@ -106,7 +106,7 @@ packages:
     source: hosted
     version: "0.0.11"
   cloudinary_url_gen:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloudinary_url_gen
       sha256: d79558bcb845eedc0e7e7b2a2b06049ce625a590a15eb4fb0630759ec102a732

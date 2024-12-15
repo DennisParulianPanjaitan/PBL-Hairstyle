@@ -11,6 +11,7 @@ dependencies:
   camera: ^0.11.0+2
   cloudinary_api: ^1.0.2
   cloudinary_dart: ^0.0.11
+  cloudinary_url_gen: ^1.6.0
   cupertino_icons: ^1.0.8
   equatable: ^2.0.7
   flutter:
@@ -32,4 +33,5 @@ flutter:
     - assets/images/
     - assets/images/haircut/buzz_cut/
     - assets/images/haircut/crew_cut/
+    - assets/images/uploads/
     - assets/icons/
