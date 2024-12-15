@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uts_linkaja/widgets/hair_button.dart';
 
 class RecommendationScreen extends StatefulWidget {
@@ -24,20 +25,32 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   List<dynamic> recommendations = [];
   bool isLoading = true;
   bool isFetching = false;
+  late int id;
 
   @override
   void initState() {
     super.initState();
-    if (!isFetching) {
-      isFetching = true; // Set flag ke true agar tidak dipanggil lagi
-      fetchRecommendations(widget.result['predicted_class']);
-    }
+    _loadUserId();
   }
 
-  Future<void> fetchRecommendations(String predictedClass) async {
-    print('Predicted Class: $predictedClass'); // Debug nilai predicted_class
+  Future<void> _loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    id = prefs.getInt('id') ?? 0; // Ambil user_id, default 0 jika null
 
-    final url = Uri.parse('https://hairmate.smartrw.my.id/api/recommendation');
+    if (id == 0) {
+      print("Error: user_id not found in SharedPreferences.");
+      return;
+    }
+
+    fetchRecommendations(widget.result['predicted_class']);
+  }
+
+  /// Fungsi untuk fetch data rekomendasi dari API
+  Future<void> fetchRecommendations(String predictedClass) async {
+    print(
+        'Predicted Class: $predictedClass'); // Debugging nilai predicted_class
+
+    final url = Uri.parse('http://10.0.2.2:8000/api/recommendation');
 
     try {
       final response = await http.post(
@@ -56,6 +69,13 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
             recommendations = responseData['data']['hairstyles'];
             isLoading = false;
           });
+
+          // Simpan ke scan_history
+          await saveScanHistory(
+            widget.imagePath,
+            predictedClass,
+            responseData['data']['id'], // ID rekomendasi
+          );
         } else {
           setState(() {
             recommendations = [];
@@ -70,6 +90,45 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  /// Fungsi untuk menyimpan hasil scan ke database scan_history
+  Future<void> saveScanHistory(
+      String filePath, String faceShape, int recomId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('id') ?? 0;
+
+    if (userId == 0) {
+      print("Error: user_id not found in SharedPreferences.");
+      return;
+    }
+
+    final url =
+        Uri.parse('https://hairmate.smartrw.my.id/api/scan-history/store');
+
+    try {
+      var request = http.MultipartRequest('POST', url)
+        ..fields['user_id'] = userId.toString()
+        ..fields['face_shape'] = faceShape
+        ..fields['recom_id'] = recomId.toString()
+        ..files.add(await http.MultipartFile.fromPath('image', filePath));
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final decodedResponse = jsonDecode(responseData);
+        if (decodedResponse['success']) {
+          print('Scan history saved successfully!');
+        } else {
+          print('Failed to save scan history: ${decodedResponse['message']}');
+        }
+      } else {
+        print('Error saving scan history: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error saving scan history: $error');
     }
   }
 

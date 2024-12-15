@@ -9,15 +9,6 @@ import 'package:http_parser/http_parser.dart';
 
 import 'recomendation_page.dart';
 
-import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:mime/mime.dart';
-import 'dart:convert';
-import 'package:http_parser/http_parser.dart'; // Import this for MediaType
-
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
 
@@ -300,7 +291,7 @@ class PreviewPage extends StatelessWidget {
   Future<void> _sendImageToAPI(String imagePath, BuildContext context) async {
     try {
       final uri = Uri.parse(
-          'https://d353-182-253-176-146.ngrok-free.app/predict/'); // Replace with actual API URL
+          'https://4aa5-182-253-176-146.ngrok-free.app/predict/'); // Replace with actual API URL
 
       // Use MediaType.parse() for content type
       final request = http.MultipartRequest('POST', uri)

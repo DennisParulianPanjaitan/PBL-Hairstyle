@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: const [
                       CircularProgressIndicator(),
                       SizedBox(width: 10),
-                      Text("Logging in..."),
+                      Text("Wait a Minute..."),
                     ],
                   ),
                 );
@@ -46,7 +46,8 @@ class _LoginPageState extends State<LoginPage> {
             final prefs = await SharedPreferences.getInstance();
             await prefs.setString('username', state.user.username);
             await prefs.setString('email', state.user.email);
-            
+            await prefs.setInt('id', state.user.id);
+
             // Navigasi ke halaman home setelah login sukses
             Navigator.pushReplacement(
               context,
