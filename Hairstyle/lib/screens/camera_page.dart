@@ -2,6 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
+import 'dart:convert';
+import 'package:http_parser/http_parser.dart';
+
+import 'recomendation_page.dart';
+
+import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
+import 'dart:convert';
+import 'package:http_parser/http_parser.dart'; // Import this for MediaType
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -176,8 +191,7 @@ class _CameraPageState extends State<CameraPage> {
                       color: Colors.black.withOpacity(0.3),
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back_ios_rounded,
-                          color: Colors.white),
+                      icon: Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -209,11 +223,11 @@ class _CameraPageState extends State<CameraPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: 70,
-                          height: 70,
+                          width: 50,
+                          height: 50,
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(40),
+                            borderRadius: BorderRadius.circular(25),
                           ),
                           child: IconButton(
                             icon:
@@ -238,8 +252,8 @@ class _CameraPageState extends State<CameraPage> {
                           ),
                         ),
                         Container(
-                          width: 90,
-                          height: 90,
+                          width: 80,
+                          height: 80,
                           decoration: BoxDecoration(
                             color: Color(0xFF1B1A55),
                             shape: BoxShape.circle,
@@ -254,11 +268,11 @@ class _CameraPageState extends State<CameraPage> {
                           ),
                         ),
                         Container(
-                          width: 70,
-                          height: 70,
+                          width: 50,
+                          height: 50,
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(40),
+                            borderRadius: BorderRadius.circular(25),
                           ),
                           child: IconButton(
                             icon: Icon(
@@ -283,6 +297,68 @@ class PreviewPage extends StatelessWidget {
 
   const PreviewPage({super.key, required this.imagePath});
 
+  Future<void> _sendImageToAPI(String imagePath, BuildContext context) async {
+    try {
+      final uri = Uri.parse(
+          'https://d353-182-253-176-146.ngrok-free.app/predict/'); // Replace with actual API URL
+
+      // Use MediaType.parse() for content type
+      final request = http.MultipartRequest('POST', uri)
+        ..fields['user'] = 'flutter_user' // Optionally add user or other data
+        ..files.add(await http.MultipartFile.fromPath(
+          'file', imagePath,
+          contentType: MediaType.parse('image/jpeg'), // Use MediaType.parse()
+        ));
+      request.headers.addAll(({
+        'ngrok-skip-browser-warning': 'true',
+      }));
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        // Handle success
+        final responseBody = await response.stream.bytesToString();
+        final decodedResponse = jsonDecode(responseBody);
+
+        // Navigate to the result page with the response data (modify as needed)
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecommendationScreen(
+              result: decodedResponse,
+              imagePath: imagePath,
+            ),
+          ),
+        );
+      } else {
+        // Handle error
+        print('Failed to upload image. Status Code: ${response.statusCode}');
+        _showErrorDialog(context, 'Error uploading image');
+      }
+    } catch (e) {
+      // Handle error
+      print('Error: $e');
+      _showErrorDialog(context, 'Error occurred: $e');
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -291,18 +367,12 @@ class PreviewPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.file(File(
-                imagePath)), // Menampilkan gambar yang dipilih atau diambil
+            Image.file(File(imagePath)), // Display the captured image
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                // Navigasi ke halaman hasil setelah preview
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const ResultPage(),
-                //   ),
-                // );
+                // Call the function to send the image to the API
+                _sendImageToAPI(imagePath, context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF1B1A55),
@@ -313,8 +383,7 @@ class PreviewPage extends StatelessWidget {
               child: const Text(
                 "Go to Result Page",
                 style: TextStyle(
-                  color: Color.fromARGB(
-                      255, 255, 255, 255), // Mengubah warna teks menjadi biru
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
             ),
