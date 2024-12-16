@@ -3,17 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uts_linkaja/screens/login.dart';
 
 import '../blocs/auth/auth_bloc.dart';
-// import '../blocs/auth/auth_event.dart';
 import '../blocs/auth/auth_event.dart';
 import '../blocs/auth/auth_state.dart';
-import 'package:flutter/material.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
 
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // State untuk visibilitas password
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -106,15 +112,27 @@ class RegisterPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 16),
-                        // Password TextField
+                        // Password TextField with Visibility Toggle
                         TextField(
                           controller: passwordController,
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.lock),
                             labelText: "Password",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
                             ),
                           ),
                         ),
@@ -155,8 +173,7 @@ class RegisterPage extends StatelessWidget {
                         Center(
                           child: TextButton(
                             onPressed: () {
-                              Navigator.pop(
-                                  context); // Kembali ke halaman login
+                              Navigator.pop(context);
                             },
                             child: Text(
                               "Already have an account? Login",
