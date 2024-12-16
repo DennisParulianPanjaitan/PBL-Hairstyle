@@ -24,11 +24,11 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     HomeScreen(),
     FeaturesPage(),
-    FeaturesPage(),
+    FavoritesPage(),
     ProfileScreen(),
   ];
-  
-   // Fungsi untuk mengambil data pengguna
+
+  // Fungsi untuk mengambil data pengguna
   // void getUserData() async {
   //   final prefs = await SharedPreferences.getInstance();
   //   setState(() {

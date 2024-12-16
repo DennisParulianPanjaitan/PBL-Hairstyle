@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,27 @@ import 'package:uts_linkaja/models/haircut.dart';
 
 import 'profile_screen.dart';
 
+final List<Map<String, String>> hairstyles = [
+  {
+    'title': 'Buzz Cut',
+    'description':
+        'A very short, even cut all over the head. Easy to maintain, clean, and masculine, suitable for various face shapes.',
+    'imagePath': 'assets/images/masamba.jpeg',
+  },
+  {
+    'title': 'Undercut',
+    'description':
+        'Short sides with longer top. Popular and modern, giving a stylish and edgy look.',
+    'imagePath': 'assets/images/masamba2.jpeg',
+  },
+  {
+    'title': 'Two Block',
+    'description':
+        'Long, voluminous top with short sides and back. Perfect for a trendy and cool look.',
+    'imagePath': 'assets/images/masamba4.jpeg',
+  },
+];
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -32,22 +54,23 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentPage = 0;
   ScrollController _scrollController = ScrollController();
   PageController _pageController = PageController(initialPage: 1000);
-  int _itemsPerLoad = 3; // Menampilkan 3 produk per load
-  int _currentIndex = 0;
   double _headerOpacity = 1.0; // Opacity initial header
   Timer? _timer;
 
   String username = '';
   String email = '';
-  
+  String ppPath = '';
+
   // Fungsi untuk mengambil data pengguna
   void getUserData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       username = prefs.getString('username') ?? 'Bro';
       email = prefs.getString('email') ?? 'Unknown';
+      ppPath = prefs.getString('profile_picture_url') ?? '';
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -138,8 +161,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: CircleAvatar(
                             radius: 25,
-                            backgroundImage:
-                                AssetImage('assets/images/home_profile.jpeg'),
+                            backgroundImage: ppPath.isEmpty
+                                ? AssetImage('assets/images/home_profile.jpeg')
+                                    as ImageProvider
+                                : FileImage(File(ppPath)),
                           ),
                         ),
                       ],
@@ -177,31 +202,36 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding:
                                 const EdgeInsets.only(left: 25.0, top: 20.0),
                             child: Text(
-                              "Popular hairstyle this month",
+                              "Preview Haircut",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
+
                           SizedBox(
                             height: 220,
                             child: PageView.builder(
                               controller: _pageController,
                               onPageChanged: (index) {
                                 setState(() {
-                                  currentPage = index % 5;
+                                  currentPage = index %
+                                      3; // This keeps cycling between 0 to 4
                                 });
                               },
-                              itemCount: 5 *
-                                  1000, // Large number to simulate infinite loop
+                              itemCount: 3 * 1000, // Infinite loop simulation
                               itemBuilder: (context, index) {
-                                final itemIndex = index % 5;
+                                final itemIndex = index % 3;
+                                final hairstyle = hairstyles[
+                                    itemIndex]; // Get data for the current page
+
                                 return PopularHairstyleCard(
-                                  title: "Buzz Cut",
-                                  description:
-                                      "Buzz cut adalah gaya rambut sangat pendek yang dicukur merata di seluruh kepala. Gaya ini mudah dirawat, memberikan tampilan bersih dan maskulin, serta cocok untuk berbagai bentuk wajah.",
-                                  imagePath: 'assets/images/masamba.jpeg',
+                                  title: hairstyle[
+                                      'title']!, // Access title from the list
+                                  description: hairstyle['description']!,
+                                  imagePath: hairstyle['imagePath']!,
+                                  // Access description from the list
                                 );
                               },
                             ),
@@ -212,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               SizedBox(width: 30),
                               ...List.generate(
-                                5,
+                                3,
                                 (index) => AnimatedContainer(
                                   duration: Duration(milliseconds: 300),
                                   margin: EdgeInsets.symmetric(horizontal: 4),
@@ -228,6 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
+
                           SizedBox(
                               height: 20), // Jarak dengan bagian Barbershop
                           // Bagian Barbershop

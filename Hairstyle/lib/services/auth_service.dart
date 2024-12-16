@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import '../models/user_model.dart';
 
 class AuthService {
-  // final String baseUrl = "https://hairmate.smartrw.my.id/api/user";
   final String baseUrl = "https://hairmate.smartrw.my.id/api/user";
 
   Future<UserModel?> login(String email, String password) async {

@@ -13,83 +13,85 @@ class PopularHairstyleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          width: 350, // Lebar kotak biru
-          height: 200, // Tinggi kotak biru
-          margin: EdgeInsets.only(top: 20, left: 20), // Margin untuk kotak biru
+    // Menentukan ukuran gambar berdasarkan title
+    double imageWidth = 180;
+    double imageHeight = 180;
 
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            color: Color(0xFF1B1A55),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 0), // Ruang untuk gambar
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 110), // Geser seluruh teks ke kanan dan atas
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 1), // Geser teks deskripsi ke kanan
-                          child: Text(
-                            description,
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 11, // Atur ukuran font sesuai kebutuhan
-                            ),
-                            maxLines: 6,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 225, bottom: 1), // Geser teks "Model Mas Amba"
-                    child: Text(
-                      "Model Mas Amba",
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ),
-                ],
+    if (title == "Buzz Cut") {
+      imageWidth = 200; // Lebar gambar berbeda untuk Buzz Cut
+      imageHeight = 220; // Tinggi gambar berbeda untuk Buzz Cut
+    } else if (title == "Coma") {
+      imageWidth = 0; // Lebar gambar berbeda untuk Coma
+      imageHeight = 100; // Tinggi gambar berbeda untuk Coma
+    } else if (title == "Undercut") {
+      imageWidth = 180; // Lebar gambar berbeda untuk Undercut
+      imageHeight = 200; // Tinggi gambar berbeda untuk Undercut
+    } else if (title == "Mullet") {
+      imageWidth = 190; // Lebar gambar berbeda untuk Mullet
+      imageHeight = 210; // Tinggi gambar berbeda untuk Mullet
+    } else if (title == "Two Block") {
+      imageWidth = 220; // Lebar gambar berbeda untuk Two Block
+      imageHeight = 240; // Tinggi gambar berbeda untuk Two Block
+    }
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        color: Color(0xFF1B1A55),
+        elevation: 10, // Efek bayangan
+        child: Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Kolom pertama untuk gambar dengan ukuran tetap
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  imagePath,
+                  width: 120, // Tentukan lebar gambar tetap (misalnya 100)
+                  height: 200, // Tentukan tinggi gambar tetap
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
+              SizedBox(width: 16), // Jarak antar kolom
+              // Kolom kedua untuk title dan description, menggunakan Expanded agar kolom teks mengambil sisa ruang
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 32, 16, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        description,
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        Positioned(
-          top: -60, // Posisi vertikal gambar relatif terhadap Card
-          left: 8, // Posisi horizontal gambar relatif terhadap Card
-          child: ClipRRect(
-            borderRadius:
-                BorderRadius.circular(12), // Membuat sudut gambar melengkung
-            child: Image.asset(
-              imagePath, // Jalur file gambar
-              width: 180, // Lebar gambar
-              height: 300, // Tinggi gambar
-              fit: BoxFit.fill, // Stretch gambar agar memenuhi ruang
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
