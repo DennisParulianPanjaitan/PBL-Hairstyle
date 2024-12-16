@@ -78,13 +78,13 @@ class ContactUsScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               children: [
                 const Text(
-                  'Selamat datang di halaman Bantuan dan Dukungan kami. Jika Anda membutuhkan bantuan tentang cara menggunakan aplikasi HairMate, ikuti langkah-langkah di bawah ini untuk memulai dan memanfaatkan fitur-fitur yang tersedia.',
+                  'Welcome to our Help and Support page. If you need assistance on how to use the HairMate application, follow the steps below to get started and make use of the available features.',
                   style: TextStyle(fontSize: 16, color: Colors.black87),
                   textAlign: TextAlign.justify,
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'Langkah-langkah Penggunaan Aplikasi HairMate',
+                  'Steps to Use the HairMate Application',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -92,70 +92,70 @@ class ContactUsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _buildStep(
-                  'Pendaftaran Akun',
+                  'Account Registration',
                   [
-                    'Buka aplikasi HairMate.',
-                    'Pilih opsi Daftar di halaman utama.',
-                    'Isi informasi yang diperlukan seperti nama, email, dan kata sandi.',
-                    'Klik Daftar untuk membuat akun Anda. Anda akan menerima email konfirmasi untuk verifikasi.',
+                    'Open the HairMate application.',
+                    'Select the Register option on the main page.',
+                    'Fill in the required information such as name, email, and password.',
+                    'Click Register to create your account. You will receive a confirmation email for verification.',
                   ],
                 ),
                 const SizedBox(height: 16),
                 _buildStep(
-                  'Login ke Akun',
+                  'Login to Your Account',
                   [
-                    'Setelah berhasil mendaftar, buka aplikasi dan pilih Masuk.',
-                    'Masukkan email dan kata sandi yang telah Anda daftarkan.',
-                    'Klik Masuk untuk mengakses aplikasi.',
+                    'After successfully registering, open the app and select Login.',
+                    'Enter the email and password you registered with.',
+                    'Click Login to access the application.',
                   ],
                 ),
                 const SizedBox(height: 16),
                 _buildStep(
-                  'Mengunggah Foto Wajah',
+                  'Uploading a Face Photo',
                   [
-                    'Pada halaman utama aplikasi, pilih menu Scan atau Unggah Foto.',
-                    'Pilih foto wajah Anda dari galeri atau ambil foto baru menggunakan kamera.',
-                    'Pastikan foto diambil dengan pencahayaan yang baik untuk hasil deteksi yang lebih akurat.',
+                    'On the main page of the app, select the Scan or Upload Photo menu.',
+                    'Choose your face photo from the gallery or take a new photo using the camera.',
+                    'Ensure the photo is taken with good lighting for more accurate detection results.',
                   ],
                 ),
                 const SizedBox(height: 16),
                 _buildStep(
-                  'Mendapatkan Rekomendasi Gaya Rambut',
+                  'Getting Hairstyle Recommendations',
                   [
-                    'Setelah foto wajah berhasil diunggah, aplikasi akan memproses gambar untuk mendeteksi bentuk wajah Anda.',
-                    'Berdasarkan deteksi bentuk wajah, aplikasi akan memberikan beberapa rekomendasi gaya rambut yang cocok.',
-                    'Anda dapat melihat gambar model rambut dan memilih gaya yang paling sesuai dengan preferensi Anda.',
+                    'Once the face photo is successfully uploaded, the app will process the image to detect your face shape.',
+                    'Based on the detected face shape, the app will provide several hairstyle recommendations that suit you.',
+                    'You can view hairstyle images and choose the style that best matches your preference.',
                   ],
                 ),
                 const SizedBox(height: 16),
                 _buildStep(
-                  'Menyimpan dan Mengelola Rekomendasi',
+                  'Saving and Managing Recommendations',
                   [
-                    'Jika Anda tertarik dengan gaya rambut yang direkomendasikan, pilih opsi Simpan atau Tambahkan ke Wishlist untuk menyimpannya.',
-                    'Anda dapat mengakses gaya rambut yang telah disimpan melalui menu Wishlist di aplikasi.',
+                    'If you are interested in a recommended hairstyle, select the Save or Add to Wishlist option.',
+                    'You can access the saved hairstyles through the Wishlist menu in the app.',
                   ],
                 ),
                 const SizedBox(height: 16),
                 _buildStep(
-                  'Mengatur Profil Pengguna',
+                  'Managing Your Profile',
                   [
-                    'Untuk memperbarui informasi pribadi Anda, buka menu Profil.',
-                    'Di halaman profil, Anda dapat mengubah foto profil, nama, email, dan preferensi lainnya.',
-                    'Klik Simpan Perubahan untuk memperbarui informasi.',
+                    'To update your personal information, go to the Profile menu.',
+                    'On the profile page, you can change your profile photo, name, email, and other preferences.',
+                    'Click Save Changes to update the information.',
                   ],
                 ),
                 const SizedBox(height: 16),
                 _buildStep(
-                  'Menghubungi Dukungan Pelanggan',
+                  'Contacting Customer Support',
                   [
-                    'Jika Anda memiliki masalah atau pertanyaan, pilih menu Contact us.',
-                    'Anda dapat menghubungi kami melalui Email atau contact lain kami.',
-                    'Jika Anda membutuhkan informasi lebih lanjut atau memiliki pertanyaan lain, jangan ragu untuk menghubungi tim dukungan kami melalui email atau contact lain kami.',
+                    'If you have any issues or questions, select the Contact Us menu.',
+                    'You can contact us via Email or other contact options.',
+                    'If you need further information or have other questions, do not hesitate to contact our support team via email or other available contacts.',
                   ],
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Dengan langkah-langkah di atas, Anda dapat dengan mudah menggunakan HairMate dan mendapatkan rekomendasi gaya rambut terbaik berdasarkan bentuk wajah Anda.',
+                  'By following the steps above, you can easily use HairMate and get the best hairstyle recommendations based on your face shape.',
                   style: TextStyle(fontSize: 16, color: Colors.black87),
                 ),
               ],
@@ -197,7 +197,7 @@ class ContactUsScreen extends StatelessWidget {
                       _buildContactItem(
                         icon: Icons.business,
                         title: 'Office Address',
-                        content: '123 HairMate Street, City, Country',
+                        content: '123 True Street, Malang, Indonesia',
                         onTap: () {
                           // action for showing address
                         },
@@ -228,7 +228,6 @@ class ContactUsScreen extends StatelessWidget {
           title,
           style: TextStyle(
             color: Color(0xFF1B1A55),
-            // fontWeight: FontWeight.bold,
           ),
         ),
         subtitle: subtitle != null ? Text(subtitle) : null,

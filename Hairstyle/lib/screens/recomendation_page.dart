@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uts_linkaja/widgets/hair_button.dart';
 
 class RecommendationScreen extends StatefulWidget {
@@ -24,18 +25,30 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
   List<dynamic> recommendations = [];
   bool isLoading = true;
   bool isFetching = false;
+  late int id;
 
   @override
   void initState() {
     super.initState();
-    if (!isFetching) {
-      isFetching = true; // Set flag ke true agar tidak dipanggil lagi
-      fetchRecommendations(widget.result['predicted_class']);
-    }
+    _loadUserId();
   }
 
+  Future<void> _loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    id = prefs.getInt('id') ?? 0; // Ambil user_id, default 0 jika null
+
+    if (id == 0) {
+      print("Error: user_id not found in SharedPreferences.");
+      return;
+    }
+
+    fetchRecommendations(widget.result['predicted_class']);
+  }
+
+  /// Fungsi untuk fetch data rekomendasi dari API
   Future<void> fetchRecommendations(String predictedClass) async {
-    print('Predicted Class: $predictedClass'); // Debug nilai predicted_class
+    print(
+        'Predicted Class: $predictedClass'); // Debugging nilai predicted_class
 
     final url = Uri.parse('https://hairmate.smartrw.my.id/api/recommendation');
 
@@ -56,6 +69,13 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
             recommendations = responseData['data']['hairstyles'];
             isLoading = false;
           });
+
+          // Simpan ke scan_history
+          await saveScanHistory(
+            widget.imagePath,
+            predictedClass,
+            responseData['data']['id'], // ID rekomendasi
+          );
         } else {
           setState(() {
             recommendations = [];
@@ -73,8 +93,52 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     }
   }
 
+  /// Fungsi untuk menyimpan hasil scan ke database scan_history
+  Future<void> saveScanHistory(
+      String filePath, String faceShape, int recomId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('id') ?? 0;
+
+    if (userId == 0) {
+      print("Error: user_id not found in SharedPreferences.");
+      return;
+    }
+
+    final url =
+        Uri.parse('https://hairmate.smartrw.my.id/api/scan-history/store');
+
+    try {
+      var request = http.MultipartRequest('POST', url)
+        ..fields['user_id'] = userId.toString()
+        ..fields['face_shape'] = faceShape
+        ..fields['recom_id'] = recomId.toString()
+        ..files.add(await http.MultipartFile.fromPath('image', filePath));
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseData = await response.stream.bytesToString();
+        final decodedResponse = jsonDecode(responseData);
+        if (decodedResponse['success']) {
+          print('Scan history saved successfully!');
+        } else {
+          print('Failed to save scan history: ${decodedResponse['message']}');
+        }
+      } else {
+        print('Error saving scan history: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error saving scan history: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    String capitalize(String text) {
+      if (text.isEmpty) return '';
+      return text[0].toUpperCase() + text.substring(1).toLowerCase();
+    }
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -115,8 +179,9 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${widget.result['predicted_class']}',
-                          style: TextStyle(
+                          capitalize(
+                              widget.result['predicted_class'] ?? 'No Data'),
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
                             color: Color(0xFF1B1A55),
@@ -181,6 +246,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   Widget _buildCut(int index) {
     final hairstyle = recommendations[index];
+    final images = hairstyle['images'] ?? [];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -201,20 +268,29 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
         const SizedBox(height: 16),
         GridView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 8.0,
             mainAxisSpacing: 8.0,
           ),
-          itemCount: hairstyle['images'].length,
+          itemCount: images.length,
           itemBuilder: (context, imgIndex) {
-            final image = hairstyle['images'][imgIndex];
+            final String imageUrl = images[imgIndex]['image_url'] ?? '';
+            final String assetPath = 'assets/images/$imageUrl';
+
             return ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                image['image_url'],
+              child: Image.asset(
+                assetPath, // Tambahkan path lokal
                 fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) {
+                  return const Icon(
+                    Icons.image_not_supported,
+                    size: 50,
+                    color: Colors.grey,
+                  );
+                },
               ),
             );
           },

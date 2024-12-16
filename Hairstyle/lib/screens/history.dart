@@ -1,58 +1,77 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:uts_linkaja/screens/recomendation_page.dart';
-import 'detail_haircut.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class HistoryScreen extends StatelessWidget {
+import 'detail_history.dart';
+
+class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Daftar data haircut
-    final haircuts = [
-      {
-        'image': 'assets/images/photo.png',
-        'title': 'Square',
-        'description':
-            'Gunakan pomade atau clay daya tahan tinggi untuk Buzz Cut dan Mullet yang rapi, serta dry shampoo dan serum untuk menjaga kesegaran dan kesehatan rambut pada gaya Man Bun.',
-        'date': '2024-12-02',
-      },
-      {
-        'image': 'assets/images/photo.png',
-        'title': 'Rectangular',
-        'description':
-            'Gunakan pomade atau clay daya tahan tinggi untuk Buzz Cut dan Mullet yang rapi, serta dry shampoo dan serum untuk menjaga kesegaran dan kesehatan rambut pada gaya Man Bun.',
-        'date': '2024-11-25',
-      },
-      {
-        'image': 'assets/images/photo.png',
-        'title': 'Heart',
-        'description':
-            'Gunakan pomade atau clay daya tahan tinggi untuk Buzz Cut dan Mullet yang rapi, serta dry shampoo dan serum untuk menjaga kesegaran dan kesehatan rambut pada gaya Man Bun.',
-        'date': '2024-11-18',
-      },
-      {
-        'image': 'assets/images/photo.png',
-        'title': 'Square',
-        'description':
-            'Gunakan pomade atau clay daya tahan tinggi untuk Buzz Cut dan Mullet yang rapi, serta dry shampoo dan serum untuk menjaga kesegaran dan kesehatan rambut pada gaya Man Bun.',
-        'date': '2024-11-10',
-      },
-      {
-        'image': 'assets/images/photo.png',
-        'title': 'Oval',
-        'description':
-            'Gunakan pomade atau clay daya tahan tinggi untuk Buzz Cut dan Mullet yang rapi, serta dry shampoo dan serum untuk menjaga kesegaran dan kesehatan rambut pada gaya Man Bun.',
-        'date': '2024-11-10',
-      },
-      {
-        'image': 'assets/images/photo.png',
-        'title': 'Rectangular',
-        'description':
-            'Gunakan pomade atau clay daya tahan tinggi untuk Buzz Cut dan Mullet yang rapi, serta dry shampoo dan serum untuk menjaga kesegaran dan kesehatan rambut pada gaya Man Bun.',
-        'date': '2024-11-10',
-      },
-    ];
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
 
+class _HistoryScreenState extends State<HistoryScreen> {
+  List<dynamic> historyData = []; // Data untuk menyimpan hasil API
+  bool isLoading = true; // State untuk loading
+
+  @override
+  void initState() {
+    super.initState();
+    fetchHistory(); // Panggil API saat inisialisasi
+  }
+
+  Future<void> fetchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('id') ?? 0;
+
+    if (userId == 0) {
+      print("Error: user_id not found in SharedPreferences.");
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
+    final url =
+        Uri.parse('https://hairmate.smartrw.my.id/api/scan-history/get');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'user_id': userId}),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        if (responseData['success']) {
+          setState(() {
+            historyData = responseData['data'];
+            isLoading = false;
+          });
+        } else {
+          print('Error fetching history: ${responseData['message']}');
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } else {
+        print('Error fetching history: ${response.statusCode}');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (error) {
+      print('Error fetching history: $error');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -62,7 +81,6 @@ class HistoryScreen extends StatelessWidget {
             height: 40,
           ),
           onPressed: () => Navigator.pop(context),
-          color: Color(0xFF1B1A55),
         ),
         title: const Text(
           'History',
@@ -75,38 +93,51 @@ class HistoryScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0.5,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: List.generate(haircuts.length, (index) {
-            final haircut = haircuts[index];
-            return _buildHairCutItem(
-              context,
-              haircut['image']!,
-              haircut['title']!,
-              haircut['description']!,
-              haircut['date']!,
-            );
-          }),
-        ),
-      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : historyData.isEmpty
+              ? const Center(
+                  child: Text('No history found.'),
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: List.generate(historyData.length, (index) {
+                      final item = historyData[index];
+                      return _buildHairCutItem(
+                        context,
+                        item['scan_id'],
+                        item['image'],
+                        item['title'],
+                        item['description'],
+                        item['scan_date'],
+                        item['hairstyles'], // Tiga nama haircut
+                      );
+                    }),
+                  ),
+                ),
     );
   }
 
   Widget _buildHairCutItem(
     BuildContext context,
+    int scanId,
     String imagePath,
     String name,
-    String desc,
+    String description,
     String date,
+    List<dynamic> hairstyles,
   ) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => RecommendationScreen(),
-        //   ),
-        // );
+        // Navigasi ke DetailHistoryScreen dengan scanId dari data
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailHistoryScreen(
+              scanId: scanId.toString(), // Kirim scan_id sebagai string
+            ),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 10.0),
@@ -115,23 +146,21 @@ class HistoryScreen extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Color(0xFF1B1A55),
+            color: const Color(0xFF1B1A55),
             width: 2,
           ),
         ),
         child: Stack(
           children: [
-            // Row untuk gambar dan teks, pastikan semua sejajar atas
             Row(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start, // Pastikan sejajar atas
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
+                  child: Image.network(
                     imagePath,
-                    width: 130, // Memperbesar gambar
-                    height: 130, // Memperbesar gambar
+                    width: 100,
+                    height: 100,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -140,53 +169,51 @@ class HistoryScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                          color: Color(0xFF1B1A55),
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10), // Spasi sebelum tombol
-                      // Row untuk tiga tombol berbentuk kotak
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildShapeButton('Buzz cut'),
-                          const SizedBox(width: 10),
-                          _buildShapeButton('Man Bun'),
-                          const SizedBox(width: 10),
-                          _buildShapeButton('Mullet'),
+                          Text(
+                            name,
+                            style: const TextStyle(
+                              color: Color(0xFF1B1A55),
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            date,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 149, 148, 148),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        desc,
-                        style: TextStyle(
-                          color: Color(0xFF1B1A55),
-                          fontSize: 11,
+                      const SizedBox(height: 5),
+                      Row(
+                        children: List.generate(
+                          hairstyles.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: _buildShapeButton(hairstyles[index]['name']),
+                          ),
                         ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        description,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13,
+                        ),
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
                       ),
                     ],
                   ),
                 ),
               ],
-            ),
-            // Tanggal di pojok kanan atas
-            Positioned(
-              right: 5,
-              top: -3,
-              child: Text(
-                date,
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 149, 148, 148),
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
             ),
           ],
         ),
@@ -196,15 +223,15 @@ class HistoryScreen extends StatelessWidget {
 
   Widget _buildShapeButton(String label) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12), // Radius sejajar 3
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Color(0xFF1B1A55), width: 2),
       ),
       child: Text(
         label,
-        style: TextStyle(
+        style: const TextStyle(
           color: Color(0xFF1B1A55),
           fontSize: 12,
           fontWeight: FontWeight.bold,
