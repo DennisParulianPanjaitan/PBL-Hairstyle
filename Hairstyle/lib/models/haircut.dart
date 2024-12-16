@@ -19,7 +19,7 @@ class Haircut {
     return Haircut(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
-      description: json['description'] ?? r'',
+      description: json['description'] ?? '',
       images: imagesList,
     );
   }

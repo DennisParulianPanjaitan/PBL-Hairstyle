@@ -15,8 +15,8 @@ class DetailHaircut extends StatelessWidget {
     Key? key,
     required this.title,
     required this.description,
-    required this.sliderImages,
-    required this.galleryImages,
+      required this.sliderImages,
+      required this.galleryImages,
     required this.faceShapes,
   }) : super(key: key);
 

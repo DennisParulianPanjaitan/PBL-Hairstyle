@@ -10,11 +10,10 @@ import '../blocs/features/features_event.dart';
 import '../blocs/features/features_state.dart';
 import '../widgets/menu_button.dart';
 import '../widgets/haircut_item.dart';
-import '../widgets/hairproduct_item.dart';
 import '../widgets/barbershop_item.dart';
-import '../widgets/data/mock_haircuts.dart';
 import '../services/haircut_service.dart';
 import '../services/product_service.dart';
+import '../services/like_service.dart';
 import '../models/haircut.dart';
 
 class FeaturesPage extends StatelessWidget {
@@ -88,69 +87,84 @@ class FeaturesPage extends StatelessWidget {
   }
 
   // Tab HairCut sudah ada
-// Tab HairCut menggunakan data dari mock_haircuts.dart
   Widget _buildHairCutTab(BuildContext context, Set<int> bookmarks) {
     final HaircutService haircutService = HaircutService();
 
     return FutureBuilder<List<Haircut>>(
-      future:
-          haircutService.fetchHaircuts(), // Memanggil API untuk data haircut
+      future: haircutService.fetchHaircuts(), // Misalnya user_id = 50
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator()); // Loading spinner
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(
-            child: Text('Failed to load haircuts: ${snapshot.error}'),
+            child: Text(
+              'Failed to load liked hairstyles: ${snapshot.error}',
+              style: TextStyle(color: Colors.red),
+            ),
           );
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Text('No haircuts available.'),
-          );
+          return Center(child: Text('No liked hairstyles available.'));
         } else {
-          final haircuts = snapshot.data!;
-          return ListView.builder(
-            itemCount: haircuts.length,
-            itemBuilder: (context, index) {
-              final haircut = haircuts[index];
-              return GestureDetector(
-                onTap: () {
-                  // Navigasi ke halaman DetailHaircut dengan data dari API
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailHaircut(
-                        title: haircut
-                            .name, // Menggunakan nama yang dari Haircut model
-                        description:
-                            haircut.description, // Deskripsi dari Haircut
-                        sliderImages: haircut.images
-                            .map((img) =>
-                                'assets/images/${img.imageUrl}') // Menambahkan 'assets/images/uploads/' sebelum URL gambar
-                            .toList(), // Ambil URL gambar dari HaircutImage dan tambahkan prefix
-                        galleryImages: haircut.images
-                            .map((img) =>
-                                'assets/images/${img.imageUrl}') // Sama uaaantuk galleryImages
-                            .toList(), // Gambar lain dari HaircutImage
-                        faceShapes: [
-                          "Round",
-                          "Oval",
-                          "Square"
-                        ], // Ganti dengan data face shapes yang relevan
+          final haircutList = snapshot.data!;
+
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: haircutList.length,
+                  itemBuilder: (context, index) {
+                    final haircut = haircutList[index];
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigasi ke halaman detail
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailHaircut(
+                              title: haircut.name,
+                              description: haircut.description,
+                              sliderImages: haircut.images
+                                  .map((image) =>
+                                      'assets/images/${image.imageUrl}')
+                                  .toList(),
+                              galleryImages: haircut.images
+                                  .map((image) =>
+                                      'assets/images/${image.imageUrl}')
+                                  .toList(),
+                              faceShapes: ['Oval', 'Round'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: HaircutItem(
+                        title: haircut.name,
+                        description: haircut.description,
+                        faceShapes: ['Oval', 'Round'],
+                        isBookmarked: bookmarks.contains(haircut.id),
+                        onBookmarkTap: () {
+                          Set<int> modifiableBookmarks =
+                              Set<int>.from(bookmarks);
+                          if (modifiableBookmarks.contains(haircut.id)) {
+                            modifiableBookmarks.remove(haircut.id);
+                            LikeService().deleteUserLike(haircut.id);
+                          } else {
+                            modifiableBookmarks.add(haircut.id);
+                            LikeService()
+                                .setUserLike(50, 'haircut', haircut.id);
+                          }
+                          // setState(() {
+                          //   bookmarks = modifiableBookmarks;
+                          // });
+                        },
+                        images: haircut.images,
                       ),
-                    ),
-                  );
-                },
-                child: HaircutItem(
-                  title: haircut.name,
-                  description: haircut.description,
-                  images: haircut.images,
-                  isBookmarked: false, // Sesuai logika Anda
-                  onBookmarkTap: () {
-                    // Logika bookmark
+                    );
                   },
                 ),
-              );
-            },
+              ],
+            ),
           );
         }
       },

@@ -25,8 +25,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     HomeScreen(),
     FeaturesPage(),
-    // FeaturesPage(),
-    HistoryScreen(),
+    FavoritesPage(),
     ProfileScreen(),
   ];
 
