@@ -44,8 +44,8 @@ class BottomNavBar extends StatelessWidget {
                 onItemTapped(2);
               },
               icon: selectedIndex == 2
-                  ? Image.asset('assets/icons/HeartBold.png', width: 24.0, height: 24.0)
-                  : Image.asset('assets/icons/HeartOut.png', width: 24.0, height: 24.0),
+                  ? Image.asset('assets/icons/historybold.png', width: 30.0, height: 30.0)
+                  : Image.asset('assets/icons/historyout.png', width: 30.0, height: 30.0),
             ),
             IconButton(
               onPressed: () {

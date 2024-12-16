@@ -86,8 +86,8 @@ class _DetailHistoryScreenState extends State<DetailHistoryScreen> {
                   Image.network(
                     historyDetail['scan_image'] ?? '',
                     width: double.infinity,
-                    height: 250,
-                    fit: BoxFit.cover,
+                    // height: 250,
+                    fit: BoxFit.fill,
                     errorBuilder: (_, __, ___) => const Icon(
                         Icons.image_not_supported,
                         size: 50,
@@ -201,17 +201,23 @@ class _DetailHistoryScreenState extends State<DetailHistoryScreen> {
           ),
           itemCount: images.length,
           itemBuilder: (context, imgIndex) {
+            final String imageUrl = images[imgIndex]['image_url'] ?? '';
+
+            // Menentukan path asset jika berasal dari lokal
+            final String assetPath = 'assets/images/$imageUrl';
+
             return ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                images[imgIndex]['image_url'] ??
-                    '', // Ambil URL gambar apa adanya
+              child: Image.asset(
+                assetPath, // Tambahkan prefix assets/images/
                 fit: BoxFit.cover,
-                // errorBuilder: (_, __, ___) => const Icon(
-                //   Icons.image_not_supported,
-                //   size: 50,
-                //   color: Colors.grey,
-                // ),
+                errorBuilder: (_, __, ___) {
+                  return const Icon(
+                    Icons.image_not_supported,
+                    size: 50,
+                    color: Colors.grey,
+                  );
+                },
               ),
             );
           },

@@ -71,7 +71,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<File?> _pickProfileImage() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
@@ -169,8 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content:
-                Text('Failed to save profile image URL, {$filePath}')),
+            content: Text('Failed to save profile image URL, {$filePath}')),
       );
     }
     // } else if (imageUrl == "Gagal") {
@@ -384,15 +384,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
 
               const SizedBox(height: 30),
-              // Menu Items
-              _buildMenuItem('History Scan', Icons.history, onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HistoryScreen(),
-                  ),
-                );
-              }),
+              // // Menu Items
+              // _buildMenuItem('History Scan', Icons.history, onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => const HistoryScreen(),
+              //     ),
+              //   );
+              // }),
               _buildMenuItem('Privacy and Policy', Icons.privacy_tip_outlined,
                   onTap: () {
                 Navigator.push(

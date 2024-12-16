@@ -33,7 +33,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             Text(
-              'HairMate sangat menghargai privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi data pribadi Anda saat menggunakan aplikasi kami. Dengan menggunakan aplikasi ini, Anda menyetujui ketentuan dalam kebijakan privasi ini.',
+              'HairMate greatly values your privacy. This policy explains how we collect, use, and protect your personal data when using our application. By using this application, you agree to the terms of this privacy policy.',
               style: TextStyle(
                 fontSize: 14,
                 color: Color(0xFF3A3A3A),
@@ -42,18 +42,18 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             SizedBox(height: 24),
 
-            // 1. Informasi yang Kami Kumpulkan
+            // 1. Information We Collect
             Text(
-              'Informasi yang Kami Kumpulkan',
+              'Information We Collect',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B1A55), // Warna biru untuk judul
+                color: Color(0xFF1B1A55), // Blue for title
               ),
             ),
             SizedBox(height: 8),
             Text(
-              'Kami mengumpulkan informasi yang Anda berikan secara langsung, seperti data diri, email, dan informasi lainnya. Selain itu, kami juga mengumpulkan foto wajah yang diunggah untuk mendeteksi bentuk wajah dan memberikan rekomendasi gaya rambut.',
+              'We collect information you directly provide, such as personal details, email, and other information. In addition, we collect uploaded facial photos to detect face shapes and provide hairstyle recommendations.',
               style: TextStyle(
                 fontSize: 14,
                 color: Color(0xFF3A3A3A),
@@ -62,18 +62,18 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            // 2. Penggunaan Informasi
+            // 2. Use of Information
             Text(
-              'Penggunaan Informasi',
+              'Use of Information',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B1A55), // Warna biru untuk judul
+                color: Color(0xFF1B1A55), // Blue for title
               ),
             ),
             SizedBox(height: 8),
             Text(
-              'Informasi yang kami kumpulkan digunakan untuk menyediakan layanan inti aplikasi, seperti analisis bentuk wajah dan rekomendasi gaya rambut. Selain itu, data juga dapat digunakan untuk mempersonalisasi layanan dan mengirimkan pembaruan terkait aplikasi. Kami tidak menjual atau menyewakan informasi pribadi Anda kepada pihak ketiga. Dalam beberapa kasus, data Anda dapat dibagikan dengan penyedia layanan pihak ketiga yang membantu kami dalam memproses informasi tersebut, atau jika diwajibkan oleh hukum.',
+              'The information we collect is used to provide core application services, such as face shape analysis and hairstyle recommendations. Additionally, the data may be used to personalize services and send updates related to the application. We do not sell or rent your personal information to third parties. In some cases, your data may be shared with third-party service providers who help us process this information, or if required by law.',
               style: TextStyle(
                 fontSize: 14,
                 color: Color(0xFF3A3A3A),
@@ -82,18 +82,18 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            // 3. Perlindungan Data
+            // 3. Data Protection
             Text(
-              'Perlindungan Data',
+              'Data Protection',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B1A55), // Warna biru untuk judul
+                color: Color(0xFF1B1A55), // Blue for title
               ),
             ),
             SizedBox(height: 8),
             Text(
-              'Kami berkomitmen untuk melindungi data Anda dengan menerapkan langkah-langkah keamanan teknis dan organisasi yang sesuai. Meskipun kami berupaya keras menjaga keamanan data Anda, tidak ada sistem yang sepenuhnya bebas risiko. Kami menyarankan Anda untuk menjaga keamanan informasi pribadi Anda juga.',
+              'We are committed to protecting your data by implementing appropriate technical and organizational security measures. Although we work hard to maintain the security of your data, no system is completely risk-free. We also advise you to safeguard your personal information.',
               style: TextStyle(
                 fontSize: 14,
                 color: Color(0xFF3A3A3A),
@@ -102,18 +102,18 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            // 4. Hak Anda
+            // 4. Your Rights
             Text(
-              'Hak Anda',
+              'Free Access',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B1A55), // Warna biru untuk judul
+                color: Color(0xFF1B1A55), // Blue for title
               ),
             ),
             SizedBox(height: 8),
             Text(
-              'Anda memiliki hak untuk mengakses, memperbaiki, atau menghapus data pribadi Anda kapan saja. Anda juga dapat menarik persetujuan untuk pengolahan data tertentu. Jika Anda ingin menggunakan hak-hak ini, Anda dapat menghubungi kami. Kami akan berusaha merespons permintaan Anda secepat mungkin.',
+              'You have the right to access, correct, or delete your personal data at any time. You can also withdraw your consent for specific data processing. If you wish to exercise these rights, you can contact us. We will do our best to respond to your request as quickly as possible.',
               style: TextStyle(
                 fontSize: 14,
                 color: Color(0xFF3A3A3A),
@@ -122,18 +122,18 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            // 5. Perubahan Kebijakan
+            // 5. Policy Changes
             Text(
-              'Perubahan Kebijakan',
+              'Policy Changes',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B1A55), // Warna biru untuk judul
+                color: Color(0xFF1B1A55), // Blue for title
               ),
             ),
             SizedBox(height: 8),
             Text(
-              'Kebijakan privasi ini dapat diperbarui dari waktu ke waktu untuk mencerminkan perubahan dalam layanan atau persyaratan hukum. Jika ada pembaruan, kami akan memberi tahu Anda melalui aplikasi atau metode lain yang sesuai. Dengan terus menggunakan aplikasi setelah pembaruan, Anda dianggap menyetujui kebijakan privasi yang diperbarui.',
+              'This privacy policy may be updated from time to time to reflect changes in services or legal requirements. If there are updates, we will notify you through the application or other appropriate methods. By continuing to use the application after updates, you are deemed to agree to the updated privacy policy.',
               style: TextStyle(
                 fontSize: 14,
                 color: Color(0xFF3A3A3A),
@@ -142,18 +142,18 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-            // 6. Hubungi Kami
+            // 6. Contact Us
             Text(
-              'Hubungi Kami',
+              'Contact Us',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B1A55), // Warna biru untuk judul
+                color: Color(0xFF1B1A55), // Blue for title
               ),
             ),
             SizedBox(height: 8),
             Text(
-              'Jika Anda memiliki pertanyaan atau kekhawatiran terkait kebijakan privasi ini, Anda dapat menghubungi kami.',
+              'If you have any questions or concerns regarding this privacy policy, you can contact us.',
               style: TextStyle(
                 fontSize: 14,
                 color: Color(0xFF3A3A3A),

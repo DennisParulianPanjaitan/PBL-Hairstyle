@@ -246,6 +246,8 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
 
   Widget _buildCut(int index) {
     final hairstyle = recommendations[index];
+    final images = hairstyle['images'] ?? [];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -266,20 +268,29 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
         const SizedBox(height: 16),
         GridView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 8.0,
             mainAxisSpacing: 8.0,
           ),
-          itemCount: hairstyle['images'].length,
+          itemCount: images.length,
           itemBuilder: (context, imgIndex) {
-            final image = hairstyle['images'][imgIndex];
+            final String imageUrl = images[imgIndex]['image_url'] ?? '';
+            final String assetPath = 'assets/images/$imageUrl';
+
             return ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                image['image_url'],
+              child: Image.asset(
+                assetPath, // Tambahkan path lokal
                 fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) {
+                  return const Icon(
+                    Icons.image_not_supported,
+                    size: 50,
+                    color: Colors.grey,
+                  );
+                },
               ),
             );
           },

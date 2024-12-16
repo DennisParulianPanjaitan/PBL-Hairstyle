@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uts_linkaja/screens/features_screen.dart';
+import 'package:uts_linkaja/screens/history.dart';
 import 'camera_page.dart'; // Pastikan ini sudah diimpor
 import 'home_screen.dart';
 // import 'category_screen.dart';
@@ -24,11 +25,12 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     HomeScreen(),
     FeaturesPage(),
-    FeaturesPage(),
+    // FeaturesPage(),
+    HistoryScreen(),
     ProfileScreen(),
   ];
-  
-   // Fungsi untuk mengambil data pengguna
+
+  // Fungsi untuk mengambil data pengguna
   // void getUserData() async {
   //   final prefs = await SharedPreferences.getInstance();
   //   setState(() {
