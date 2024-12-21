@@ -140,6 +140,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

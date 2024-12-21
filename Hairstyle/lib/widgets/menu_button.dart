@@ -20,8 +20,7 @@ class MenuButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 115, // Menentukan lebar tetap untuk button
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ? Color(0xFF1B1A55) : Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -29,7 +28,7 @@ class MenuButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment
-              .center, // Mengatur posisi ikon dan teks agar sejajar
+              .center, // Menjaga posisi ikon dan teks di tengah
           children: [
             Image.asset(
               isSelected ? activeImagePath : inactiveImagePath,
@@ -40,7 +39,7 @@ class MenuButton extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: isSelected ? Colors.white : Color(0xFF1B1A55),
               ),

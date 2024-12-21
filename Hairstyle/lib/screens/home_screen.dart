@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/home/popular_hairstyle_card.dart';
-import '../widgets/home/barbershop_data.dart';
 import '../widgets/home/barber_shop_card.dart'; // Import BarberShopCard
 import '../widgets/home/hair_type_card.dart'; // Import HairTypeCard
 import '../widgets/home/hair_product_card.dart'; // Import HairTypeCar
@@ -16,6 +15,9 @@ import 'package:uts_linkaja/models/product.dart';
 
 import 'package:uts_linkaja/services/haircut_service.dart';
 import 'package:uts_linkaja/models/haircut.dart';
+
+import 'package:uts_linkaja/services/barbershop_service.dart';
+import 'package:uts_linkaja/models/barbershop.dart';
 
 import 'profile_screen.dart';
 
@@ -50,10 +52,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Product>> products;
   late Future<List<Haircut>> haircuts;
+  late Future<List<Barbershop>> barbershop;
 
   int currentPage = 0;
   ScrollController _scrollController = ScrollController();
-  PageController _pageController = PageController(initialPage: 1000);
+  PageController _pageController = PageController(initialPage: 100);
   double _headerOpacity = 1.0; // Opacity initial header
   Timer? _timer;
 
@@ -76,6 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     products = ProductService().fetchProducts(); // Simpan Future di variabel
     haircuts = HaircutService().fetchHaircuts(); // Mengambil data hairstyle
+    barbershop =
+        BarberShopService().fetchBarbershop(); // Mengambil data hairstyle
 
     // Add listener to scrollController
     _scrollController.addListener(() {
@@ -175,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 // Kotak scrollable untuk 3 menu
                 SizedBox(
-                  height: 1500, // Atur tinggi tetap untuk kotak ini
+                  // height: 1500, // Atur tinggi tetap untuk kotak ini
                   child: SingleChildScrollView(
                     child: Container(
                       decoration: BoxDecoration(
@@ -202,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding:
                                 const EdgeInsets.only(left: 25.0, top: 20.0),
                             child: Text(
-                              "Preview Haircut",
+                              "Popular Haircut",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -261,7 +266,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           SizedBox(
                               height: 20), // Jarak dengan bagian Barbershop
-                          // Bagian Barbershop
                           Padding(
                             padding: const EdgeInsets.only(left: 22.0),
                             child: Row(
@@ -301,22 +305,53 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-
                           SizedBox(
                             height: 135,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              padding: EdgeInsets.only(
-                                  left: 18), // Menambahkan jarak di sisi kiri
-                              itemCount: barberShops.length,
-                              itemBuilder: (context, index) {
-                                final barber = barberShops[index];
-                                return BarberShopCard(
-                                  name: barber["name"],
-                                  price: barber["price"],
-                                  rating: barber["rating"],
-                                  imagePath: barber["imagePath"],
-                                );
+                            child: FutureBuilder<List<Barbershop>>(
+                              future:
+                                  barbershop, // Menggunakan Future yang berisi List<Barbershop>
+                              builder: (context, snapshot) {
+                                // Menangani state dari Future
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                      child:
+                                          CircularProgressIndicator()); // Menunggu data
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                      child: Text(
+                                          'Error: ${snapshot.error}')); // Menampilkan error jika ada
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return Center(
+                                      child: Text(
+                                          'No barbershops available')); // Jika tidak ada data
+                                } else {
+                                  final barberShops = snapshot
+                                      .data!; // Mendapatkan data barbers hop dari snapshot
+
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: EdgeInsets.only(left: 18),
+                                    itemCount: barberShops.length,
+                                    itemBuilder: (context, index) {
+                                      final barber = barberShops[
+                                          index]; // Mendapatkan object Barbershop
+                                      return BarberShopCard(
+                                        name: barber
+                                            .name, // Mengakses properti name
+                                        price: barber.rangeHarga ??
+                                            "N/A", // Mengakses rangeHarga dan menangani null
+                                        rating: barber.rating,
+                                        imagePath: barber.images.isNotEmpty
+                                            ? 'assets/images/' +
+                                                barber.images[0].imageUrl // Menambahkan path sebelum URL gambar
+                                            : 'assets/images/default_barbershop.png', // Path default jika tidak ada gambar
+// Mengakses gambar
+                                      );
+                                    },
+                                  );
+                                }
                               },
                             ),
                           ),
@@ -584,6 +619,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       itemBuilder: (context, index) {
                                         final haircut =
                                             limitedHaircutList[index];
+
+                                        // Gabungkan faceShape, faceShape2, dan faceShape3
+                                        final faceShapes = [
+                                          haircut.faceShape,
+                                          haircut.faceShape2,
+                                          haircut.faceShape3,
+                                        ]
+                                            .where((shape) => shape != null)
+                                            .toList();
+
                                         return GestureDetector(
                                           onTap: () {
                                             // Navigasi ke halaman detail
@@ -597,16 +642,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       haircut.description,
                                                   sliderImages: haircut.images
                                                       .map((image) =>
-                                                          'assets/images/${image.imageUrl}') // Menambahkan 'assets/images/' pada setiap gambar
+                                                          'assets/images/${image.imageUrl}')
                                                       .toList(),
                                                   galleryImages: haircut.images
                                                       .map((image) =>
-                                                          'assets/images/${image.imageUrl}') // Menambahkan 'assets/images/' pada setiap gambar
+                                                          'assets/images/${image.imageUrl}')
                                                       .toList(),
-                                                  faceShapes: [
-                                                    'Oval',
-                                                    'Round'
-                                                  ], // Sesuaikan jika ada data faceShapes
+                                                  faceShapes: faceShapes.cast<
+                                                      String>(), // Data faceShapes
                                                 ),
                                               ),
                                             );
@@ -614,10 +657,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: HaircutItem(
                                             title: haircut.name,
                                             description: haircut.description,
-                                            faceShapes: [
-                                              'Oval',
-                                              'Round'
-                                            ], // Anda bisa menyesuaikan ini jika ada data faceShapes
+                                            faceShapes: faceShapes.cast<
+                                                String>(), // Data faceShapes
                                             isBookmarked:
                                                 false, // Status bookmark, bisa disesuaikan
                                             onBookmarkTap: () {

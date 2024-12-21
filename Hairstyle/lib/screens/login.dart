@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.45,
                 padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -145,27 +145,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ForgotPasswordPage(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            "Forgot Password? click here",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
                       SizedBox(height: 16),
                       // Login Button
                       ElevatedButton(
@@ -189,52 +168,6 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      Center(
-                        child: Text("or", style: TextStyle(color: Colors.grey)),
-                      ),
-                      SizedBox(height: 16),
-                      // Google Sign-In Button
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Tambahkan aksi untuk sign in dengan Google
-                        },
-                        icon:
-                            Image.asset('assets/icons/google.jpeg', height: 24),
-                        label: Text(
-                          "Sign in with Google",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(color: Colors.grey.shade300),
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      // Apple Sign-In Button
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Tambahkan aksi untuk sign in dengan Apple
-                        },
-                        icon:
-                            Image.asset('assets/icons/apple.jpeg', height: 24),
-                        label: Text(
-                          "Sign in with Apple",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          side: BorderSide(color: Colors.grey.shade300),
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                       ),

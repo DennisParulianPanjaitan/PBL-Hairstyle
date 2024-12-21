@@ -47,26 +47,27 @@ class DetailProduct extends StatelessWidget {
                                 color: Color(0xFF1B1A55),
                               ),
                             ),
-                            Row(
-                              children: [
-                                const Icon(Icons.star, color: Colors.amber, size: 20),
-                                const SizedBox(width: 4),
-                                const Text(
-                                  "4.5",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     const Icon(Icons.star, color: Colors.amber, size: 20),
+                            //     const SizedBox(width: 4),
+                            //     const Text(
+                            //       "4.5",
+                            //       style: TextStyle(
+                            //         fontSize: 16,
+                            //         color: Colors.black,
+                            //         fontWeight: FontWeight.bold,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                         const SizedBox(height: 8),
                         Text(
                           description,
-                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[600]),
                           textAlign: TextAlign.justify,
                         ),
                         const SizedBox(height: 16),
@@ -98,7 +99,8 @@ class DetailProduct extends StatelessWidget {
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 14.0,
                             mainAxisSpacing: 14.0,
@@ -158,5 +160,3 @@ class DetailProduct extends StatelessWidget {
     );
   }
 }
-
-

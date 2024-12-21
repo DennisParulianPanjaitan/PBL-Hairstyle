@@ -10,11 +10,14 @@ import '../blocs/features/features_event.dart';
 import '../blocs/features/features_state.dart';
 import '../widgets/menu_button.dart';
 import '../widgets/haircut_item.dart';
+import '../widgets/home/barber_shop_card.dart';
 import '../widgets/barbershop_item.dart';
 import '../services/haircut_service.dart';
 import '../services/product_service.dart';
 import '../services/like_service.dart';
+import '../services/barbershop_service.dart';
 import '../models/haircut.dart';
+import '../models/barbershop.dart';
 
 class FeaturesPage extends StatelessWidget {
   @override
@@ -22,6 +25,7 @@ class FeaturesPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => FeaturesBloc(),
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             SizedBox(height: 50.0),
@@ -30,31 +34,56 @@ class FeaturesPage extends StatelessWidget {
                 return Container(
                   height: 60,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment
+                        .spaceAround, // Memberikan jarak antar tombol
                     children: [
-                      MenuButton(
-                        activeImagePath: 'assets/icons/cutp.png',
-                        inactiveImagePath: 'assets/icons/cut3.png',
-                        label: 'Hair Cut',
-                        isSelected: state.currentTabIndex == 0,
-                        onTap: () =>
-                            context.read<FeaturesBloc>().add(SelectTabEvent(0)),
+                      // Tombol kiri
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10.0), // Menambahkan padding kiri
+                          child: MenuButton(
+                            activeImagePath: 'assets/icons/cutp.png',
+                            inactiveImagePath: 'assets/icons/cut3.png',
+                            label: 'Hair Cut',
+                            isSelected: state.currentTabIndex == 0,
+                            onTap: () => context
+                                .read<FeaturesBloc>()
+                                .add(SelectTabEvent(0)),
+                          ),
+                        ),
                       ),
-                      MenuButton(
-                        activeImagePath: 'assets/icons/foamp.png',
-                        inactiveImagePath: 'assets/icons/foamb.png',
-                        label: 'Hair Product',
-                        isSelected: state.currentTabIndex == 1,
-                        onTap: () =>
-                            context.read<FeaturesBloc>().add(SelectTabEvent(1)),
+                      // Tombol tengah dengan sedikit jarak di tengah
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6.0), // Sedikit jarak antar tombol
+                          child: MenuButton(
+                            activeImagePath: 'assets/icons/foamp.png',
+                            inactiveImagePath: 'assets/icons/foamb.png',
+                            label: 'Hair Product',
+                            isSelected: state.currentTabIndex == 1,
+                            onTap: () => context
+                                .read<FeaturesBloc>()
+                                .add(SelectTabEvent(1)),
+                          ),
+                        ),
                       ),
-                      MenuButton(
-                        activeImagePath: 'assets/icons/Locationp.png',
-                        inactiveImagePath: 'assets/icons/Locationb.png',
-                        label: 'BarberShop',
-                        isSelected: state.currentTabIndex == 2,
-                        onTap: () =>
-                            context.read<FeaturesBloc>().add(SelectTabEvent(2)),
+                      // Tombol kanan
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              right: 10.0), // Menambahkan padding kanan
+                          child: MenuButton(
+                            activeImagePath: 'assets/icons/Locationp.png',
+                            inactiveImagePath: 'assets/icons/Locationb.png',
+                            label: 'BarberShop',
+                            isSelected: state.currentTabIndex == 2,
+                            onTap: () => context
+                                .read<FeaturesBloc>()
+                                .add(SelectTabEvent(2)),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -73,7 +102,7 @@ class FeaturesPage extends StatelessWidget {
                           context, state.bookmarkedProducts);
                     case 2:
                       return _buildBarberShopTab(
-                          context, state.bookmarkedBarbershops);
+                          context, state.bookmarkedProducts);
                     default:
                       return Container();
                   }
@@ -91,7 +120,7 @@ class FeaturesPage extends StatelessWidget {
     final HaircutService haircutService = HaircutService();
 
     return FutureBuilder<List<Haircut>>(
-      future: haircutService.fetchHaircuts(), // Misalnya user_id = 50
+      future: haircutService.fetchHaircuts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -116,6 +145,16 @@ class FeaturesPage extends StatelessWidget {
                   itemCount: haircutList.length,
                   itemBuilder: (context, index) {
                     final haircut = haircutList[index];
+
+                    // Kombinasikan faceShapes dari haircut
+                    final faceShapes = [
+                      haircut.faceShape,
+                      haircut.faceShape2,
+                      haircut.faceShape3,
+                    ]
+                        .where((shape) => shape != null)
+                        .toList(); // Filter null values
+
                     return GestureDetector(
                       onTap: () {
                         // Navigasi ke halaman detail
@@ -133,7 +172,7 @@ class FeaturesPage extends StatelessWidget {
                                   .map((image) =>
                                       'assets/images/${image.imageUrl}')
                                   .toList(),
-                              faceShapes: ['Oval', 'Round'],
+                              faceShapes: faceShapes.cast<String>(),
                             ),
                           ),
                         );
@@ -141,7 +180,8 @@ class FeaturesPage extends StatelessWidget {
                       child: HaircutItem(
                         title: haircut.name,
                         description: haircut.description,
-                        faceShapes: ['Oval', 'Round'],
+                        faceShapes:
+                            faceShapes.cast<String>(), // Data faceShapes
                         isBookmarked: bookmarks.contains(haircut.id),
                         onBookmarkTap: () {
                           Set<int> modifiableBookmarks =
@@ -154,9 +194,6 @@ class FeaturesPage extends StatelessWidget {
                             LikeService()
                                 .setUserLike(50, 'haircut', haircut.id);
                           }
-                          // setState(() {
-                          //   bookmarks = modifiableBookmarks;
-                          // });
                         },
                         images: haircut.images,
                       ),
@@ -245,49 +282,74 @@ class FeaturesPage extends StatelessWidget {
     );
   }
 
-  // Tab BarberShop dengan navigasi ke DetailBarber
+  // // Tab BarberShop dengan navigasi ke DetailBarber
   Widget _buildBarberShopTab(BuildContext context, Set<int> bookmarks) {
-    final List<Map<String, dynamic>> barbershops = [
-      {
-        "title": "GoodFellas",
-        "description": "Rp 20.000 - 500.000",
-        "imagePath": "assets/images/barbershop.jpeg", // Path to the image
-        "isBookmarked": false,
-      },
-      {
-        "title": "GoodFellas",
-        "description": "Rp 20.000 - 500.000",
-        "imagePath": "assets/images/barbershop.jpeg", // Path to the image
-        "isBookmarked": false,
-      },
-    ];
+    final barberShopService =
+        BarberShopService(); // Membuat instance dari BarberShopService
 
-    return ListView.builder(
-      itemCount: barbershops.length,
-      itemBuilder: (context, index) {
-        final item = barbershops[index];
-        return GestureDetector(
-          onTap: () {
-            // Navigasi ke halaman DetailBarber
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DetailBarber(),
+    return FutureBuilder<List<Barbershop>>(
+      future: barberShopService.fetchBarbershop(), // Mengambil data barber shop
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+              child: CircularProgressIndicator()); // Menunggu data
+        } else if (snapshot.hasError) {
+          return Center(
+              child: Text(
+                  'Error: ${snapshot.error}')); // Menampilkan error jika ada
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+              child: Text(
+                  'No Barbershops Available')); // Menampilkan pesan jika data kosong
+        } else {
+          List<Barbershop> barbershops = snapshot.data!;
+
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 20.0,
+                childAspectRatio: 1.4, // Proporsi lebih tinggi untuk estetika
               ),
-            );
-          },
-          child: BarberShopItem(
-            title: item["title"] as String,
-            description: item["description"] as String,
-            imagePath: item["imagePath"] as String,
-            isBookmarked: bookmarks.contains(index),
-            onBookmarkTap: () {
-              context
-                  .read<FeaturesBloc>()
-                  .add(ToggleBookmarkEvent(index, "BarberShop"));
-            },
-          ),
-        );
+              itemCount: barbershops.length,
+              itemBuilder: (context, index) {
+                final item = barbershops[index];
+                return GestureDetector(
+                  onTap: () {
+                    // Navigasi ke halaman DetailBarber
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailBarber(
+                          title: item.name,
+                          description: item.description,
+                          sliderImages: item.images
+                              .map((img) => 'assets/images/${img.imageUrl}')
+                              .toList(), // Menggunakan gambar dari barbershop
+                          galleryImages: item.images
+                              .map((img) => 'assets/images/${img.imageUrl}')
+                              .toList(), // Menggunakan gambar untuk galeri
+                          priceRange: item.rangeHarga ??
+                              "N/A", // Menampilkan range harga
+                        ),
+                      ),
+                    );
+                  },
+                  child: BarberShopCard(
+                    name: item.name, // Menampilkan nama barbershop
+                    price: item.rangeHarga ?? "N/A", // Menampilkan range harga
+                    rating: item.rating, // Menampilkan range harga
+                    imagePath:
+                        'assets/images/${item.images.first.imageUrl}', // Menampilkan gambar pertama sebagai thumbnail
+                  ),
+                );
+              },
+            ),
+          );
+        }
       },
     );
   }

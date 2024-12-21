@@ -22,15 +22,23 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
+          ColorFiltered(
+            colorFilter: ColorFilter.mode(
+              Colors.grey,
+              BlendMode.saturation, // Efek grayscale
+            ),
+            child: Image.asset(
+              'assets/images/hairstyle.jpeg',
+              fit: BoxFit.cover, // Gambar mengisi seluruh area
+              width: double.infinity,
+              height: double.infinity,
+              alignment: Alignment(0.0, -1.0), // Geser gambar lebih ke atas
+            ),
+          ),
           Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/hairstyle.jpeg'), // Ganti dengan gambar Anda
-                fit: BoxFit.cover,
-              ),
-            ),
+                // Tambahkan elemen lain ke dekorasi jika diperlukan
+                ),
           ),
           // Teks di bagian atas
           Align(

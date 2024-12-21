@@ -35,11 +35,11 @@ class HairMateApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
-          '/': (context) => HomeScreen(),
+          '/': (context) => FeaturesPage(),
           '/login': (context) => LoginPage(),
           '/home': (context) => HomeScreen(),
           '/features': (context) => FeaturesPage(),
-          '/bookmarked': (context) => FavoritesPage(),
+          // '/bookmarked': (context) => FavoritesPage(),
           '/profile': (context) => ProfileScreen(),
         },
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/image_slider.dart';
-import '../widgets/data/mock_haircuts.dart';
 
 
 class DetailHaircut extends StatelessWidget {
@@ -49,20 +48,20 @@ class DetailHaircut extends StatelessWidget {
                                 color: Color(0xFF1B1A55),
                               ),
                             ),
-                            Row(
-                              children: [
-                                const Icon(Icons.star, color: Colors.amber, size: 20),
-                                const SizedBox(width: 4),
-                                const Text(
-                                  "4.5",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     const Icon(Icons.star, color: Colors.amber, size: 20),
+                            //     const SizedBox(width: 4),
+                            //     const Text(
+                            //       "4.5",
+                            //       style: TextStyle(
+                            //         fontSize: 16,
+                            //         color: Colors.black,
+                            //         fontWeight: FontWeight.bold,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
                           ],
                         ),
                         const SizedBox(height: 8),

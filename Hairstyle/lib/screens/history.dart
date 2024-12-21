@@ -73,6 +73,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
           icon: Image.asset(
@@ -195,7 +196,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         children: List.generate(
                           hairstyles.length,
                           (index) => Padding(
-                            padding: const EdgeInsets.only(right: 5),
+                            padding: const EdgeInsets.only(right: 3),
                             child: _buildShapeButton(hairstyles[index]['name']),
                           ),
                         ),
@@ -223,7 +224,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _buildShapeButton(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -233,7 +234,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         label,
         style: const TextStyle(
           color: Color(0xFF1B1A55),
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: FontWeight.bold,
         ),
       ),

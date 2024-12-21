@@ -105,24 +105,24 @@ class _HaircutItemState extends State<HaircutItem> {
             ),
           ),
           // Bookmark Icon
-          Padding(
-            padding: const EdgeInsets.only(top: 18), // Geser ke bawah
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isBookmarked = !isBookmarked; // Toggle status bookmark
-                });
-                widget.onBookmarkTap(); // Memanggil callback dari widget parent
-              },
-              child: Image.asset(
-                isBookmarked
-                    ? 'assets/icons/bookmarkwhite.png'
-                    : 'assets/icons/bookmarkblue.png',
-                width: 24,
-                height: 24,
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 18), // Geser ke bawah
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       setState(() {
+          //         isBookmarked = !isBookmarked; // Toggle status bookmark
+          //       });
+          //       widget.onBookmarkTap(); // Memanggil callback dari widget parent
+          //     },
+          //     child: Image.asset(
+          //       isBookmarked
+          //           ? 'assets/icons/bookmarkwhite.png'
+          //           : 'assets/icons/bookmarkblue.png',
+          //       width: 24,
+          //       height: 24,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

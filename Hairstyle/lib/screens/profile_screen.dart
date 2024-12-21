@@ -23,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController usernameController;
   late TextEditingController passwordController;
   String profilePictureUrl = "";
+  int userId = -1;
 
   @override
   void initState() {
@@ -44,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
-
+    userId = prefs.getInt('id') ?? 0;
     setState(() {
       emailController.text = prefs.getString('email') ?? '';
       usernameController.text = prefs.getString('username') ?? 'Bro';
@@ -62,11 +63,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return;
     }
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', emailController.text);
-    await prefs.setString('username', usernameController.text);
-  }
+    final url = Uri.parse(
+        'https://hairmate.smartrw.my.id/api/updateuser'); // Replace with your API endpoint
 
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json', // Use JSON format
+        },
+        body: jsonEncode({
+          'id': userId,
+          'email': emailController.text,
+          'username': usernameController.text,
+          'password': passwordController.text,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile updated successfully')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update profile: ${response.body}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    }
+  }
   String profileImagePath = '';
 
   Future<File?> _pickProfileImage() async {
@@ -90,17 +118,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<String> uploadProfileImage(File imageFile) async {
-    final url = Uri.parse("https://hairmate.smartrw.my.id/api/unggah");
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('id') ?? 0;
+    final url = Uri.parse("https://hairmate.smartrw.my.id/api/simpan-pp");
     String localUrl = imageFile.path;
-    final request = http.MultipartRequest("POST", url);
-    request.files.add(await http.MultipartFile.fromPath('file', localUrl));
+    final request = http.MultipartRequest("POST", url)
+      ..fields['user_id'] = userId.toString()
+      ..files.add(await http.MultipartFile.fromPath('image', localUrl));
+    ;
+    // request.files.add(await http.MultipartFile.fromPath('image', localUrl));
     final response = await request.send();
-
-    if (response.statusCode != 400) {
+    if (response.statusCode == 200) {
       // Berhasil, ambil URL yang dikembalikan server
       final responseBody = await response.stream.bytesToString();
-      // final data = utf8.decode(responseBody as List<int>);
-      return responseBody; // URL dikembalikan sebagai teks
+      final decodedResponse = jsonDecode(responseBody);
+      if (decodedResponse['success']) {
+        print('Scan history saved successfully!');
+      } else {
+        print('Failed to save scan history: ${decodedResponse['message']}');
+      }
+
+      return decodedResponse['image_url']; // URL dikembalikan sebagai teks
     } else {
       // Gagal
       print("Failed to upload image: ${response.statusCode}");
@@ -109,6 +147,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<bool> saveProfileImageUrl(int? userId, String imageUrl) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt('id') ?? 0;
     final url =
         Uri.parse("https://hairmate.smartrw.my.id/api/user/unggahppurl");
     final response = await http.post(
@@ -141,47 +181,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     // 2. Unggah gambar ke server
-    // final imageUrl = await uploadProfileImage(imageFile);
+    final imageUrl = await uploadProfileImage(imageFile);
     // print(imageUrl);
-    // if (imageUrl == "Gagal") {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Upload failed')),
-    //   );
-    //   return;
-    // }
+    if (imageUrl == "Gagal") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Upload failed')),
+      );
+      return;
+    }
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('profile_picture_url', imageFile.path);
+    await prefs.setString('profile_picture_url', imageUrl);
     Navigator.pop(context); // Close the loading indicator
 
+    setState(() {
+      profilePictureUrl = imageUrl;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Profile image updated successfully!')),
+    );
     // if (imageUrl != 'Gagal') {
     // final prefs = await SharedPreferences.getInstance();
-    String filePath = imageFile.path;
-    int? userId = prefs.getInt('userId');
-    final success = await saveProfileImageUrl(userId, filePath);
-    if (success) {
-      await prefs.setString('profile_picture_url', imageFile.path);
-      setState(() {
-        profilePictureUrl = imageFile.path;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile image updated successfully!')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Failed to save profile image URL, {$filePath}')),
-      );
-    }
+    // String filePath = imageFile.path;
+    // int? userId = prefs.getInt('id');
+    // final success = await saveProfileImageUrl(userId, filePath);
+    // if (success) {
+    //   await prefs.setString('profile_picture_url', imageFile.path);
+    //   setState(() {
+    //     profilePictureUrl = imageFile.path;
+    //   });
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('Profile image updated successfully!')),
+    //   );
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //         content:
+    //             Text('Failed to save profile image URL, {$filePath}')),
+    //   );
+    // }
     // } else if (imageUrl == "Gagal") {
     //   ScaffoldMessenger.of(context).showSnackBar(
     //     SnackBar(content: Text('Failed to upload image')),
     //   );
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Last condition')),
-    //   );
-    // }
   }
 
   Future<String> getProfilePictureUrl() async {
@@ -331,7 +373,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildTextField(
                 label: 'Password',
                 controller: passwordController,
-                hint: 'Password Anda',
+                hint: '••••••••',
                 icon: Image.asset(
                   'assets/icons/password.png', // Gambar email
                   width: 24,
@@ -384,15 +426,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
 
               const SizedBox(height: 30),
-              // // Menu Items
-              // _buildMenuItem('History Scan', Icons.history, onTap: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => const HistoryScreen(),
-              //     ),
-              //   );
-              // }),
+              // Menu Items
+              _buildMenuItem('History Scan', Icons.history, onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HistoryScreen(),
+                  ),
+                );
+              }),
               _buildMenuItem('Privacy and Policy', Icons.privacy_tip_outlined,
                   onTap: () {
                 Navigator.push(
@@ -515,7 +557,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: const TextStyle(
-              color: Color.fromRGBO(171, 171, 171, 100),
+              color: Color.fromRGBO(0, 0, 0, 0.612),
               fontSize: 16,
             ),
             prefixIcon: icon,

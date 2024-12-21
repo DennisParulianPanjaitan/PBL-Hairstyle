@@ -291,7 +291,7 @@ class PreviewPage extends StatelessWidget {
   Future<void> _sendImageToAPI(String imagePath, BuildContext context) async {
     try {
       final uri = Uri.parse(
-          'https://4aa5-182-253-176-146.ngrok-free.app/predict/'); // Replace with actual API URL
+          'https://4b0e-2001-448a-50a0-3e62-7d74-9d74-dd57-68c.ngrok-free.app/predict/'); // Replace with actual API URL
 
       // Use MediaType.parse() for content type
       final request = http.MultipartRequest('POST', uri)

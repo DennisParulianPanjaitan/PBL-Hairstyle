@@ -34,12 +34,23 @@ class _RegisterPageState extends State<RegisterPage> {
                 fit: BoxFit.cover,
               ),
             ),
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Colors.grey,
+                BlendMode.saturation, // Mengubah gambar menjadi grayscale
+              ),
+              child: Image.asset(
+                'assets/images/register_background.jpeg',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
+
           // White container for register form
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.5,
               padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
