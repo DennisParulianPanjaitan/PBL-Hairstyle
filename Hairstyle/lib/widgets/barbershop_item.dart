@@ -1,116 +1,158 @@
 import 'package:flutter/material.dart';
+import '../widgets/image_slider.dart';
 
-class BarberShopItem extends StatelessWidget {
+class DetailBarberFeature extends StatelessWidget {
   final String title;
   final String description;
-  final String imagePath;
-  final bool isBookmarked;
-  final VoidCallback onBookmarkTap;
+  final List<String> sliderImages;
+  final List<String> galleryImages;
+  final String priceRange; // Menambahkan informasi harga
 
-  const BarberShopItem({
+  const DetailBarberFeature({
     Key? key,
     required this.title,
     required this.description,
-    required this.imagePath,
-    required this.isBookmarked,
-    required this.onBookmarkTap,
+    required this.sliderImages,
+    required this.galleryImages,
+    required this.priceRange, // Menambahkan parameter harga
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        elevation: 4.0,
+    return Scaffold(
+      body: SafeArea(
         child: Stack(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Image.asset(
-                imagePath,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
-            ),
-            // Bookmark Icon at the top-right corner
-            Positioned(
-              top: 16,
-              right: 16,
-              child: GestureDetector(
-                onTap: onBookmarkTap,
-                child: Image.asset(
-                  isBookmarked
-                      ? 'assets/icons/bookmarkcwhite.png'
-                      : 'assets/icons/bookmarkcblue.png', // Gambar untuk bookmark tidak terklik
-                  width: 28.0,
-                  height: 28.0,
-                ),
-              ),
-            ),
-            // Text with a semi-transparent black background
-            Positioned(
-              bottom: 1,
-              left: 1,
-              right: 1, // Menambah right untuk membuat background penuh
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.black
-                      .withOpacity(0.5), // Background hitam dengan opacity
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4.0),
-                    Text(
-                      description,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 35,
-              right: 16,
-              child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Pastikan elemen rata tengah
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'assets/icons/star.jpeg', // Path to star image
-                    width: 28.0, // Memperbesar ukuran bintang
-                    height: 28.0,
-                  ),
-                  SizedBox(
-                      width: 2.0), // Sesuaikan jarak antara bintang dan rating
-                  Text(
-                    '4.5',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17.0,
+                  // Slider menggunakan sliderImages
+                  ImageSlider(images: sliderImages),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                                color: Color(0xFF1B1A55),
+                              ),
+                            ),
+                            // Rating dapat ditambahkan kembali jika diperlukan
+                            // Row(
+                            //   children: [
+                            //     const Icon(Icons.star, color: Colors.amber, size: 20),
+                            //     const SizedBox(width: 4),
+                            //     const Text(
+                            //       "4.5",
+                            //       style: TextStyle(
+                            //         fontSize: 16,
+                            //         color: Colors.black,
+                            //         fontWeight: FontWeight.bold,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          description,
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                          textAlign: TextAlign.justify,
+                        ),
+                        const SizedBox(height: 16),
+                        // Menambahkan informasi harga dan jam kerja
+                        Text(
+                          "Price Range: $priceRange",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1B1A55),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const SizedBox(height: 16),
+                        const Text(
+                          "Gallery",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1B1A55),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Galeri menggunakan galleryImages
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 14.0,
+                            mainAxisSpacing: 14.0,
+                          ),
+                          itemCount: galleryImages.length > 4
+                              ? 4
+                              : galleryImages.length, // Batasi hanya 4 gambar
+                          itemBuilder: (context, index) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: Image.asset(
+                                galleryImages[index],
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
+            Positioned(
+              top: 16,
+              left: 16,
+              child: IconButton(
+                icon: Image.asset(
+                  'assets/icons/detailarrow.png',
+                  width: 30,
+                  height: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFaceTag(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF1B1A55)),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Color(0xFF1B1A55),
+          fontWeight: FontWeight.bold,
         ),
       ),
     );

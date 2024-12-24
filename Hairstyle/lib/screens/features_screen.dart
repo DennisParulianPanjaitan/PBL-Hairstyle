@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uts_linkaja/screens/detail_haircut.dart';
 import 'package:uts_linkaja/screens/detail_product.dart'; // Tambahkan import
-import 'package:uts_linkaja/screens/detail_barber.dart'; // Tambahkan import
 import 'package:uts_linkaja/models/product.dart'; // Sesuaikan dengan path model Product
 import 'package:uts_linkaja/widgets/hairproduct_item.dart';
 import '../blocs/features/features_bloc.dart';
@@ -10,14 +9,15 @@ import '../blocs/features/features_event.dart';
 import '../blocs/features/features_state.dart';
 import '../widgets/menu_button.dart';
 import '../widgets/haircut_item.dart';
-import '../widgets/home/barber_shop_card.dart';
 import '../widgets/barbershop_item.dart';
+import '../widgets/barber_shop_cardfeature.dart';
 import '../services/haircut_service.dart';
 import '../services/product_service.dart';
 import '../services/like_service.dart';
 import '../services/barbershop_service.dart';
 import '../models/haircut.dart';
 import '../models/barbershop.dart';
+
 
 class FeaturesPage extends StatelessWidget {
   @override
@@ -323,7 +323,7 @@ class FeaturesPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailBarber(
+                        builder: (context) => DetailBarberFeature(
                           title: item.name,
                           description: item.description,
                           sliderImages: item.images
@@ -338,7 +338,7 @@ class FeaturesPage extends StatelessWidget {
                       ),
                     );
                   },
-                  child: BarberShopCard(
+                  child: BarberShopCardfeature(
                     name: item.name, // Menampilkan nama barbershop
                     price: item.rangeHarga ?? "N/A", // Menampilkan range harga
                     rating: item.rating, // Menampilkan range harga

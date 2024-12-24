@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -53,15 +54,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  Future<void> _updateProfileData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      emailController.text = prefs.getString('email') ?? '';
+      usernameController.text = prefs.getString('username') ?? '';
+      passwordController.text = prefs.getString('password') ?? '';
+    });
+  }
+
   Future<void> _saveProfileData() async {
-    if (emailController.text.isEmpty ||
-        usernameController.text.isEmpty ||
+    final prefs = await SharedPreferences.getInstance();
+    if (emailController.text.isEmpty &&
+        usernameController.text.isEmpty &&
         passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all fields')),
+        SnackBar(content: Text('All fields are still empty')),
       );
       return;
     }
+    String email = emailController.text.isNotEmpty
+        ? emailController.text
+        : prefs.getString('email') ?? '';
+    String username = usernameController.text.isNotEmpty
+        ? usernameController.text
+        : prefs.getString('username') ?? '';
 
     final url = Uri.parse(
         'https://hairmate.smartrw.my.id/api/updateuser'); // Replace with your API endpoint
@@ -74,27 +92,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
         body: jsonEncode({
           'id': userId,
-          'email': emailController.text,
-          'username': usernameController.text,
+          'email': email,
+          'username': username,
           'password': passwordController.text,
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        await prefs.setString('email', email);
+        await prefs.setString('username', username);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Profile updated successfully')),
         );
+
+        // Return to the previous screen with success signal
+        // Navigator.pop(context, true);
+      } else if (response.statusCode == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No new data updated')),
+        );
+        return;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to update profile: ${response.body}')),
         );
+        return;
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An error occurred: $e')),
       );
     }
+    // final prefs = await SharedPreferences.getInstance();
+    // await prefs.setString('username', username);
+    // await prefs.setString('email', email);
+    setState(() {
+      emailController.text = prefs.getString('email') ?? '';
+      usernameController.text = prefs.getString('username') ?? '';
+    });
   }
+
   String profileImagePath = '';
 
   Future<File?> _pickProfileImage() async {
@@ -128,6 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ;
     // request.files.add(await http.MultipartFile.fromPath('image', localUrl));
     final response = await request.send();
+
     if (response.statusCode == 200) {
       // Berhasil, ambil URL yang dikembalikan server
       final responseBody = await response.stream.bytesToString();
@@ -147,8 +186,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<bool> saveProfileImageUrl(int? userId, String imageUrl) async {
-    final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getInt('id') ?? 0;
     final url =
         Uri.parse("https://hairmate.smartrw.my.id/api/user/unggahppurl");
     final response = await http.post(
@@ -200,30 +237,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Profile image updated successfully!')),
     );
-    // if (imageUrl != 'Gagal') {
-    // final prefs = await SharedPreferences.getInstance();
-    // String filePath = imageFile.path;
-    // int? userId = prefs.getInt('id');
-    // final success = await saveProfileImageUrl(userId, filePath);
-    // if (success) {
-    //   await prefs.setString('profile_picture_url', imageFile.path);
-    //   setState(() {
-    //     profilePictureUrl = imageFile.path;
-    //   });
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Profile image updated successfully!')),
-    //   );
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //         content:
-    //             Text('Failed to save profile image URL, {$filePath}')),
-    //   );
-    // }
-    // } else if (imageUrl == "Gagal") {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Failed to upload image')),
-    //   );
   }
 
   Future<String> getProfilePictureUrl() async {
@@ -237,7 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //     profilePictureUrl = prefs.getString('profilePictureUrl');
   //   });
   // }
-
+  bool _isPasswordVisible = false;
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -370,17 +383,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildTextField(
-                label: 'Password',
-                controller: passwordController,
-                hint: '••••••••',
-                icon: Image.asset(
-                  'assets/icons/password.png', // Gambar email
-                  width: 24,
-                  height: 24,
+              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Text(
+                  "Password",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                isPassword: true,
-              ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: passwordController,
+                  obscureText: !_isPasswordVisible, // Atur visibilitas password
+                  decoration: InputDecoration(
+                    hintText: "Enter your password",
+                    hintStyle: const TextStyle(
+                      color: Color.fromRGBO(171, 171, 171, 100),
+                      fontSize: 16,
+                    ),
+                    prefixIcon: const Icon(Icons.lock),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ]),
               const SizedBox(height: 20),
               // Buttons
               Row(
@@ -539,6 +583,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required Widget icon,
     bool isPassword = false,
     required TextEditingController controller,
+    bool obscureText =
+        false, // Tambahkan parameter untuk mendukung toggle password visibility
+    void Function()? toggleVisibility, // Callback untuk toggle visibility
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -557,7 +604,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: const TextStyle(
-              color: Color.fromRGBO(0, 0, 0, 0.612),
+              color: Color.fromRGBO(171, 171, 171, 100),
               fontSize: 16,
             ),
             prefixIcon: icon,
@@ -568,6 +615,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               horizontal: 16,
               vertical: 12,
             ),
+            // Tambahkan suffixIcon hanya untuk password
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey,
+                    ),
+                    onPressed: toggleVisibility, // Panggil toggleVisibility
+                  )
+                : null,
           ),
         ),
       ],

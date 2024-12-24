@@ -83,15 +83,6 @@ class DetailBarber extends StatelessWidget {
                         const SizedBox(height: 8),
                         const SizedBox(height: 16),
                         const Text(
-                          "Face Shape",
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1B1A55),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
                           "Gallery",
                           style: TextStyle(
                             fontSize: 25,

@@ -10,6 +10,7 @@ import '../widgets/home/hair_product_card.dart'; // Import HairTypeCar
 import '../widgets/home/hair_style_card.dart'; // Import HairTypeCard
 import 'detail_haircut.dart';
 
+import 'detail_barber.dart';
 import 'package:uts_linkaja/services/product_service.dart';
 import 'package:uts_linkaja/models/product.dart';
 
@@ -60,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double _headerOpacity = 1.0; // Opacity initial header
   Timer? _timer;
 
-  String username = '';
+  String username = 'Dennis';
   String email = '';
   String ppPath = '';
 
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
     haircuts = HaircutService().fetchHaircuts(); // Mengambil data hairstyle
     barbershop =
         BarberShopService().fetchBarbershop(); // Mengambil data hairstyle
-
+    getUserData();
     // Add listener to scrollController
     _scrollController.addListener(() {
       double offset = _scrollController.offset;
@@ -166,10 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: CircleAvatar(
                             radius: 25,
-                            backgroundImage: ppPath.isEmpty
-                                ? AssetImage('assets/images/home_profile.jpeg')
-                                    as ImageProvider
-                                : FileImage(File(ppPath)),
+                            backgroundImage: NetworkImage(ppPath) as ImageProvider
+                              // ppPath.isEmpty
+                              //   ? FileImage(File(ppPath))
+                              //   : AssetImage('assets/images/home_profile.jpeg') as ImageProvider,
                           ),
                         ),
                       ],
@@ -309,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 135,
                             child: FutureBuilder<List<Barbershop>>(
                               future:
-                                  barbershop, // Menggunakan Future yang berisi List<Barbershop>
+                                  barbershop, // Future yang berisi List<Barbershop>
                               builder: (context, snapshot) {
                                 // Menangani state dari Future
                                 if (snapshot.connectionState ==
@@ -328,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'No barbershops available')); // Jika tidak ada data
                                 } else {
                                   final barberShops = snapshot
-                                      .data!; // Mendapatkan data barbers hop dari snapshot
+                                      .data!; // Mendapatkan data barbershop dari snapshot
 
                                   return ListView.builder(
                                     scrollDirection: Axis.horizontal,
@@ -337,17 +338,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                     itemBuilder: (context, index) {
                                       final barber = barberShops[
                                           index]; // Mendapatkan object Barbershop
-                                      return BarberShopCard(
-                                        name: barber
-                                            .name, // Mengakses properti name
-                                        price: barber.rangeHarga ??
-                                            "N/A", // Mengakses rangeHarga dan menangani null
-                                        rating: barber.rating,
-                                        imagePath: barber.images.isNotEmpty
-                                            ? 'assets/images/' +
-                                                barber.images[0].imageUrl // Menambahkan path sebelum URL gambar
-                                            : 'assets/images/default_barbershop.png', // Path default jika tidak ada gambar
-// Mengakses gambar
+
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailBarber(
+                                                title: barber.name,
+                                                description: barber.description,
+                                                sliderImages: barber.images
+                                                    .map((img) =>
+                                                        'assets/images/${img.imageUrl}')
+                                                    .toList(), // Menggunakan gambar dari barbershop
+                                                galleryImages: barber.images
+                                                    .map((img) =>
+                                                        'assets/images/${img.imageUrl}')
+                                                    .toList(), // Menggunakan gambar untuk galeri
+                                                priceRange: barber.rangeHarga ??
+                                                    "N/A", // Menampilkan range harga
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: BarberShopCard(
+                                          name: barber
+                                              .name, // Mengakses properti name
+                                          price: barber.rangeHarga ??
+                                              'N/A', // Mengakses rangeHarga dan menangani null
+                                          rating: barber.rating,
+                                          imagePath: barber.images.isNotEmpty
+                                              ? 'assets/images/' +
+                                                  barber.images[0]
+                                                      .imageUrl // Menambahkan path sebelum URL gambar
+                                              : 'assets/images/default_barbershop.png', // Path default jika tidak ada gambar
+                                        ),
                                       );
                                     },
                                   );

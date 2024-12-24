@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:uts_linkaja/screens/features_screen.dart';
 import 'package:uts_linkaja/screens/history.dart';
-import 'camera_page.dart'; // Pastikan ini sudah diimpor
+// import 'camera_page.dart'; // Pastikan ini sudah diimpor
 import 'home_screen.dart';
 // import 'category_screen.dart';
-import 'favorite_screen.dart';
+// import 'favorite_screen.dart';
 import 'profile_screen.dart';
 import '../widgets/bottom_navbar.dart'; // Pastikan ini sudah diimpor
 import '../widgets/alert_scan.dart'; // Pastikan ini sudah diimpor
